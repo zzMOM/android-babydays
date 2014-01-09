@@ -27,10 +27,6 @@ import android.widget.Toast;
 
 public class MainMenu extends ListActivity {
 	static final String[] items = new String[]{"Feed", "Sleep", "Diaper", "Milestone" };
-	static final Integer[] imageId = { 	R.drawable.bottle,
-										R.drawable.sleep,
-										R.drawable.diaper,
-										R.drawable.milestones};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +46,7 @@ public class MainMenu extends ListActivity {
 		
 		
 		final ListView lv = (ListView) findViewById(R.id.mainmenu);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
-		lv.setAdapter(adapter);
+		lv.setAdapter(new MainMenuAdapter(this, items));
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// When clicked, show a toast with the TextView text
