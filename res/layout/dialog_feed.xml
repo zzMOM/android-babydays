@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/silver"
+    android:orientation="vertical" >
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        
+        <TextView 
+	        android:id="@+id/curTime"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp"
+	        android:text="@string/curtime"/>
+        
+        <TextView 
+	        android:id="@+id/showTime"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp"/>
+        
+    </LinearLayout>
+      
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+	    
+        <TextView
+            android:id="@+id/feedAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/feedamount"
+            android:textSize="20sp" />
+        
+        <EditText
+            android:id="@+id/editTextOZ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_vertical|top"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/textlines"
+            android:ems="3"
+            android:inputType="number"
+            android:textSize="20sp" >
+	
+	        <requestFocus />
+	    </EditText>
+	    
+        <TextView
+            android:id="@+id/oz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/oz"
+            android:textSize="20sp" />
+    
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="horizontal">
+    
+	    <Button 
+	        android:id="@+id/cancel"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/cancel"/>
+	    
+	    <Button 
+	        android:id="@+id/ok"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/ok"/>
+	    
+    </LinearLayout>
+
+</LinearLayout>
