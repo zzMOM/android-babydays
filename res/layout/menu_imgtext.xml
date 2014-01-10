@@ -6,8 +6,8 @@
 
     <ImageView 
         android:id="@+id/img"
-        android:layout_width="20sp"
-        android:layout_height="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:contentDescription="@string/listitemimg"/>
     
