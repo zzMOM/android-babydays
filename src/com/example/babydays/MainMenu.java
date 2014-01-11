@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -19,21 +18,29 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainMenu extends ListActivity {
+public class MainMenu extends Activity {
 	static final String[] items = new String[]{"Feed", "Sleep", "Diaper", "Milestone" };
+	static final Integer[] imageId = {	R.drawable.bottle,
+        								R.drawable.sleep,
+        								R.drawable.diaper,
+        								R.drawable.milestones};
+	Button viewAct;
+	ListView lv;
+	DatabaseHelper db = new DatabaseHelper(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
 		
-		final Button viewAct = (Button)findViewById(R.id.babyActivities);
+		viewAct = (Button)findViewById(R.id.babyActivities);
 		viewAct.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -45,8 +52,10 @@ public class MainMenu extends ListActivity {
 		});
 		
 		
-		final ListView lv = (ListView) findViewById(R.id.mainmenu);
-		lv.setAdapter(new MainMenuAdapter(this, items));
+		lv = (ListView) findViewById(R.id.itemLists);
+		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
+        //lv.setAdapter(adapter);
+		lv.setAdapter(new MainMenuAdapter(this, items, imageId));
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// When clicked, show a toast with the TextView text
@@ -89,7 +98,6 @@ public class MainMenu extends ListActivity {
         dialog.setTitle("It's time to feed!");
 
         // set values for custom dialog components - text, edit text and button
-        //TextView curTime = (TextView) dialog.findViewById(R.id.curTime);
         TextView showTime = (TextView) dialog.findViewById(R.id.showTime);
         //TextView showTime--get current date and time
         Calendar c = Calendar.getInstance();
@@ -97,12 +105,17 @@ public class MainMenu extends ListActivity {
         String formattedDate = df.format(c.getTime());
         showTime.setText(formattedDate);
         
-        //TextView feedAmount = (TextView) dialog.findViewById(R.id.feedAmount);
-        //EditText textOZ = (EditText) dialog.findViewById(R.id.editTextOZ);
-        //TextView oz = (TextView) dialog.findViewById(R.id.oz);
-        
+        EditText textOZ = (EditText) dialog.findViewById(R.id.editTextOZ);
 
         dialog.show();
+        
+        //get date to insert into database-TABLE_FEED
+        //get input amount
+        final int amount = Integer.parseInt(textOZ.getText().toString());
+        formattedDate = df.format(c.getTime());
+        String[] s = formattedDate.split(" ");
+        final String date = s[0];
+        final String time = s[1];
          
         Button cancelButton = (Button) dialog.findViewById(R.id.cancel);
         // if decline button is clicked, close the custom dialog
@@ -118,6 +131,8 @@ public class MainMenu extends ListActivity {
         okButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+            	//insert current feed activity to database
+            	db.addFeedActivities(new FeedActivities(date, time, amount));
                 // Close dialog
                 dialog.dismiss();
             }

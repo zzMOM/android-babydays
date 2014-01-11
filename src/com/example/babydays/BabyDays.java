@@ -32,6 +32,7 @@ public class BabyDays extends Activity {
 			}
         };
         myTimer.schedule(delayTask, 2000);
+		
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.example.babydays;
 
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,55 +11,60 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainMenuAdapter extends BaseAdapter {
-	private final Context context;
+	private final Integer[] imageId;
 	private final String[] values;
+	private LayoutInflater inflater;
+	
  
-	public MainMenuAdapter(Context context, String[] values) {
-		this.context = context;
+	public MainMenuAdapter(Context context, String[] values, Integer[] imageId) {
 		this.values = values;
+		this.imageId = imageId;
+		inflater = LayoutInflater.from(context);
 	}
- 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context
-			.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
- 
-		View rowView = inflater.inflate(R.layout.menu_imgtext, null);
-		TextView textView = (TextView) rowView.findViewById(R.id.items);
-		ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
-		textView.setText(values[position]);
- 
-		// Change icon based on name
-		String s = values[position];
- 
-		if (s.equals("Feed")) {
-			imageView.setImageResource(R.drawable.bottle);
-		} else if (s.equals("Sleep")) {
-			imageView.setImageResource(R.drawable.sleep);
-		} else if (s.equals("Diaper")) {
-			imageView.setImageResource(R.drawable.diaper);
-		} else if (s.equals("Milestone")){
-			imageView.setImageResource(R.drawable.milestones);
-		}
- 
-		return rowView;
+	
+	static class ViewHolder {
+		TextView textView;
+		ImageView imageView;
 	}
-
+	
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return 0;
+		return values.length;
 	}
 
 	@Override
-	public Object getItem(int arg0) {
+	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		return null;
+		return values[position];
 	}
 
 	@Override
-	public long getItemId(int arg0) {
+	public long getItemId(int position) {
 		// TODO Auto-generated method stub
-		return 0;
+		return position;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder;
+		if(convertView == null){
+			holder = new ViewHolder();
+			//get layout from .xml
+			convertView = inflater.inflate(R.layout.menu_imgtext, null);
+			//set value into textview
+			holder.textView = (TextView) convertView.findViewById(R.id.items);
+			//set image based on selected text
+			holder.imageView = (ImageView) convertView.findViewById(R.id.img);
+			
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
+		
+		holder.textView.setText(values[position]);
+		holder.imageView.setImageResource(imageId[position]);
+		
+		return convertView;
 	}
 }
