@@ -30,8 +30,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	//Table create statements
 	//FEED table create statements
-	private static final String CREATE_TABLE_FEED = "CREATE TABLE" + TABLE_FEED + "(" + FEED_ID
-			+ " INTEGER PRIMARY KEY," + FEED_DATE + " TEXT," + FEED_TIME + " TEXT," + FEED_AMOUNT
+	private static final String CREATE_TABLE_FEED = "CREATE TABLE " + TABLE_FEED + "(" + FEED_ID
+			+ " INTEGER PRIMARY KEY, " + FEED_DATE + " TEXT, " + FEED_TIME + " TEXT, " + FEED_AMOUNT
 			+ " INTEGER" + ")";
 	
 	public DatabaseHelper(Context context){

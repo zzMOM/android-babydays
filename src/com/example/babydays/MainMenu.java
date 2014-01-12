@@ -4,6 +4,7 @@ package com.example.babydays;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -11,6 +12,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -137,6 +139,14 @@ public class MainMenu extends Activity {
                 dialog.dismiss();
             }
         });
+        
+        //reading all 
+        Log.d("Reading", "Reading all feed");
+        List<FeedActivities> list = db.getAllFeedActivities();
+        for(FeedActivities f : list){
+        	String log = "Date: " + f.getDate() + ", Time: " + f.getTime() + ", Amount: " + f.getAmount();
+        	Log.d("feed:", log);
+        }
     }
 	
 	public void creatSleepDialog(){
