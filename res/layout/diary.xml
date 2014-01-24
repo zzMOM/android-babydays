@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".Diary" >
+
+    <ImageButton 
+        android:id="@+id/diaryShare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/share"
+        android:contentDescription="@string/share"/>
+    
+    <Button 
+        android:id="@+id/diaryCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/cancel"/>
+    
+    <Button 
+        android:id="@+id/diaryOK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/ok"/>
+    
+    <EditText 
+        android:id="@+id/diaryText"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:gravity="top"
+    	android:layout_above="@id/diaryCancel"
+    	android:layout_below="@id/diaryShare"
+    	android:hint="@string/writediary"
+    	android:background="@drawable/textlines"/>
+
+</RelativeLayout>
