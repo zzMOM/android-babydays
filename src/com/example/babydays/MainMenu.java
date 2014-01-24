@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,14 +30,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainMenu extends Activity {
-	static final String[] items = new String[]{"Feed", "Sleep", "Diaper", "Milestone" };
+	static final String[] items = new String[]{"Feed", "Sleep", "Diaper", "Milestone", "Diary"};
 	static final Integer[] imageId = {	R.drawable.bottle,
         								R.drawable.sleep,
         								R.drawable.diaper,
-        								R.drawable.milestones};
+        								R.drawable.milestones,
+        								R.drawable.diary};
 	Button viewAct;
 	ListView lv;
-	DatabaseHelper db = new DatabaseHelper(this);
+	MediaPlayer littlestar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,9 @@ public class MainMenu extends Activity {
 				case 3:
 					creatMilestonesDialog();
 	                break;
+				case 4:
+					openDiary();
+					break;
 				}
 				    
 			}
@@ -107,17 +113,17 @@ public class MainMenu extends Activity {
         String formattedDate = df.format(c.getTime());
         showTime.setText(formattedDate);
         
-        EditText textOZ = (EditText) dialog.findViewById(R.id.editTextOZ);
+        //EditText textOZ = (EditText) dialog.findViewById(R.id.editTextOZ);
 
         dialog.show();
         
         //get date to insert into database-TABLE_FEED
         //get input amount
-        final int amount = Integer.parseInt(textOZ.getText().toString());
+        /*final int amount = Integer.parseInt(textOZ.getText().toString());
         formattedDate = df.format(c.getTime());
         String[] s = formattedDate.split(" ");
         final String date = s[0];
-        final String time = s[1];
+        final String time = s[1];*/
          
         Button cancelButton = (Button) dialog.findViewById(R.id.cancel);
         // if decline button is clicked, close the custom dialog
@@ -133,20 +139,10 @@ public class MainMenu extends Activity {
         okButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-            	//insert current feed activity to database
-            	db.addFeedActivities(new FeedActivities(date, time, amount));
                 // Close dialog
                 dialog.dismiss();
             }
         });
-        
-        //reading all 
-        Log.d("Reading", "Reading all feed");
-        List<FeedActivities> list = db.getAllFeedActivities();
-        for(FeedActivities f : list){
-        	String log = "Date: " + f.getDate() + ", Time: " + f.getTime() + ", Amount: " + f.getAmount();
-        	Log.d("feed:", log);
-        }
     }
 	
 	public void creatSleepDialog(){
@@ -220,6 +216,55 @@ public class MainMenu extends Activity {
 	           });      
 	    builder.show();
 	}
+	
+	public void openDiary(){
+		Intent intent = new Intent(MainMenu.this, Diary.class);
+		startActivity(intent);
+	}
 
+	//background music
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		littlestar = MediaPlayer.create(this, R.raw.littlestar);
+		littlestar.start();
+		littlestar.setLooping(true);
+		super.onResume();
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		littlestar.stop();
+		littlestar.release();
+		super.onPause();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
+	    // Get the layout inflater
+	    LayoutInflater inflater = MainMenu.this.getLayoutInflater();
+
+	    // Inflate and set the layout for the dialog
+	    // Pass null as the parent view because its going in the dialog layout
+	    builder.setTitle("Exit")
+	    	   .setMessage("Do you want to exit app?")
+	    // Add action buttons
+	           .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+	               @Override
+	               public void onClick(DialogInterface dialog, int id) {
+	            	   finish();
+	                   System.exit(0);
+	               }
+	           })
+	           .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialog, int id) {
+	                   
+	               }
+	           });      
+	    builder.show();
+	}
 
 }
