@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.babydays"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19" />
+    
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.example.babydays.BabyDays"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.babydays.MainMenu"
+            android:label="@string/title_activity_main_menu" 
+            android:configChanges="orientation|screenSize|uiMode">
+        </activity>
+        <activity
+            android:name="com.example.babydays.Summary"
+            android:label="@string/title_activity_summary" >
+        </activity>
+        <activity
+            android:name="com.example.babydays.DayActiviies"
+            android:label="@string/title_activity_day_activiies" >
+        </activity>
+        <activity
+            android:name="com.example.babydays.DayActivities"
+            android:label="@string/title_activity_day_activities" >
+        </activity>
+        <activity
+            android:name="com.example.babydays.Diary"
+            android:label="@string/title_activity_diary" >
+        </activity>
+    </application>
+
+</manifest>

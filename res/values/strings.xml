@@ -189,5 +189,6 @@
     <string name="share">Share</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
+    <string name="shareimage">Share Image</string>
 
 </resources>

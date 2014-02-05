@@ -8,38 +8,62 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Diary" >
 
-    <ImageButton 
-        android:id="@+id/diaryShare"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/share"
-        android:contentDescription="@string/share"/>
-    
-    <Button 
-        android:id="@+id/diaryCancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="@string/cancel"/>
-    
-    <Button 
-        android:id="@+id/diaryOK"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="@string/ok"/>
-    
-    <EditText 
-        android:id="@+id/diaryText"
+    <ScrollView 
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent">
+    <LinearLayout 
         android:layout_width="match_parent"
     	android:layout_height="wrap_content"
-    	android:gravity="top"
-    	android:layout_above="@id/diaryCancel"
-    	android:layout_below="@id/diaryShare"
-    	android:hint="@string/writediary"
-    	android:background="@drawable/textlines"/>
-
+    	android:orientation="vertical">
+    	
+        <EditText 
+	        android:id="@+id/diaryText"
+	        android:layout_width="match_parent"
+	    	android:layout_height="wrap_content"
+	    	android:minLines="10"
+	    	android:gravity="top"
+	    	android:hint="@string/writediary"
+	    	android:background="@drawable/textlines"/>
+        
+        <ImageView 
+            android:id="@+id/shareImage0"
+            android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:src="@drawable/photo_add_icon"
+	    	android:contentDescription="@string/shareimage"
+	    	android:onClick="choosePhoto"/>
+	    
+	</LinearLayout>
+	</ScrollView>
+	
+    <LinearLayout 
+        android:layout_width="match_parent"
+   		android:layout_height="wrap_content"
+   		android:layout_alignParentBottom="true"
+   		android:orientation="horizontal">
+	    
+	    <Button 
+	        android:id="@+id/diaryCancel"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1"
+	        android:text="@string/cancel"/>
+	    
+	    <Button 
+	        android:id="@+id/diaryOK"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1"
+	        android:text="@string/ok"/>
+	    
+	    <ImageButton 
+	        android:id="@+id/diaryShare"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1"
+	        android:src="@drawable/share"
+	        android:contentDescription="@string/share"/>
+	    
+    </LinearLayout>
+    
 </RelativeLayout>
