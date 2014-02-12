@@ -3,6 +3,7 @@ package com.example.babydays;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +24,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -40,11 +43,25 @@ public class MainMenu extends Activity {
 	ListView lv;
 	MediaPlayer littlestar;
 	private int backButtonCount = 0;
+	private SimpleDateFormat df;
+	private Calendar c;
+	private EditText textOZ;
+	private MySQLiteHelper dbHelper;
+	private CheckBox wetCheckBox;
+	private CheckBox poopyCheckBox;
+	private List mSelectedItems;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
+		
+		//create database helper
+		dbHelper = new MySQLiteHelper(this);
+		
+		//date and time format
+		c = Calendar.getInstance();
+        df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 		
 		viewAct = (Button)findViewById(R.id.babyActivities);
 		viewAct.setOnClickListener(new OnClickListener() {
@@ -108,23 +125,12 @@ public class MainMenu extends Activity {
 
         // set values for custom dialog components - text, edit text and button
         TextView showTime = (TextView) dialog.findViewById(R.id.showTime);
-        //TextView showTime--get current date and time
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String formattedDate = df.format(c.getTime());
         showTime.setText(formattedDate);
         
-        //EditText textOZ = (EditText) dialog.findViewById(R.id.editTextOZ);
+        textOZ = (EditText) dialog.findViewById(R.id.editTextOZ);
 
         dialog.show();
-        
-        //get date to insert into database-TABLE_FEED
-        //get input amount
-        /*final int amount = Integer.parseInt(textOZ.getText().toString());
-        formattedDate = df.format(c.getTime());
-        String[] s = formattedDate.split(" ");
-        final String date = s[0];
-        final String time = s[1];*/
          
         Button cancelButton = (Button) dialog.findViewById(R.id.cancel);
         // if decline button is clicked, close the custom dialog
@@ -140,6 +146,16 @@ public class MainMenu extends Activity {
         okButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+            	
+            	//get date to insert into database-TABLE baby_activities
+                String formattedDate = df.format(c.getTime());
+                String[] s = formattedDate.split(" ");
+                String date = s[0];
+                String time = s[1];
+                String type = "FeedMilk";
+                String info = textOZ.getText().toString();
+            	dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
+            	
                 // Close dialog
                 dialog.dismiss();
             }
@@ -171,19 +187,53 @@ public class MainMenu extends Activity {
 	}
 	
 	public void creatDiaperDialog(){
+		mSelectedItems = new ArrayList();
 		AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
 	    // Get the layout inflater
 	    LayoutInflater inflater = MainMenu.this.getLayoutInflater();
-
+	    
 	    // Inflate and set the layout for the dialog
 	    // Pass null as the parent view because its going in the dialog layout
-	    builder.setView(inflater.inflate(R.layout.dialog_diaper, null))
+	    builder//.setView(inflater.inflate(R.layout.dialog_diaper, null))
 	    	   .setTitle("Time to change diaper!")
-	    // Add action buttons
-	           .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+	    		// Specify the list array, the items to be selected by default (null for none),
+	    		// and the listener through which to receive callbacks when items are selected
+	           .setMultiChoiceItems(R.array.diaper, null,
+	                      new DialogInterface.OnMultiChoiceClickListener() {
+	               @Override
+	               public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+	                   if (isChecked) {
+	                       // If the user checked the item, add it to the selected items
+	                       mSelectedItems.add(which);
+	                   } else if (mSelectedItems.contains(which)) {
+	                       // Else, if the item is already in the array, remove it 
+	                       mSelectedItems.remove(Integer.valueOf(which));
+	                   }
+	               }
+	           })
+	       
+	    		// Add action buttons
+	    		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
+	           	       //get date to insert into database-TABLE baby_activities
+	                   String formattedDate = df.format(c.getTime());
+	                   String[] s = formattedDate.split(" ");
+	                   String date = s[0];
+	                   String time = s[1];
+	                   String type = "Diaper";
 	                   
+	                   StringBuffer info = new StringBuffer("");
+	                   Resources res = getResources();
+	                   String[] diaperSelectedItems = res.getStringArray(R.array.diaper);
+	                   for(int i = 0; i < mSelectedItems.size(); i++){
+	                	   info.append(diaperSelectedItems[(Integer) mSelectedItems.get(i)] + " ");
+	                   }
+	                   if(info.toString() != ""){
+	                	   dbHelper.addBabyActivity(new BabyActivity(date, time, type, info.toString()));
+	                   }
+	                   
+	                   dialog.dismiss();
 	               }
 	           })
 	           .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
