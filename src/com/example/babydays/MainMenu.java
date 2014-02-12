@@ -39,6 +39,7 @@ public class MainMenu extends Activity {
 	Button viewAct;
 	ListView lv;
 	MediaPlayer littlestar;
+	private int backButtonCount = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -243,7 +244,7 @@ public class MainMenu extends Activity {
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
-		AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
+		/*AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
 	    // Get the layout inflater
 	    LayoutInflater inflater = MainMenu.this.getLayoutInflater();
 
@@ -255,8 +256,10 @@ public class MainMenu extends Activity {
 	           .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
-	            	   finish();
-	                   System.exit(0);
+	            	   	Intent intent = new Intent(Intent.ACTION_MAIN);
+   						intent.addCategory(Intent.CATEGORY_HOME);
+   						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+   						startActivity(intent);
 	               }
 	           })
 	           .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -264,7 +267,19 @@ public class MainMenu extends Activity {
 	                   
 	               }
 	           });      
-	    builder.show();
+	    builder.show();*/
+		if(backButtonCount  >= 1)
+	    {
+	        Intent intent = new Intent(Intent.ACTION_MAIN);
+	        intent.addCategory(Intent.CATEGORY_HOME);
+	        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	        startActivity(intent);
+	    }
+	    else
+	    {
+	        Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
+	        backButtonCount++;
+	    }
 	}
 
 }
