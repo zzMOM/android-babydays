@@ -58,7 +58,7 @@ public class BabyActivity {
 	}
 	
 	public String toString() {
-        return "BabyActivity [id=" + id + ", date=" + date + ", time=" + time
+        return "[id=" + id + ", date=" + date + ", time=" + time
                 + ", type=" + type + ", info=" + info + "]";
     }
 }

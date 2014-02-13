@@ -9,6 +9,9 @@
     android:background="@color/backgroundblue"
     tools:context=".Summary" >
 
-    
+    <TextView
+        android:id="@+id/summaryText" 
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"/>
 
 </RelativeLayout>

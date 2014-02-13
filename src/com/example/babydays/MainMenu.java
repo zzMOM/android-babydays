@@ -61,16 +61,16 @@ public class MainMenu extends Activity {
 		
 		//date and time format
 		c = Calendar.getInstance();
-        df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        df = new SimpleDateFormat("MM-dd-yyyy hh:mm");
 		
 		viewAct = (Button)findViewById(R.id.babyActivities);
 		viewAct.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				/*Intent intent = new Intent(MainMenu.this, DayActivities.class);
-				startActivity(intent);*/
-				Toast.makeText(getApplicationContext(), ((TextView) v).getText(), Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(MainMenu.this, DayActivities.class);
+				startActivity(intent);
+				//Toast.makeText(getApplicationContext(), ((TextView) v).getText(), Toast.LENGTH_SHORT).show();
 			}
 		});
 		
@@ -153,7 +153,7 @@ public class MainMenu extends Activity {
                 String date = s[0];
                 String time = s[1];
                 String type = "FeedMilk";
-                String info = textOZ.getText().toString();
+                String info = textOZ.getText().toString() + "oz";
             	dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
             	
                 // Close dialog
@@ -245,19 +245,52 @@ public class MainMenu extends Activity {
 	}
 	
 	public void creatMilestonesDialog(){
+		mSelectedItems = new ArrayList();
 		AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
 	    // Get the layout inflater
 	    LayoutInflater inflater = MainMenu.this.getLayoutInflater();
 
 	    // Inflate and set the layout for the dialog
 	    // Pass null as the parent view because its going in the dialog layout
-	    builder.setView(inflater.inflate(R.layout.dialop_milstones, null))
+	    builder//.setView(inflater.inflate(R.layout.dialop_milstones, null))
 	    	   .setTitle("MileStones")
-	    // Add action buttons
+	    	   // Specify the list array, the items to be selected by default (null for none),
+	    		// and the listener through which to receive callbacks when items are selected
+	           .setMultiChoiceItems(R.array.mileStone, null,
+	                      new DialogInterface.OnMultiChoiceClickListener() {
+	               @Override
+	               public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+	                   if (isChecked) {
+	                       // If the user checked the item, add it to the selected items
+	                       mSelectedItems.add(which);
+	                   } else if (mSelectedItems.contains(which)) {
+	                       // Else, if the item is already in the array, remove it 
+	                       mSelectedItems.remove(Integer.valueOf(which));
+	                   }
+	               }
+	           })
+	           // Add action buttons
 	           .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
+	            	 //get date to insert into database-TABLE baby_activities
+	                   String formattedDate = df.format(c.getTime());
+	                   String[] s = formattedDate.split(" ");
+	                   String date = s[0];
+	                   String time = s[1];
+	                   String type = "Milestone";
 	                   
+	                   StringBuffer info = new StringBuffer("");
+	                   Resources res = getResources();
+	                   String[] milestoneSelectedItems = res.getStringArray(R.array.mileStone);
+	                   for(int i = 0; i < mSelectedItems.size(); i++){
+	                	   info.append(milestoneSelectedItems[(Integer) mSelectedItems.get(i)] + " ");
+	                   }
+	                   if(info.toString() != ""){
+	                	   dbHelper.addBabyActivity(new BabyActivity(date, time, type, info.toString()));
+	                   }
+	                   
+	                   dialog.dismiss();
 	               }
 	           })
 	           .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

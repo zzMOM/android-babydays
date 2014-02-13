@@ -24,7 +24,13 @@
 	    	android:gravity="top"
 	    	android:hint="@string/writediary"
 	    	android:background="@drawable/textlines"/>
-        
+   			
+        <TextView 
+            android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:text="@string/addphoto"
+	    	android:textSize="22sp"/>
+       
         <ImageView 
             android:id="@+id/shareImage0"
             android:layout_width="wrap_content"
@@ -32,7 +38,6 @@
 	    	android:src="@drawable/photo_add_icon"
 	    	android:contentDescription="@string/shareimage"
 	    	android:onClick="choosePhoto"/>
-	    
 	</LinearLayout>
 	</ScrollView>
 	
@@ -55,7 +60,7 @@
 	        android:layout_height="match_parent"
 	        android:layout_weight="1"
 	        android:text="@string/ok"/>
-	    
+	        
 	    <ImageButton 
 	        android:id="@+id/diaryShare"
 	        android:layout_width="match_parent"

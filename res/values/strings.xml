@@ -179,7 +179,7 @@
     <string name="babyactivity">baby Activities</string>
     <string name="title_activity_summary">Summary</string>
     <string name="datebutton_text">Pick Date</string>
-    <string name="date">Date: </string>
+    <string name="today">Today: </string>
     <string name="title_activity_day_activiies">DayActiviies</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_day_activities">DayActivities</string>
@@ -190,5 +190,29 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="shareimage">Share Image</string>
+    <string name="addphoto">Add a photo to share with your friends</string>
+    
+    <string-array name="diaper">
+        <item >wet</item>
+        <item >poopy</item>
+    </string-array>
+    
+    <string-array name="mileStone">
+        <item >First Smile</item>
+	    <item >First Roll Over</item>
+	    <item >First Time to Sit up</item>
+	    <item >First Time Crawing Back</item>
+	    <item >First Time Crawing Forward</item>
+	    <item >First Time Stand Support</item>
+	    <item >First Time Stand by Self</item>
+	    <item >First Time Walking when holding</item>
+	    <item >First Time Walk by self</item>
+	    <item >Speak First Word</item>
+    </string-array>
+	    <string name="set_date">Set Date</string>
+	    <string name="pre_month">&lt;&lt;</string>
+	    <string name="pre_day">&lt;</string>
+	    <string name="next_day">></string>
+	    <string name="next_month">>></string>
 
 </resources>

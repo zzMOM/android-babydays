@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,31 +9,84 @@
     android:background="@color/backgroundblue"
     tools:context=".DayActivities" >
     
-    <DatePicker
-        android:id="@+id/dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical">
+    	
+        <LinearLayout 
+            android:layout_width="match_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="horizontal">
+    	
+	        <TextView 
+		        android:id="@+id/today"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/today"/>
+		    
+		    <TextView 
+		        android:id="@+id/showDate"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"/>
+		</LinearLayout>
+    
+	    <Button
+	        android:id="@+id/setDate"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/set_date"/>
+	    
+	    <LinearLayout 
+	        android:layout_width="match_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="horizontal">
+	    
+		    <Button 
+		        android:id="@+id/preMonth"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/pre_month"
+		        android:onClick="DecreaseMonth"/>
+		    
+		    <Button 
+		        android:id="@+id/preDay"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/pre_day"
+		        android:onClick="DecreaseDay"/>
+		    
+		    <TextView 
+		        android:id="@+id/showSetDate"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="22sp"/>
+		    
+		    <Button 
+		        android:id="@+id/nextDay"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/next_day"
+		        android:onClick="IncreaseDay"/>
+		    
+		    <Button 
+		        android:id="@+id/nextMonth"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/next_month"
+		        android:onClick="IncreaseMonth"/>
+	
+	    </LinearLayout>
+	    
+	    
+	    <TextView 
+	        android:id="@+id/dayActivity"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:minLines="20"
+	        android:background="@drawable/textlines"/>
 
-    
-    <TextView 
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="@string/date"/>
-    
-    <TextView 
-        android:id="@+id/showDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/date"/>
-    
-    <TextView 
-        android:id="@+id/dayActivity"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/dp"
-        android:background="@drawable/textlines"/>
+	</LinearLayout>
+</ScrollView>
 
-</RelativeLayout>
+
