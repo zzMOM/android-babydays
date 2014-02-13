@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,13 +35,9 @@ public class DayActivities extends Activity {
 	private Calendar c;
 
 	private TextView showSetDate;
-
 	private Button preMonth;
-
 	private Button preDay;
-
 	private Button nextDay;
-
 	private Button nextMonth;
 
 	@Override
@@ -60,12 +57,50 @@ public class DayActivities extends Activity {
 		preDay = (Button)findViewById(R.id.preDay);
 		nextDay = (Button)findViewById(R.id.nextDay);
 		nextMonth = (Button)findViewById(R.id.nextMonth);
+		
+		
+		setDate = (Button)findViewById(R.id.setDate);
+		setDate.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				showDialog(DATE_DIALOG_ID);
+			}
+		});
+		
 		//set current date on dayActivity textview field
-		//set default day activities according to current date
-		setCurrentDateAndActivities();
-		
-		
+				//set default day activities according to current date
+				setCurrentDateAndActivities();
 	}
+	
+	@Override
+	@Deprecated
+	protected Dialog onCreateDialog(int id) {
+		// TODO Auto-generated method stub
+		switch (id) {
+		case DATE_DIALOG_ID:
+		   // set date picker as current date
+		   return new DatePickerDialog(this, datePickerListener, 
+                         year, month, day);
+		}
+		return null;
+	}
+	
+	private DatePickerDialog.OnDateSetListener datePickerListener= new DatePickerDialog.OnDateSetListener() {
+		
+		// when dialog box is closed, below method will be called.
+		@Override
+		public void onDateSet(DatePicker view, int selectedYear, int monthOfYear, int dayOfMonth) {
+			// TODO Auto-generated method stub
+			year = selectedYear;
+			month = monthOfYear;
+			day = dayOfMonth;
+ 
+			showDateChanged();
+ 
+		}
+	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -101,41 +136,56 @@ public class DayActivities extends Activity {
 	public void DecreaseMonth(View v){
 		month--;
 		
-		// set current date into textview
-		showSetDate.setText(new StringBuilder()
-			// Month is 0 based, just add 1
-			.append(month + 1).append("-").append(day).append("-")
-			.append(year).append(" "));
+		showDateChanged();
 	}
 	
 	public void DecreaseDay(View v){
 		day--;
 		
-		// set current date into textview
-		showSetDate.setText(new StringBuilder()
-			// Month is 0 based, just add 1
-			.append(month + 1).append("-").append(day).append("-")
-			.append(year).append(" "));
+		showDateChanged();
 	}
 	
 	public void IncreaseMonth(View v){
 		month++;
 		
-		// set current date into textview
-		showSetDate.setText(new StringBuilder()
-			// Month is 0 based, just add 1
-			.append(month + 1).append("-").append(day).append("-")
-			.append(year).append(" "));
+		showDateChanged();
 	}
 	
 	public void IncreaseDay(View v){
 		day++;
 		
-		// set current date into textview
-		showSetDate.setText(new StringBuilder()
-			// Month is 0 based, just add 1
-			.append(month + 1).append("-").append(day).append("-")
-			.append(year).append(" "));
+		showDateChanged();
+	}
+	
+	private void showDateChanged(){
+		// set selected date into textview
+		// Month is 0 based, just add 1
+		StringBuffer buffer = new StringBuffer();
+		String m = null, d = null;
+		int monthOfYear = month + 1;
+		if(monthOfYear < 10){
+			m = "0" + monthOfYear;
+		} else {
+			m = "" + monthOfYear;
+		}
+		if(day < 10){
+			d = "0" + day;
+		} else {
+			d = "" + day;
+		}
+		buffer.append(m).append("-").append(d).append("-").append(year);
+		showSetDate.setText(buffer.toString());
+		
+		//search recodes in sqlite db march date
+		List<BabyActivity> activitiesByDate = dbHelper.getBabyActivityByDate(buffer.toString());
+		Log.d("search date", buffer.toString());
+		dayActivity.setText("");
+		for(int i = 0; i < activitiesByDate.size(); i++){
+			dayActivity.append(activitiesByDate.get(i).getTime().toString() + "\t\t");
+			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t");
+			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
+			dayActivity.append("\n");
+		}
 	}
 
 }
