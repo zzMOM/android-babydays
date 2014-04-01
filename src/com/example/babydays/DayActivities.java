@@ -134,25 +134,63 @@ public class DayActivities extends Activity {
 	}
 	
 	public void DecreaseMonth(View v){
-		month--;
+		//month is 0 base, if 0, change to 12, and year decrease 1
+		if(month == 0){
+			year--;
+			month = 11;
+		} else {
+			month--;
+		}
+		c.set(year, month, day);
+		/*in case: month show 2, and day show 30---error*/
+		if(day > c.getActualMaximum(Calendar.DAY_OF_MONTH)){
+			day = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+		}
+		c.set(year, month, day);
 		
 		showDateChanged();
 	}
 	
 	public void DecreaseDay(View v){
-		day--;
+		//if day is 1, month decrease and day to the last day of month
+		if(day == 1){
+			DecreaseMonth(v);
+			c.set(year, month, day);
+			day = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+		} else {
+			day--;
+		}
+		c.set(year, month, day);
 		
 		showDateChanged();
 	}
 	
 	public void IncreaseMonth(View v){
-		month++;
+		if(month == 11){
+			year++;
+			month = 0;
+		} else {
+			month++;
+		}
+		c.set(year, month, day);
+		
+		/*in case: month show 2, and day show 30*/
+		if(day > c.getActualMaximum(Calendar.DAY_OF_MONTH)){
+			day = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+		}
+		c.set(year, month, day);
 		
 		showDateChanged();
 	}
 	
 	public void IncreaseDay(View v){
-		day++;
+		if(day == c.getActualMaximum(Calendar.DAY_OF_MONTH)){
+			IncreaseMonth(v);
+			day = 1;
+		} else {
+			day++;
+		} 
+		c.set(year, month, day);
 		
 		showDateChanged();
 	}

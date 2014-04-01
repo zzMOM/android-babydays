@@ -307,6 +307,7 @@ public class MainMenu extends Activity {
 	}
 
 	//background music
+	/*
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -322,7 +323,7 @@ public class MainMenu extends Activity {
 		littlestar.stop();
 		littlestar.release();
 		super.onPause();
-	}
+	}*/
 	
 	@Override
 	public void onBackPressed() {
