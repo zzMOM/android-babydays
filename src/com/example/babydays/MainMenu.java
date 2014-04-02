@@ -61,7 +61,7 @@ public class MainMenu extends Activity {
 		
 		//date and time format
 		c = Calendar.getInstance();
-        df = new SimpleDateFormat("MM-dd-yyyy hh:mm");
+        df = new SimpleDateFormat("MM-dd-yyyy hh:mma");
 		
 		viewAct = (Button)findViewById(R.id.babyActivities);
 		viewAct.setOnClickListener(new OnClickListener() {
