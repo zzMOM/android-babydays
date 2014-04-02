@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.net.Uri;
@@ -38,6 +39,10 @@ public class Diary extends Activity {
 	private Bitmap mBitmap;
 	private ImageView shareImage0;
 	private Uri uri;
+	
+	private SimpleDateFormat df;
+	private Calendar c;
+	private MySQLiteHelper dbHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,14 @@ public class Diary extends Activity {
 		diaryText.setFocusableInTouchMode(true);
 		diaryText.requestFocus();
 		
+		//date and time format
+		c = Calendar.getInstance();
+		df = new SimpleDateFormat("MM-dd-yyyy hh:mma");
+		
+		//create database helper
+		dbHelper = new MySQLiteHelper(this);
+		
+		//share the diary text and attach a photo via email, facebook, twitter etc.
 		shareButton = (ImageButton) findViewById(R.id.diaryShare);
 		shareButton.setOnClickListener(new OnClickListener() {
 			
@@ -57,6 +70,7 @@ public class Diary extends Activity {
 			}
 		});
 		
+		//cancel writing - delete all text
 		cancelButton = (Button) findViewById(R.id.diaryCancel);
 		cancelButton.setOnClickListener(new OnClickListener() {
 			
@@ -64,6 +78,27 @@ public class Diary extends Activity {
 			public void onClick(View v) {
 				cancelDialog();
 				
+			}
+		});
+		
+		okButton = (Button)findViewById(R.id.diaryOK);
+		okButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//get date to insert into database-TABLE baby_activities
+                String formattedDate = df.format(c.getTime());
+                String[] s = formattedDate.split(" ");
+                String date = s[0];
+                String time = s[1];
+                String type = "Diary";
+                String info = diaryText.getText().toString();
+            	dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
+            	
+            	diaryText.setText("");
+				diaryText.requestFocus();
+        	    
 			}
 		});
 	}
@@ -75,14 +110,6 @@ public class Diary extends Activity {
 		return true;
 	}
 	
-	/*public void shareIt(){
-		Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-		sharingIntent.setType("text/plain");
-		String shareBody = diaryText.getText().toString();
-		sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Diary Today");
-		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-		startActivity(Intent.createChooser(sharingIntent, "Share via"));
-	}*/
 	
 	public void cancelDialog(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(Diary.this);
@@ -92,9 +119,9 @@ public class Diary extends Activity {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				diaryText.setText("");
 				diaryText.requestFocus();
+				dialog.dismiss();
 			}
 		});
 		
@@ -103,6 +130,7 @@ public class Diary extends Activity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
+				dialog.dismiss();
 			}
 		});
 		builder.show();
@@ -190,7 +218,9 @@ public class Diary extends Activity {
 			return;
 		}
 		
-		/*File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+		/*
+		//this part will make a copy of the original photo, put a stamp on photo, and save on device
+		File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 		path.mkdirs();
 
 		// Note, for display purposes

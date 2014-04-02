@@ -221,6 +221,7 @@
         <item >FeedMilk</item>
         <item >Nap</item>
         <item >Diaper</item>
+        <item >Diary</item>
     </string-array>
     
     <string-array name="nap">

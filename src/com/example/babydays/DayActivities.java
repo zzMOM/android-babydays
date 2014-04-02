@@ -148,7 +148,7 @@ public class DayActivities extends Activity {
 			dayActivity.append(activitiesByDate.get(i).getTime().toString() + "\t\t");
 			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t");
 			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
-			dayActivity.append("\n");
+			dayActivity.append("\n\n");
 		}
 	}
 	
@@ -241,7 +241,7 @@ public class DayActivities extends Activity {
 			dayActivity.append(activitiesByDate.get(i).getTime().toString() + "\t\t");
 			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t");
 			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
-			dayActivity.append("\n");
+			dayActivity.append("\n\n");
 		}
 	}
 
@@ -263,6 +263,9 @@ public class DayActivities extends Activity {
 	            	   String[] recordItems = getResources().getStringArray(R.array.recordFilter);
 	            	   String attr = recordItems[which];
 	            	   
+	            	   //set the button text to selected item 
+	            	   recordFilter.setText(attr);
+	            	   
 	            	   //get current time in sqlite record format
 	           		   SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy");
 	           		   String formattedDate = df.format(c.getTime());
@@ -280,7 +283,7 @@ public class DayActivities extends Activity {
 		           			dayActivity.append(activitiesByDate.get(i).getTime().toString() + "\t\t");
 		           			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t");
 		           			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
-		           			dayActivity.append("\n");
+		           			dayActivity.append("\n\n");
 		           	   }
 	               }
 	           });
@@ -291,5 +294,6 @@ public class DayActivities extends Activity {
 	//reset the result to current date without filter
 	public void resetResults(View v){
 		setCurrentDateAndActivities();
+		recordFilter.setText("Record Filter");
 	}
 }
