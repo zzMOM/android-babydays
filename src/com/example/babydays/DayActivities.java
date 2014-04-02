@@ -1,15 +1,20 @@
 package com.example.babydays;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,6 +44,8 @@ public class DayActivities extends Activity {
 	private Button preDay;
 	private Button nextDay;
 	private Button nextMonth;
+	private Button recordFilter;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +77,17 @@ public class DayActivities extends Activity {
 		});
 		
 		//set current date on dayActivity textview field
-				//set default day activities according to current date
-				setCurrentDateAndActivities();
+		//set default day activities according to current date
+		setCurrentDateAndActivities();
+		
+		recordFilter = (Button)findViewById(R.id.recordFilter);
+		recordFilter.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				creatFilterDialog();
+			}
+		});
 	}
 	
 	@Override
@@ -102,6 +118,7 @@ public class DayActivities extends Activity {
 		}
 	};
 
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -122,6 +139,8 @@ public class DayActivities extends Activity {
 		String formattedDate = df.format(c.getTime());
 		showSetDate.setText(formattedDate);
 		showDate.setText(formattedDate);
+		
+		dayActivity.setText("");
 		
 		//search recodes in sqlite db march date
 		List<BabyActivity> activitiesByDate = dbHelper.getBabyActivityByDate(formattedDate);
@@ -226,4 +245,51 @@ public class DayActivities extends Activity {
 		}
 	}
 
+	
+	public void creatFilterDialog(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(DayActivities.this);
+	    // Get the layout inflater
+	    LayoutInflater inflater = DayActivities.this.getLayoutInflater();
+	    
+	    // Inflate and set the layout for the dialog
+	    // Pass null as the parent view because its going in the dialog layout
+	    builder.setTitle("Pick one filter item!")
+	           .setItems(R.array.recordFilter, new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialog, int which) {
+	                   // The 'which' argument contains the index position
+	                   // of the selected item
+	            
+	            	   //get string-array items using getResources().getStringArray
+	            	   String[] recordItems = getResources().getStringArray(R.array.recordFilter);
+	            	   String attr = recordItems[which];
+	            	   
+	            	   //get current time in sqlite record format
+	           		   SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy");
+	           		   String formattedDate = df.format(c.getTime());
+	           		   
+	           		   dayActivity.setText("");
+	           		
+	            	   //search recodes in sqlite db march date and type or date
+	           		   List<BabyActivity> activitiesByDate;
+	           		   if(which == 0){
+	           			   	activitiesByDate = dbHelper.getBabyActivityByDate(formattedDate);
+	           		   } else {
+	           			   	activitiesByDate = dbHelper.getBabyActivityByDateAttr(formattedDate, attr);
+	           		   }
+		           	   for(int i = 0; i < activitiesByDate.size(); i++){
+		           			dayActivity.append(activitiesByDate.get(i).getTime().toString() + "\t\t");
+		           			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t");
+		           			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
+		           			dayActivity.append("\n");
+		           	   }
+	               }
+	           });
+	       
+	    builder.show();
+	}
+	
+	//reset the result to current date without filter
+	public void resetResults(View v){
+		setCurrentDateAndActivities();
+	}
 }
