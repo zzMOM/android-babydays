@@ -33,7 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainMenu extends Activity {
-	static final String[] items = new String[]{"Feed", "Sleep", "Diaper", "Milestone", "Diary"};
+	static final String[] items = new String[]{"Feed", "Nap", "Diaper", "Milestone", "Diary"};
 	static final Integer[] imageId = {	R.drawable.bottle,
         								R.drawable.sleep,
         								R.drawable.diaper,
@@ -50,6 +50,7 @@ public class MainMenu extends Activity {
 	private CheckBox wetCheckBox;
 	private CheckBox poopyCheckBox;
 	private List mSelectedItems;
+	private int selectedItem;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -169,20 +170,43 @@ public class MainMenu extends Activity {
 
 	    // Inflate and set the layout for the dialog
 	    // Pass null as the parent view because its going in the dialog layout
-	    builder.setView(inflater.inflate(R.layout.dialog_sleep, null))
-	    	   .setTitle("Time to sleep!")
-	    // Add action buttons
+	    
+	    builder.setTitle("Time to sleep!")
+	    	   .setSingleChoiceItems(R.array.nap, 0, 
+	    			   new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							selectedItem = which;
+						}
+					})
+	    		// Add action buttons
 	           .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-	               @Override
-	               public void onClick(DialogInterface dialog, int id) {
-	                   
-	               }
-	           })
+		               @Override
+		               public void onClick(DialogInterface dialog, int id) {
+		            	   //get date and insert into database-TABLE baby_activities
+		                   String formattedDate = df.format(c.getTime());
+		                   String[] s = formattedDate.split(" ");
+		                   String date = s[0];
+		                   String time = s[1];
+		                   String type = "Nap";
+		                   
+		                   String[] napChoice = getResources().getStringArray(R.array.nap);
+		                   String info = napChoice[selectedItem];
+		                   
+		               	   dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
+		               	
+		                   // Close dialog
+		                   dialog.dismiss();
+		               }
+		           })
 	           .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-	               public void onClick(DialogInterface dialog, int id) {
-	                   
-	               }
-	           });      
+		               public void onClick(DialogInterface dialog, int id) {
+		            	// Close dialog
+		                   dialog.dismiss();
+		               }
+		           });      
 	    builder.show();
 	}
 	

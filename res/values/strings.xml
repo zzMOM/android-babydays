@@ -219,8 +219,15 @@
     <string-array name="recordFilter">
         <item >All</item>
         <item >FeedMilk</item>
+        <item >Nap</item>
         <item >Diaper</item>
     </string-array>
+    
+    <string-array name="nap">
+        <item >Start</item>
+        <item >End</item>
+    </string-array>
+    
         <string name="reset">Reset</string>
         <string name="summary">Summary</string>
 	    
