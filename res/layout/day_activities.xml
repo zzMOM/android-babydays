@@ -28,11 +28,31 @@
 	        android:layout_height="wrap_content"/>
 	</LinearLayout>
    
-    <Button
-        android:id="@+id/setDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/set_date"/>
+    <LinearLayout 
+        android:layout_width="match_parent"
+   		android:layout_height="wrap_content"
+   		android:orientation="horizontal">
+        
+	    <Button
+	        android:id="@+id/setDate"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/set_date"/>
+	    
+	    <Button 
+	        android:id="@+id/recordFilter"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/record_filter"/>
+	    
+	    <Button 
+	        android:id="@+id/reset"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/reset"
+	        android:onClick="resetResults"/>
+    
+    </LinearLayout>
     
     <LinearLayout 
         android:layout_width="match_parent"

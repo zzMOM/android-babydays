@@ -191,6 +191,12 @@
     <string name="no">NO</string>
     <string name="shareimage">Share Image</string>
     <string name="addphoto">Add a photo to share with your friends</string>
+    <string name="set_date">Set Date</string>
+    <string name="pre_month">&lt;&lt;</string>
+    <string name="pre_day">&lt;</string>
+    <string name="next_day">></string>
+    <string name="next_month">>></string>
+    <string name="record_filter">Record Filter</string>
     
     <string-array name="diaper">
         <item >wet</item>
@@ -209,10 +215,14 @@
 	    <item >First Time Walk by self</item>
 	    <item >Speak First Word</item>
     </string-array>
-	    <string name="set_date">Set Date</string>
-	    <string name="pre_month">&lt;&lt;</string>
-	    <string name="pre_day">&lt;</string>
-	    <string name="next_day">></string>
-	    <string name="next_month">>></string>
+    
+    <string-array name="recordFilter">
+        <item >All</item>
+        <item >FeedMilk</item>
+        <item >Diaper</item>
+    </string-array>
+        <string name="reset">Reset</string>
+        <string name="summary">Summary</string>
+	    
 
 </resources>
