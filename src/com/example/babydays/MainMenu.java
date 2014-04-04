@@ -39,9 +39,10 @@ public class MainMenu extends Activity {
         								R.drawable.diaper,
         								R.drawable.milestones,
         								R.drawable.diary};
-	Button viewAct;
-	ListView lv;
-	MediaPlayer littlestar;
+	private Button viewAct;
+	private Button summaryButton;
+	private ListView lv;
+	private MediaPlayer littlestar;
 	private int backButtonCount = 0;
 	private SimpleDateFormat df;
 	private Calendar c;
@@ -72,6 +73,17 @@ public class MainMenu extends Activity {
 				Intent intent = new Intent(MainMenu.this, DayActivities.class);
 				startActivity(intent);
 				//Toast.makeText(getApplicationContext(), ((TextView) v).getText(), Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+		summaryButton = (Button)findViewById(R.id.summary);
+		summaryButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(MainMenu.this, Summary.class);
+				startActivity(intent);
 			}
 		});
 		

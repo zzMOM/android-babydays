@@ -231,6 +231,7 @@
     
         <string name="reset">Reset</string>
         <string name="summary">Summary</string>
+        <string name="chart_image">chart image</string>
 	    
 
 </resources>
