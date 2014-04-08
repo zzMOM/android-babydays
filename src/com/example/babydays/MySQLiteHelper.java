@@ -42,7 +42,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         // SQL statement to create baby_activities table
     	String CREATE_TABLE_BABY_ACTIVITIES = "CREATE TABLE " + TABLE_BABY_ACTIVITIES + "(" 
     						+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
-    						+ KEY_DATE + " DATE," 
+    						+ KEY_DATE + " TEXT," 
     						+ KEY_TIME + " TEXT," 
     						+ KEY_TYPE + " TEXT,"
     						+ KEY_INFO + " TEXT )";
@@ -308,7 +308,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         // 2. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
         
-        String whereClause = " date > ? and date < ? and type = ?";
+        String whereClause = " date >= ? and date <= ? and type = ?";
         String[] whereArgs = new String[] {
         	    date1,
         	    date2,
@@ -358,7 +358,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         // 2. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
         
-        String whereClause = " date > ? and date < ?";
+        String whereClause = " date >= ? and date <= ?";
         String[] whereArgs = new String[] {
         	    date1,
         	    date2

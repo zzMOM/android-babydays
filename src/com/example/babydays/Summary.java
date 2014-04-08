@@ -1,5 +1,7 @@
 package com.example.babydays;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import com.jjoe64.graphview.GraphView;
@@ -102,8 +104,52 @@ public class Summary extends Activity {
 			canvas.drawLine(20, 400 - 50 * i, 30, 400 - 50 * i, paint);
 		}
 		
-		
-		 
+		/*--------------------------------------draw chart-----------------------------------------*/
+		String prevDate = "";
+		int count = 0;
+		int i = routine.size() - 1;
+		int y = 0;
+		while(count <= 4){
+			String date = routine.get(i).getDate().toString();
+			String time = routine.get(i).getTime().toString();
+			String type = routine.get(i).getType().toString();
+			String info = routine.get(i).getInfo().toString();
+			
+			//draw date on y axis
+			if(!date.equals(prevDate)){
+				paint.setColor(Color.WHITE);
+				count++;
+				y = 400 - 50 * count;
+				canvas.drawText(date, 0, y, paint);
+				prevDate = date;
+			}
+			
+			//date transfer 12hours to 24hours
+			String time24 = "";
+			SimpleDateFormat h_mm_a   = new SimpleDateFormat("h:mma");
+			SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
+
+			try {
+			    Date t = h_mm_a.parse(time);
+			    time24 = hh_mm.format(t).toString();
+			} catch (Exception e) {
+			    e.printStackTrace();
+			    i--;
+			    continue;
+			}
+			
+			float j = Integer.parseInt(time24.substring(0, 2)) + (float)Integer.parseInt(time24.substring(3, 5)) / 60;
+			float x = 30 + 30 * j;
+			if(type.equals("FeedMilk")){
+				paint.setColor(Color.RED);
+				canvas.drawText("M", x, y, paint);
+			} else if(type.equals("Diaper")){
+				paint.setColor(Color.GREEN);
+				canvas.drawText("D", x, y, paint);
+			}
+			
+			i--;
+		}
 		
 		 
 		// In order to display this image in our activity, we need to create a new ImageView that we
