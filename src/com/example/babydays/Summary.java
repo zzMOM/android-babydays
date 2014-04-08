@@ -70,6 +70,7 @@ public class Summary extends Activity {
 		// Fill the entire canvas with a red color.
 		canvas.drawColor(Color.BLACK);
 		
+		/*-------------------------------------------draw x and y axis--------------------------------*/
 		// Create a paint object for us to draw with, and set our drawing color to blue.
 		Paint paint = new Paint();
 		paint.setColor(Color.WHITE);
@@ -100,6 +101,8 @@ public class Summary extends Activity {
 		for(int i = 1; i <= 7; i++){
 			canvas.drawLine(20, 400 - 50 * i, 30, 400 - 50 * i, paint);
 		}
+		
+		
 		 
 		
 		 

@@ -1,5 +1,6 @@
 package com.example.babydays;
 
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         // SQL statement to create baby_activities table
     	String CREATE_TABLE_BABY_ACTIVITIES = "CREATE TABLE " + TABLE_BABY_ACTIVITIES + "(" 
     						+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
-    						+ KEY_DATE + " TEXT," 
+    						+ KEY_DATE + " DATE," 
     						+ KEY_TIME + " TEXT," 
     						+ KEY_TYPE + " TEXT,"
     						+ KEY_INFO + " TEXT )";
@@ -247,7 +248,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         return babyActivityList;
     }
     
-  //select record by date
+    //select record by date and attributes
     public List<BabyActivity> getBabyActivityByDateAttr(String date, String attrs){
     	List<BabyActivity> babyActivityList = new LinkedList<BabyActivity>();
     	 
@@ -262,6 +263,105 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         String[] whereArgs = new String[] {
         	    date,
         	    attrs
+        	};
+        
+        Cursor cursor = 
+                db.query(TABLE_BABY_ACTIVITIES, // a. table
+                COLUMNS, // b. column names
+                whereClause, // c. selections 
+                whereArgs, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+ 
+        // 3. go over each row, build babyActivity and add it to list
+        BabyActivity babyActivity = null;
+        if (cursor.moveToFirst()) {
+            do {
+            	babyActivity = new BabyActivity();
+            	babyActivity.setId(Integer.parseInt(cursor.getString(0)));
+            	babyActivity.setDate(cursor.getString(1));
+            	babyActivity.setTime(cursor.getString(2));
+            	babyActivity.setType(cursor.getString(3));
+            	babyActivity.setInfo(cursor.getString(4));
+ 
+                // Add babyActivity to babyActivities 
+            	babyActivityList.add(babyActivity);
+            } while (cursor.moveToNext());
+        }
+ 
+        Log.d("getBabyActivityByDate()", babyActivityList.toString());
+ 
+        // return books
+        return babyActivityList;
+    }
+    
+    //select record by date range and attributes
+    public List<BabyActivity> getBabyActivityByDateRangeAttr(String date1, String date2, String attrs){
+    	List<BabyActivity> babyActivityList = new LinkedList<BabyActivity>();
+    	 
+        // 1. build the query
+        /*String query = 	"SELECT * FROM "+ TABLE_BABY_ACTIVITIES +
+        				" WHERE " + KEY_DATE + "=" + date;--error*/
+ 
+        // 2. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        String whereClause = " date > ? and date < ? and type = ?";
+        String[] whereArgs = new String[] {
+        	    date1,
+        	    date2,
+        	    attrs
+        	};
+        
+        Cursor cursor = 
+                db.query(TABLE_BABY_ACTIVITIES, // a. table
+                COLUMNS, // b. column names
+                whereClause, // c. selections 
+                whereArgs, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+ 
+        // 3. go over each row, build babyActivity and add it to list
+        BabyActivity babyActivity = null;
+        if (cursor.moveToFirst()) {
+            do {
+            	babyActivity = new BabyActivity();
+            	babyActivity.setId(Integer.parseInt(cursor.getString(0)));
+            	babyActivity.setDate(cursor.getString(1));
+            	babyActivity.setTime(cursor.getString(2));
+            	babyActivity.setType(cursor.getString(3));
+            	babyActivity.setInfo(cursor.getString(4));
+ 
+                // Add babyActivity to babyActivities 
+            	babyActivityList.add(babyActivity);
+            } while (cursor.moveToNext());
+        }
+ 
+        Log.d("getBabyActivityByDate()", babyActivityList.toString());
+ 
+        // return books
+        return babyActivityList;
+    }
+    
+  //select record by date range
+    public List<BabyActivity> getBabyActivityByDateRange(String date1, String date2){
+    	List<BabyActivity> babyActivityList = new LinkedList<BabyActivity>();
+    	 
+        // 1. build the query
+        /*String query = 	"SELECT * FROM "+ TABLE_BABY_ACTIVITIES +
+        				" WHERE " + KEY_DATE + "=" + date;--error*/
+ 
+        // 2. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        String whereClause = " date > ? and date < ?";
+        String[] whereArgs = new String[] {
+        	    date1,
+        	    date2
         	};
         
         Cursor cursor = 
