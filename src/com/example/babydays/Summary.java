@@ -109,6 +109,10 @@ public class Summary extends Activity {
 		int count = 0;
 		int i = routine.size() - 1;
 		int y = 0;
+		float endTime = 0;
+		String endDate = "";
+		boolean endFlag = false;
+		float lastx = 0;
 		while(count <= 4){
 			String date = routine.get(i).getDate().toString();
 			String time = routine.get(i).getTime().toString();
@@ -142,12 +146,29 @@ public class Summary extends Activity {
 			float x = 30 + 30 * j;
 			if(type.equals("FeedMilk")){
 				paint.setColor(Color.RED);
-				canvas.drawText("M", x, y, paint);
+				canvas.drawText("F", x, y, paint);
 			} else if(type.equals("Diaper")){
 				paint.setColor(Color.GREEN);
 				canvas.drawText("D", x, y, paint);
+			} else if(type.equals("Nap") && info.equals("End")){
+				endFlag = true;
+				endTime = x;
+				endDate = date;
+			} else if(type.equals("Nap") && info.equals("Start")){
+				paint.setColor(Color.YELLOW);
+				paint.setStrokeWidth(5);
+				if(endFlag && date.equals(endDate)){
+					canvas.drawLine(x, y, endTime, y, paint);
+				} else {
+					canvas.drawLine(x, y, lastx-5, y, paint);
+				}
+				//reset
+				endFlag = false;
+				endTime = 0;
+				endDate = "";
 			}
 			
+			lastx = x;
 			i--;
 		}
 		
