@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,24 +7,59 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/backgroundblue"
+    android:orientation="vertical"
     tools:context=".Summary" >
-
-    <ScrollView 
+    
+    <LinearLayout
+        android:id="@+id/conditions" 
         android:layout_width="match_parent"
-    	android:layout_height="wrap_content">
-    	
-        <HorizontalScrollView 
+    	android:layout_height="0dip"
+    	android:layout_weight="1"
+    	android:orientation="horizontal">
+        
+        <Spinner
+            android:id="@+id/attrSpinner" 
             android:layout_width="wrap_content"
-    		android:layout_height="wrap_content">
-    	
+        	android:layout_height="match_parent"
+        	android:entries="@array/attrSp"/>
+        
+        <Spinner
+            android:id="@+id/rangeBySpinner" 
+            android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:entries="@array/rangeBySp"/>
+        
+        <Button 
+            android:id="@+id/prevButton"
+            android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:text="@string/prev"/>
+        
+        <Button 
+            android:id="@+id/nextButton"
+            android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:text="@string/next"/>
+        
+    </LinearLayout>
+            
+	<ScrollView 
+		android:layout_width="match_parent"
+    	android:layout_height="0dip"
+    	android:layout_weight="5">
+  	
+      		<HorizontalScrollView 
+          		android:layout_width="wrap_content"
+  				android:layout_height="wrap_content">
+  	
 	        <ImageView
 	            android:id="@+id/chartImageView" 
 	            android:layout_width="wrap_content"
 	    		android:layout_height="wrap_content"
 	    		android:contentDescription="@string/chart_image"/>
-	        
+       
 		</HorizontalScrollView>
-        
-    </ScrollView>
+      
+	</ScrollView>
 
-</RelativeLayout>
+</LinearLayout>

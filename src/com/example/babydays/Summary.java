@@ -9,6 +9,7 @@ import com.jjoe64.graphview.LineGraphView;
 import android.os.Bundle;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -28,6 +29,7 @@ public class Summary extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.summary);
+		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
@@ -50,10 +52,11 @@ public class Summary extends Activity {
 	}
 	
 	
+	
 	private void createChartOfDayActivity(List<BabyActivity> routine){
 		// We'll be creating an image that is 100 pixels wide and 200 pixels tall.
 		int width = 800;
-		int height = 500;
+		int height = 450;
 		 
 		// Create a bitmap with the dimensions we defined above, and with a 16-bit pixel format. We'll
 		// get a little more in depth with pixel formats in a later post.
@@ -71,12 +74,12 @@ public class Summary extends Activity {
 		Paint paint = new Paint();
 		paint.setColor(Color.WHITE);
 		
-		// canvas draw x and y coordination, (0, 0) left bottom corner--> (30, 450) 
-		canvas.drawLine(30, 0, 30, 450, paint);//y
-		canvas.drawLine(30, 450, 900, 450, paint);//x
+		// canvas draw x and y coordination, (0, 0) left bottom corner--> (30, 400) 
+		canvas.drawLine(30, 0, 30, 400, paint);//y
+		canvas.drawLine(30, 400, 900, 400, paint);//x
 		//x
 		for(int i = 0; i <= 24; i++){
-			canvas.drawLine(30 + 30 * i, 440, 30 + 30 * i, 450, paint);
+			canvas.drawLine(30 + 30 * i, 390, 30 + 30 * i, 400, paint);
 			String x;
 			if(i == 0){
 				x = "12:00AM";
@@ -90,12 +93,12 @@ public class Summary extends Activity {
 				x = Integer.toString(i - 12) + ":00PM";
 			}
 			canvas.save();
-			canvas.rotate(-45, 30 * i, 470);
-			canvas.drawText(x, 30 * i, 470, paint);
+			canvas.rotate(-45, 30 * i, 440);
+			canvas.drawText(x, 30 * i, 440, paint);
 			canvas.restore();
 		}
 		for(int i = 1; i <= 7; i++){
-			canvas.drawLine(20, 450 - 50 * i, 30, 450 - 50 * i, paint);
+			canvas.drawLine(20, 400 - 50 * i, 30, 400 - 50 * i, paint);
 		}
 		 
 		
