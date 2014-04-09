@@ -113,7 +113,7 @@ public class Summary extends Activity {
 		String endDate = "";
 		boolean endFlag = false;
 		float lastx = 0;
-		while(count <= 4){
+		while(i >= 0){
 			String date = routine.get(i).getDate().toString();
 			String time = routine.get(i).getTime().toString();
 			String type = routine.get(i).getType().toString();
@@ -124,7 +124,7 @@ public class Summary extends Activity {
 				paint.setColor(Color.WHITE);
 				count++;
 				y = 400 - 50 * count;
-				canvas.drawText(date, 0, y, paint);
+				canvas.drawText(date.substring(0, 5), 0, y, paint);
 				prevDate = date;
 			}
 			
@@ -159,9 +159,9 @@ public class Summary extends Activity {
 				paint.setStrokeWidth(5);
 				if(endFlag && date.equals(endDate)){
 					canvas.drawLine(x, y, endTime, y, paint);
-				} else {
+				} /*else {
 					canvas.drawLine(x, y, lastx-5, y, paint);
-				}
+				}*/
 				//reset
 				endFlag = false;
 				endTime = 0;
