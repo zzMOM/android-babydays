@@ -113,13 +113,14 @@ public class Summary extends Activity {
 		String endDate = "";
 		boolean endFlag = false;
 		float lastx = 0;
-		while(i >= 0){
+		float lasty = 0;
+		while(i >= 0){//start from last activity
 			String date = routine.get(i).getDate().toString();
 			String time = routine.get(i).getTime().toString();
 			String type = routine.get(i).getType().toString();
 			String info = routine.get(i).getInfo().toString();
 			
-			//draw date on y axis
+			//draw date on y axis when start a new date
 			if(!date.equals(prevDate)){
 				paint.setColor(Color.WHITE);
 				count++;
@@ -157,11 +158,12 @@ public class Summary extends Activity {
 			} else if(type.equals("Nap") && info.equals("Start")){
 				paint.setColor(Color.YELLOW);
 				paint.setStrokeWidth(5);
-				if(endFlag && date.equals(endDate)){
+				if(endFlag && date.equals(endDate)){//start end in the same day
 					canvas.drawLine(x, y, endTime, y, paint);
-				} /*else {
-					canvas.drawLine(x, y, lastx-5, y, paint);
-				}*/
+				} else if(endFlag && !date.equals(endDate) && endTime == lastx){//start end in different day
+					canvas.drawLine(30, lasty, lastx, lasty, paint);//draw 12:00am to lastx,lasty
+					canvas.drawLine(x, y, 30 + 30 * 24, y, paint);//draw current to 12:00AM
+				}
 				//reset
 				endFlag = false;
 				endTime = 0;
@@ -169,6 +171,7 @@ public class Summary extends Activity {
 			}
 			
 			lastx = x;
+			lasty = y;
 			i--;
 		}
 		

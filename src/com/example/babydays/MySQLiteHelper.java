@@ -122,7 +122,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         babyActivity.setType(cursor.getString(3));
         babyActivity.setInfo(cursor.getString(4));
  
-        Log.d("getBabyActivity("+id+")", babyActivity.toString());
+        //Log.d("getBabyActivity("+id+")", babyActivity.toString());
  
         // 5. return babyActivity
         return babyActivity;
@@ -155,7 +155,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
  
-        Log.d("getAllBabyActivity()", babyActivityList.toString());
+        //Log.d("getAllBabyActivity()", babyActivityList.toString());
  
         // return books
         return babyActivityList;
@@ -242,13 +242,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
  
-        Log.d("getBabyActivityByDate()", babyActivityList.toString());
+        //Log.d("getBabyActivityByDate()", babyActivityList.toString());
  
         // return books
         return babyActivityList;
     }
     
-  //get sum diaper and feedmilk by date
+    /*get sum diaper and feedmilk by date*/
     public List<String> getTotalByDate(String date){
     	/*0-FeedMilk sum, 1-Diaper count*/
     	List<String> babyActivityList = new LinkedList<String>();
@@ -257,6 +257,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
         
         //get FeedMilk total amount -- sum
+        //substr(info, -2, -2), 8oz->8, 10oz->10
         String[] newColumns1 = {KEY_TYPE, "SUM(SUBSTR(info, -2, -2)) AS sum"};
         Cursor cursor1 = 
                 db.query(TABLE_BABY_ACTIVITIES, // a. table
@@ -299,7 +300,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         return babyActivityList;
     }
     
-    //select record by date and attributes
+    /*select record by date and attributes*/
     public List<BabyActivity> getBabyActivityByDateAttr(String date, String attrs){
     	List<BabyActivity> babyActivityList = new LinkedList<BabyActivity>();
     	 
@@ -342,7 +343,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
  
-        Log.d("getBabyActivityByDate()", babyActivityList.toString());
+        //Log.d("getBabyActivityByDate()", babyActivityList.toString());
  
         // return books
         return babyActivityList;
