@@ -173,6 +173,10 @@ public class Summary extends Activity {
 			lastx = x;
 			lasty = y;
 			i--;
+			if(count >=7){
+				break;//current the bitmap just can show 7 days.
+			}
+				
 		}
 		
 		 

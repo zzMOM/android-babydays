@@ -23,12 +23,6 @@
         	android:layout_height="match_parent"
         	android:entries="@array/attrSp"/>
         
-        <Spinner
-            android:id="@+id/rangeBySpinner" 
-            android:layout_width="wrap_content"
-        	android:layout_height="match_parent"
-        	android:entries="@array/rangeBySp"/>
-        
         <Button 
             android:id="@+id/prevButton"
             android:layout_width="wrap_content"
