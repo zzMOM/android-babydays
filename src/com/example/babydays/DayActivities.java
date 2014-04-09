@@ -139,17 +139,8 @@ public class DayActivities extends Activity {
 		String formattedDate = df.format(c.getTime());
 		showSetDate.setText(formattedDate);
 		showDate.setText(formattedDate);
-		
-		dayActivity.setText("");
-		
-		//search recodes in sqlite db march date
-		List<BabyActivity> activitiesByDate = dbHelper.getBabyActivityByDate(formattedDate);
-		for(int i = 0; i < activitiesByDate.size(); i++){
-			dayActivity.append(activitiesByDate.get(i).getTime().toString() + "\t\t");
-			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t");
-			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
-			dayActivity.append("\n\n");
-		}
+		//show search by date
+		showSearchByDateResult(formattedDate);
 	}
 	
 	public void DecreaseMonth(View v){
@@ -233,10 +224,26 @@ public class DayActivities extends Activity {
 		buffer.append(m).append("-").append(d).append("-").append(year);
 		showSetDate.setText(buffer.toString());
 		
-		//search recodes in sqlite db march date
-		List<BabyActivity> activitiesByDate = dbHelper.getBabyActivityByDate(buffer.toString());
-		Log.d("search date", buffer.toString());
+		showSearchByDateResult(buffer.toString());
+		
+	}
+	
+	private void showSearchByDateResult(String date){
 		dayActivity.setText("");
+		
+		//show total of FeedMilk and Diaper times
+		List<String> totalMilkDiaper = dbHelper.getTotalByDate(date);
+		Log.d("search total", date);
+		for(int i = 0; i < totalMilkDiaper.size(); i++){
+			dayActivity.append(totalMilkDiaper.get(i).toString() + "\n");
+		}
+		dayActivity.append("---------------------------------------------------------\n\n");
+		
+		
+		//search recodes in sqlite db march date
+		List<BabyActivity> activitiesByDate = dbHelper.getBabyActivityByDate(date);
+		Log.d("search date", date);
+		
 		for(int i = 0; i < activitiesByDate.size(); i++){
 			dayActivity.append(activitiesByDate.get(i).getTime().toString() + "\t\t");
 			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t");

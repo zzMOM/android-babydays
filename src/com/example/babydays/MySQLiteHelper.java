@@ -248,6 +248,57 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         return babyActivityList;
     }
     
+  //get sum diaper and feedmilk by date
+    public List<String> getTotalByDate(String date){
+    	/*0-FeedMilk sum, 1-Diaper count*/
+    	List<String> babyActivityList = new LinkedList<String>();
+ 
+        // get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        //get FeedMilk total amount -- sum
+        String[] newColumns1 = {KEY_TYPE, "SUM(SUBSTR(info, -2, -2)) AS sum"};
+        Cursor cursor1 = 
+                db.query(TABLE_BABY_ACTIVITIES, // a. table
+                newColumns1, // b. column names
+                " type = 'FeedMilk' and date = ?", // c. selections 
+                new String[] { date }, // d. selections args
+                KEY_TYPE, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        
+        //get Diaper change times -- count
+        String[] newColumns2 = {KEY_TYPE, "COUNT(info) AS count"};
+        Cursor cursor2 = 
+                db.query(TABLE_BABY_ACTIVITIES, // a. table
+                newColumns2, // b. column names
+                " type = 'Diaper' and date = ?", // c. selections 
+                new String[] { date }, // d. selections args
+                KEY_TYPE, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        
+        // add sum and count to list
+        if (cursor1.moveToFirst()) {
+            do {
+            	babyActivityList.add("Total milk feed amount: " + cursor1.getString(1));
+            } while (cursor1.moveToNext());
+        }
+        
+        if (cursor2.moveToFirst()) {
+            do {
+            	babyActivityList.add("Total diaper change times: " + cursor2.getString(1));
+            } while (cursor2.moveToNext());
+        }
+ 
+        Log.d("getTotalByDate()", babyActivityList.toString());
+ 
+        // return books
+        return babyActivityList;
+    }
+    
     //select record by date and attributes
     public List<BabyActivity> getBabyActivityByDateAttr(String date, String attrs){
     	List<BabyActivity> babyActivityList = new LinkedList<BabyActivity>();
