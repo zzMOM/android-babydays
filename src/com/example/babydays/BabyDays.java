@@ -7,7 +7,11 @@ import android.content.Intent;
 import android.view.Menu;
 import java.util.*;
 
-
+/**
+ * The first welcome page
+ * @author weiwu
+ *
+ */
 public class BabyDays extends Activity {
 	//declare TimerTask variable
 	private TimerTask delayTask;
@@ -25,13 +29,14 @@ public class BabyDays extends Activity {
 			@Override
 			public void run() {
 		
-				//define a new Intent for the second Activity
+				//define a new Intent for MainMenu Activity
 				Intent intent = new Intent(BabyDays.this, MainMenu.class);
 				//start Activity
 				startActivity(intent);
 			}
         };
-        myTimer.schedule(delayTask, 2000);
+        //delay 1 second
+        myTimer.schedule(delayTask, 1000);
 		
 	}
 

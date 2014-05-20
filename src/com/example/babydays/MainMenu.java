@@ -15,6 +15,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,6 +41,11 @@ public class MainMenu extends Activity {
         								R.drawable.diaper,
         								R.drawable.milestones,
         								R.drawable.diary};
+	//SharedPreferences to record nap start or not
+	private static final String NAP_CLOCK = "napclock";
+	private SharedPreferences mPrefs;
+	private boolean isStart = false;//isStart to record whether nap clock started
+	
 	private Button viewAct;
 	private Button summaryButton;
 	private ListView lv;
@@ -57,6 +64,11 @@ public class MainMenu extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
+		
+		// Restore preferences
+		mPrefs = getSharedPreferences(NAP_CLOCK, 0);
+		isStart = mPrefs.getBoolean(NAP_CLOCK, false);
+		Log.e("default nap clock", Boolean.toString(isStart));
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
@@ -127,6 +139,36 @@ public class MainMenu extends Activity {
 		return true;
 	}
 	
+	/*
+	 * if nap stated and then diaper or eat happened, 
+	 * stop nap clock and record nap status
+	 */
+	private void updateNapStatusAndDatabaseRecord(){
+		//record current status info and change SharedPreferences status
+		String info;//status info for database
+		Editor editor = mPrefs.edit();
+		isStart = mPrefs.getBoolean(NAP_CLOCK, false);
+		if(isStart){
+			info = "Stop";
+			//stop the clock, set NAP_CLOCK false
+			editor.putBoolean(NAP_CLOCK, false);
+			editor.commit();//SharedPreferences modified
+	        
+			//debug
+			/*Log.e("current nap clock", info);
+			Log.e("NAP_CLOCK change", Boolean.toString(mPrefs.getBoolean(NAP_CLOCK, false)));*/
+	        
+			//get date and insert into database-TABLE baby_activities
+			//MINUTE - 5mins, to separate nap with eat and diaper
+			String formattedDate = df.format(c.getTime());
+			String[] s = formattedDate.split(" ");
+			String date = s[0];
+			String time = s[1];
+			String type = "Nap";
+			
+			dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
+		}
+	}
 	
 	public void createFeedDialog() {
 		// Create custom dialog object
@@ -159,6 +201,8 @@ public class MainMenu extends Activity {
         okButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+            	//check and change nap status
+            	updateNapStatusAndDatabaseRecord();
             	
             	//get date to insert into database-TABLE baby_activities
                 String formattedDate = df.format(c.getTime());
@@ -178,13 +222,23 @@ public class MainMenu extends Activity {
 	public void creatSleepDialog(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
 	    // Get the layout inflater
-	    LayoutInflater inflater = MainMenu.this.getLayoutInflater();
-
-	    // Inflate and set the layout for the dialog
+		// Inflate and set the layout for the dialog
 	    // Pass null as the parent view because its going in the dialog layout
+	    LayoutInflater inflater = MainMenu.this.getLayoutInflater();
+	    
+	    //check SharedPreferences and edit if nap status change
+	    //if isStart is true, means nap is started
+	    //only choice is nap stop
+	    String message;
+	    if(isStart){
+	    	message = "Nap Stop!";
+	    } else {
+	    	message = "Nap Start!";
+	    }
 	    
 	    builder.setTitle("Time to sleep!")
-	    	   .setSingleChoiceItems(R.array.nap, 0, 
+	    	   .setMessage(message)
+	    	   /*.setSingleChoiceItems(R.array.nap, checkedIndex, 
 	    			   new DialogInterface.OnClickListener() {
 						
 						@Override
@@ -192,11 +246,30 @@ public class MainMenu extends Activity {
 							// TODO Auto-generated method stub
 							selectedItem = which;
 						}
-					})
+					})*/
 	    		// Add action buttons
 	           .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 		               @Override
 		               public void onClick(DialogInterface dialog, int id) {
+		            	   //record current status info and change SharedPreferences status
+		            	   String info;//status info for database
+		            	   Editor editor = mPrefs.edit();
+		            	   isStart = mPrefs.getBoolean(NAP_CLOCK, false);
+		                   if(isStart){
+		                	   info = "Stop";
+		                	   //stop the clock, set NAP_CLOCK false
+		                	   editor.putBoolean(NAP_CLOCK, false);
+		                   } else {
+		                	   info = "Start";
+		                	   //start nap, set NAP_CLOCK true;
+		                	   editor.putBoolean(NAP_CLOCK, true);
+		                   }
+		                   editor.commit();//SharedPreferences modified
+		                   
+		                   //debug
+		                   /*Log.e("current nap clock", info);
+		                   Log.e("NAP_CLOCK change", Boolean.toString(mPrefs.getBoolean(NAP_CLOCK, false)));*/
+		                   
 		            	   //get date and insert into database-TABLE baby_activities
 		                   String formattedDate = df.format(c.getTime());
 		                   String[] s = formattedDate.split(" ");
@@ -204,11 +277,8 @@ public class MainMenu extends Activity {
 		                   String time = s[1];
 		                   String type = "Nap";
 		                   
-		                   String[] napChoice = getResources().getStringArray(R.array.nap);
-		                   String info = napChoice[selectedItem];
-		                   
 		               	   dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
-		               	
+		               	   		               	
 		                   // Close dialog
 		                   dialog.dismiss();
 		               }
@@ -252,6 +322,9 @@ public class MainMenu extends Activity {
 	    		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
+	            	   //check and change nap status
+	               	   updateNapStatusAndDatabaseRecord();
+	               	
 	           	       //get date to insert into database-TABLE baby_activities
 	                   String formattedDate = df.format(c.getTime());
 	                   String[] s = formattedDate.split(" ");

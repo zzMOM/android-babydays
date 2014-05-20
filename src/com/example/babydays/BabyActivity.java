@@ -1,5 +1,13 @@
 package com.example.babydays;
 
+/**
+ * BabyActivity Class:
+ * every BabyActivity including the date and time, activity type and information
+ * type: "Feed", "Nap", "Diaper", "Milestone", "Diary"
+ * info:  Feed-oz, Nap-start and end time, Diaper-wet or poo, 
+ * @author weiwu
+ *
+ */
 public class BabyActivity {
 	private int id;
 	private String date;

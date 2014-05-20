@@ -22,13 +22,16 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+/**
+ * Show the day activities by date
+ * choose date by DatePicker; choose date by increase or decrease day or month
+ * filter day activites by type
+ * @author weiwu
+ *
+ */
 public class DayActivities extends Activity {
 	private MySQLiteHelper dbHelper;
-	
-	private TextView showDate;
-	private DatePicker datePicker;
-	private Button setDate;
- 
+
 	private int year;
 	private int month;
 	private int day;
@@ -39,12 +42,15 @@ public class DayActivities extends Activity {
 
 	private Calendar c;
 
-	private TextView showSetDate;
-	private Button preMonth;
-	private Button preDay;
-	private Button nextDay;
-	private Button nextMonth;
-	private Button recordFilter;
+	private DatePicker datePicker;	//DatePicker
+	private TextView showDate;
+	private TextView showSetDate;	//show DatePicker or <> set date
+	private Button setDate;		//show DatePicker dialog
+	private Button preMonth;	//decrease month button
+	private Button preDay;		//decrease day button
+	private Button nextDay;		//increase day button
+	private Button nextMonth;	//increase month button
+	private Button recordFilter;//filter records button
 	
 
 	@Override
