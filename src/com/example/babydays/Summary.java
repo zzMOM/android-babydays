@@ -12,6 +12,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,6 +69,34 @@ public class Summary extends Activity {
 					createChartOfDayActivity(false);
 				}
 				
+			}
+		});
+		
+		prevButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(recordIndex > 0){
+					if(recordIndex > routine.size() - 1){
+						recordIndex = routine.size() - 1;
+					}
+					createChartOfDayActivity(false);
+				}
+			}
+		});
+		
+		nextButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(recordIndex < routine.size() - 1){
+					if(recordIndex < 0){
+						recordIndex = 0;
+					}
+					createChartOfDayActivity(true);
+				}
 			}
 		});
 		
@@ -228,7 +257,7 @@ public class Summary extends Activity {
 				
 		}
 		recordIndex = i;
-		
+		Log.e("recordIndex", Integer.toString(recordIndex));
 	}
 	
 private void drawChartByDateAsc(Paint paint, Canvas canvas){
@@ -309,7 +338,7 @@ private void drawChartByDateAsc(Paint paint, Canvas canvas){
 				
 		}
 		recordIndex = i;
-		
+		Log.e("recordIndex", Integer.toString(recordIndex));
 	}
 
 }
