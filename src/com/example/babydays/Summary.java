@@ -4,28 +4,30 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
 
 import android.os.Bundle;
-import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public class Summary extends Activity {
 
 	private MySQLiteHelper dbHelper;
+	private Button firstButton;
+	private Button prevButton;
+	private Button nextButton;
+	private Button lastButton;
+	
+	private int recordIndex;
+	private List<BabyActivity> routine;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +37,42 @@ public class Summary extends Activity {
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
-		List<BabyActivity> routine = dbHelper.getAllBabyActivity();
+		routine = dbHelper.getAllBabyActivity();
 		
+		//set recordIndex to be the last record
+		recordIndex = routine.size() - 1;
 		
-		/*for(int i = 0; i < routine.size(); i++){
-			summaryText.append(routine.get(i).toString());
-			summaryText.append("\n");
-		}*/
+		firstButton = (Button)findViewById(R.id.firstButton);
+		prevButton = (Button)findViewById(R.id.prevButton);
+		nextButton = (Button)findViewById(R.id.nextButton);
+		lastButton = (Button)findViewById(R.id.lastButton);
 		
-		createChartOfDayActivity(routine);
+		firstButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(recordIndex != 0){
+					recordIndex = 0;
+					createChartOfDayActivity(true);
+				}
+			}
+		});
+		
+		lastButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(recordIndex != routine.size() - 1){
+					recordIndex = routine.size() - 1;
+					createChartOfDayActivity(false);
+				}
+				
+			}
+		});
+		
+		//default show chart
+		createChartOfDayActivity(false);
 	}
 
 	@Override
@@ -55,7 +84,7 @@ public class Summary extends Activity {
 	
 	
 	
-	private void createChartOfDayActivity(List<BabyActivity> routine){
+	private void createChartOfDayActivity(boolean byDateAscOrDesc){
 		// We'll be creating an image that is 100 pixels wide and 200 pixels tall.
 		int width = 800;
 		int height = 450;
@@ -105,9 +134,27 @@ public class Summary extends Activity {
 		}
 		
 		/*--------------------------------------draw chart-----------------------------------------*/
+		if(byDateAscOrDesc){
+			drawChartByDateAsc(paint, canvas);
+		} else {
+			drawChartByDateDesc(paint, canvas);
+		}
+		 
+		// In order to display this image in our activity, we need to create a new ImageView that we
+		// can display.
+		ImageView chartView = (ImageView)findViewById(R.id.chartImageView);
+		 
+		// Set this ImageView's bitmap to the one we have drawn to.
+		chartView.setImageBitmap(bitmap);
+		
+		
+	}
+	
+	private void drawChartByDateDesc(Paint paint, Canvas canvas){
+		
 		String prevDate = "";
 		int count = 0;
-		int i = routine.size() - 1;
+		int i = recordIndex;
 		int y = 0;
 		float endTime = 0;
 		String endDate = "";
@@ -158,7 +205,9 @@ public class Summary extends Activity {
 			} else if(type.equals("Nap") && info.equals("Start")){
 				paint.setColor(Color.YELLOW);
 				paint.setStrokeWidth(5);
-				if(endFlag && date.equals(endDate)){//start end in the same day
+				if(!endFlag){
+					canvas.drawLine(x, y, 30 + 30 * 24, y, paint);//draw current to 12:00AM
+				} else if(endFlag && date.equals(endDate)){//start end in the same day
 					canvas.drawLine(x, y, endTime, y, paint);
 				} else if(endFlag && !date.equals(endDate) && endTime == lastx){//start end in different day
 					canvas.drawLine(30, lasty, lastx, lasty, paint);//draw 12:00am to lastx,lasty
@@ -178,15 +227,88 @@ public class Summary extends Activity {
 			}
 				
 		}
+		recordIndex = i;
 		
-		 
-		// In order to display this image in our activity, we need to create a new ImageView that we
-		// can display.
-		ImageView chartView = (ImageView)findViewById(R.id.chartImageView);
-		 
-		// Set this ImageView's bitmap to the one we have drawn to.
-		chartView.setImageBitmap(bitmap);
+	}
+	
+private void drawChartByDateAsc(Paint paint, Canvas canvas){
 		
+		String prevDate = "";
+		int count = 0;
+		int i = recordIndex;
+		int y = 0;
+		float startTime = 0;
+		String startDate = "";
+		boolean startFlag = false;
+		float lastx = 0;
+		float lasty = 0;
+		while(i < routine.size()){//start from last activity
+			String date = routine.get(i).getDate().toString();
+			String time = routine.get(i).getTime().toString();
+			String type = routine.get(i).getType().toString();
+			String info = routine.get(i).getInfo().toString();
+			
+			//draw date on y axis when start a new date
+			if(!date.equals(prevDate)){
+				paint.setColor(Color.WHITE);
+				count++;
+				y = 400 - 50 * count;
+				canvas.drawText(date.substring(0, 5), 0, y, paint);
+				prevDate = date;
+			}
+			
+			//date transfer 12hours to 24hours
+			String time24 = "";
+			SimpleDateFormat h_mm_a   = new SimpleDateFormat("h:mma");
+			SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
+
+			try {
+			    Date t = h_mm_a.parse(time);
+			    time24 = hh_mm.format(t).toString();
+			} catch (Exception e) {
+			    e.printStackTrace();
+			    i++;
+			    continue;
+			}
+			
+			float j = Integer.parseInt(time24.substring(0, 2)) + (float)Integer.parseInt(time24.substring(3, 5)) / 60;
+			float x = 30 + 30 * j;
+			if(type.equals("FeedMilk")){
+				paint.setColor(Color.RED);
+				canvas.drawText("F", x, y, paint);
+			} else if(type.equals("Diaper")){
+				paint.setColor(Color.GREEN);
+				canvas.drawText("D", x, y, paint);
+			} else if(type.equals("Nap") && info.equals("End")){
+				paint.setColor(Color.YELLOW);
+				paint.setStrokeWidth(5);
+				if(!startFlag){
+					canvas.drawLine(30, y, x, y, paint);//draw 12:00am to x,y
+				} else if(startFlag && date.equals(startDate)){//start end in the same day
+					canvas.drawLine(x, y, startTime, y, paint);
+				} else if(startFlag && !date.equals(startDate) && startTime == lastx){//start end in different day
+					canvas.drawLine(30, y, x, y, paint);//draw 12:00am to x,y
+					canvas.drawLine(lastx, lasty, 30 + 30 * 24, lasty, paint);//draw lastx,lasty to 12:00AM
+				}
+				//reset
+				startFlag = false;
+				startTime = 0;
+				startDate = "";
+			} else if(type.equals("Nap") && info.equals("Start")){
+				startFlag = true;
+				startTime = x;
+				startDate = date;
+			}
+			
+			lastx = x;
+			lasty = y;
+			i++;
+			if(count >=7){
+				break;//current the bitmap just can show 7 days.
+			}
+				
+		}
+		recordIndex = i;
 		
 	}
 
