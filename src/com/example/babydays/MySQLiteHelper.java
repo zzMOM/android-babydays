@@ -1,6 +1,8 @@
 package com.example.babydays;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -93,6 +95,45 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         // 4. close
         db.close(); 
     }
+    
+    
+    /*
+     * edit time from 12 hour formate to 24hour formate in each babyActivity
+     */
+    /*public void editBabyActivity(int id) throws ParseException{
+    	// get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        //get babyActivity time search by id
+        BabyActivity babyActivity = getBabyActivity(id);
+        String time = babyActivity.getTime().toString();
+        
+        //date transfer 12hours to 24hours
+		String time24 = "";
+		SimpleDateFormat h_mm_a   = new SimpleDateFormat("h:mma");
+		SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
+
+		java.util.Date t = h_mm_a.parse(time);
+		time24 = hh_mm.format(t).toString();
+ 
+        // 2. create ContentValues to add key "column"/value
+        ContentValues values = new ContentValues();
+        values.put(KEY_DATE, babyActivity.getDate()); // get date 
+        values.put(KEY_TIME, time24); // get time
+        values.put(KEY_TYPE, babyActivity.getType()); // get type
+        values.put(KEY_INFO, babyActivity.getInfo()); // get info
+ 
+        // 3. updating row
+        db.update(TABLE_BABY_ACTIVITIES, //table
+                values, // column/value
+                KEY_ID+" = "+id, // selections
+                null); //selection args
+ 
+        // 4. close
+        db.close();
+    }*/
+    
+    
  
     public BabyActivity getBabyActivity(int id){
  
@@ -223,7 +264,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                 new String[] { date }, // d. selections args
                 null, // e. group by
                 null, // f. having
-                null, // g. order by
+                KEY_TIME, // g. order by
                 null); // h. limit
  
         // 3. go over each row, build babyActivity and add it to list
@@ -317,6 +358,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         	    attrs
         	};
         
+        
         Cursor cursor = 
                 db.query(TABLE_BABY_ACTIVITIES, // a. table
                 COLUMNS, // b. column names
@@ -324,7 +366,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                 whereArgs, // d. selections args
                 null, // e. group by
                 null, // f. having
-                null, // g. order by
+                KEY_TIME, // g. order by
                 null); // h. limit
  
         // 3. go over each row, build babyActivity and add it to list

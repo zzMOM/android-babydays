@@ -1,8 +1,10 @@
 package com.example.babydays;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import android.os.Bundle;
@@ -94,6 +96,17 @@ public class DayActivities extends Activity {
 				creatFilterDialog();
 			}
 		});
+		
+		/*//this is used to change all records' the 12 hour format to 24 hour formate
+		//use once
+		for(int i = 1; i <= 170; i++){
+			try {
+				dbHelper.editBabyActivity(i);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}*/
 	}
 	
 	@Override
@@ -145,6 +158,7 @@ public class DayActivities extends Activity {
 		String formattedDate = df.format(c.getTime());
 		showSetDate.setText(formattedDate);
 		showDate.setText(formattedDate);
+		
 		//show search by date
 		showSearchByDateResult(formattedDate);
 	}
@@ -250,8 +264,22 @@ public class DayActivities extends Activity {
 		List<BabyActivity> activitiesByDate = dbHelper.getBabyActivityByDate(date);
 		Log.d("search date", date);
 		
+		//time is 24hour format, show with 12hour format
+		//date transfer 24hours to 12hours
+		String time12 = "";
+		SimpleDateFormat h_mm_a   = new SimpleDateFormat("h:mma");
+		SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
+		
 		for(int i = 0; i < activitiesByDate.size(); i++){
-			dayActivity.append(activitiesByDate.get(i).getTime().toString() + "\t\t");
+			//get date from datebase
+			String time24 = activitiesByDate.get(i).getTime().toString();
+			try {
+			    Date t = hh_mm.parse(time24);
+			    time12 = h_mm_a.format(t).toString();
+			} catch (Exception e) {
+			    e.printStackTrace();
+			}
+			dayActivity.append(time12 + "\t\t");
 			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t");
 			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
 			dayActivity.append("\n\n");
@@ -292,8 +320,24 @@ public class DayActivities extends Activity {
 	           		   } else {
 	           			   	activitiesByDate = dbHelper.getBabyActivityByDateAttr(formattedDate, attr);
 	           		   }
+	           		   
+		           		//time is 24hour format, show with 12hour format
+		           		//date transfer 24hours to 12hours
+		           		String time12 = "";
+		           		SimpleDateFormat h_mm_a   = new SimpleDateFormat("h:mma");
+		           		SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
+	           		
 		           	   for(int i = 0; i < activitiesByDate.size(); i++){
-		           			dayActivity.append(activitiesByDate.get(i).getTime().toString() + "\t\t");
+			           		//get date from datebase
+			       			String time24 = activitiesByDate.get(i).getTime().toString();
+			       			try {
+			       			    Date t = hh_mm.parse(time24);
+			       			    time12 = h_mm_a.format(t).toString();
+			       			} catch (Exception e) {
+			       			    e.printStackTrace();
+			       			}
+			       			
+		           			dayActivity.append(time12 + "\t\t");
 		           			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t");
 		           			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
 		           			dayActivity.append("\n\n");

@@ -205,6 +205,7 @@ public class Summary extends Activity {
 				prevDate = date;
 			}
 			
+			/*//change datebase time type to 24hour format, don't need to transfer again
 			//date transfer 12hours to 24hours
 			String time24 = "";
 			SimpleDateFormat h_mm_a   = new SimpleDateFormat("h:mma");
@@ -217,9 +218,9 @@ public class Summary extends Activity {
 			    e.printStackTrace();
 			    i--;
 			    continue;
-			}
+			}*/
 			
-			float j = Integer.parseInt(time24.substring(0, 2)) + (float)Integer.parseInt(time24.substring(3, 5)) / 60;
+			float j = Integer.parseInt(time.substring(0, 2)) + (float)Integer.parseInt(time.substring(3, 5)) / 60;
 			float x = 30 + 30 * j;
 			if(type.equals("FeedMilk")){
 				paint.setColor(Color.RED);
@@ -286,7 +287,7 @@ private void drawChartByDateAsc(Paint paint, Canvas canvas){
 				prevDate = date;
 			}
 			
-			//date transfer 12hours to 24hours
+			/*//date transfer 12hours to 24hours
 			String time24 = "";
 			SimpleDateFormat h_mm_a   = new SimpleDateFormat("h:mma");
 			SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
@@ -298,9 +299,9 @@ private void drawChartByDateAsc(Paint paint, Canvas canvas){
 			    e.printStackTrace();
 			    i++;
 			    continue;
-			}
+			}*/
 			
-			float j = Integer.parseInt(time24.substring(0, 2)) + (float)Integer.parseInt(time24.substring(3, 5)) / 60;
+			float j = Integer.parseInt(time.substring(0, 2)) + (float)Integer.parseInt(time.substring(3, 5)) / 60;
 			float x = 30 + 30 * j;
 			if(type.equals("FeedMilk")){
 				paint.setColor(Color.RED);
