@@ -17,11 +17,17 @@
     	android:layout_weight="1"
     	android:orientation="horizontal">
         
-        <Spinner
+        <!--Spinner
             android:id="@+id/attrSpinner" 
             android:layout_width="wrap_content"
         	android:layout_height="match_parent"
-        	android:entries="@array/attrSp"/>
+        	android:entries="@array/attrSp"/-->
+        
+        <Button 
+            android:id="@+id/firstButton"
+            android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:text="@string/first"/>
         
         <Button 
             android:id="@+id/prevButton"
@@ -34,6 +40,12 @@
             android:layout_width="wrap_content"
         	android:layout_height="match_parent"
         	android:text="@string/next"/>
+        
+        <Button 
+            android:id="@+id/lastButton"
+            android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:text="@string/last"/>
         
     </LinearLayout>
             

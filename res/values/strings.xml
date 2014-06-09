@@ -249,6 +249,8 @@
         <string name="prev">&lt;</string>
         <string name="x_axis">x axis</string>
         <string name="y_axis">y axis</string>
+        <string name="first">&lt;&lt;</string>
+        <string name="last">>></string>
 	    
 
 </resources>
