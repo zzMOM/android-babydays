@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -132,14 +133,40 @@ public class Summary extends Activity {
 		// Fill the entire canvas with a red color.
 		canvas.drawColor(Color.BLACK);
 		
-		/*-------------------------------------------draw x and y axis--------------------------------*/
 		// Create a paint object for us to draw with, and set our drawing color.
 		Paint paint = new Paint();
+		paint.setColor(Color.YELLOW);
+		paint.setFakeBoldText(true);
+		
+		/*draw sign*/
+		Bitmap pee = BitmapFactory.decodeResource(getResources(), R.drawable.dropwater);
+		Bitmap poo = BitmapFactory.decodeResource(getResources(), R.drawable.poo);
+		Bitmap bottle = BitmapFactory.decodeResource(getResources(), R.drawable.bottle2);
+		canvas.drawBitmap(bottle, 70,  20, paint);
+		canvas.drawText("Feed Milk", 90, 30, paint);
+		canvas.drawBitmap(pee, 250,  20, paint);
+		canvas.drawText("Diaper wet", 270, 30, paint);
+		canvas.drawBitmap(poo, 410,  20, paint);
+		canvas.drawText("Diaper wet and poopy", 430, 30, paint);
+		//paint.setColor(Color.YELLOW);
+		paint.setStrokeWidth(10);
+		canvas.drawLine(600, 20, 630, 20, paint);
+		canvas.drawText("Nap/Sleep", 640, 30, paint);
+		paint.setStrokeWidth(1);
+		
+		/*-------------------------------------------draw x and y axis--------------------------------*/
 		paint.setColor(Color.WHITE);
+		paint.setFakeBoldText(false);
+		
+		Paint dashpaint = new Paint();
+		dashpaint.setColor(Color.WHITE);
+		dashpaint.setStyle(Style.STROKE);
+		dashpaint.setPathEffect(new DashPathEffect(new float[] {10, 20}, 0));
 		
 		// canvas draw x and y coordination, (0, 0) left bottom corner--> (30, 400) 
 		canvas.drawLine(30, 0, 30, 400, paint);//y
 		canvas.drawLine(30, 400, 900, 400, paint);//x
+		canvas.drawLine(30, 30, 900, 30, dashpaint);//top dash line
 		//x
 		for(int i = 0; i <= 24; i++){
 			canvas.drawLine(30 + 30 * i, 390, 30 + 30 * i, 400, paint);
@@ -162,10 +189,6 @@ public class Summary extends Activity {
 			
 			//draw dashline on 6:00AM, 12:00PM, 6:00PM
 			if(i == 6 || i == 12 || i == 18){
-				Paint dashpaint = new Paint();
-				dashpaint.setColor(Color.WHITE);
-				dashpaint.setStyle(Style.STROKE);
-				dashpaint.setPathEffect(new DashPathEffect(new float[] {10, 20}, 0));
 				canvas.drawLine(30 + 30 * i, 30, 30 + 30 * i, 400, dashpaint);
 				canvas.drawText(x, 10 + 30 * i, 20, paint);
 			}
@@ -202,6 +225,9 @@ public class Summary extends Activity {
 		boolean endFlag = false;
 		float lastx = 0;
 		float lasty = 0;
+		Bitmap pee = BitmapFactory.decodeResource(getResources(), R.drawable.dropwater);
+		Bitmap poo = BitmapFactory.decodeResource(getResources(), R.drawable.poo);
+		Bitmap bottle = BitmapFactory.decodeResource(getResources(), R.drawable.bottle2);
 		while(i >= 0){//start from last activity
 			String date = routine.get(i).getDate().toString();
 			String time = routine.get(i).getTime().toString();
@@ -235,11 +261,17 @@ public class Summary extends Activity {
 			float j = Integer.parseInt(time.substring(0, 2)) + (float)Integer.parseInt(time.substring(3, 5)) / 60;
 			float x = 30 + 30 * j;
 			if(type.equals("FeedMilk")){
-				paint.setColor(Color.RED);
-				canvas.drawText("F", x, y, paint);
+				//paint.setColor(Color.RED);
+				//canvas.drawText("F", x, y, paint);
+				canvas.drawBitmap(bottle, x,  y, paint);
 			} else if(type.equals("Diaper")){
-				paint.setColor(Color.GREEN);
-				canvas.drawText("D", x, y, paint);
+				//paint.setColor(Color.GREEN);
+				//canvas.drawText("D", x, y, paint);
+				if(info.length() > 4){
+					canvas.drawBitmap(poo, x,  y, paint);
+				} else {
+					canvas.drawBitmap(pee, x, y, paint);
+				}
 			} else if(type.equals("Nap") && info.equals("End")){
 				endFlag = true;
 				endTime = x;
@@ -284,6 +316,9 @@ private void drawChartByDateAsc(Paint paint, Canvas canvas){
 		boolean startFlag = false;
 		float lastx = 0;
 		float lasty = 0;
+		Bitmap pee = BitmapFactory.decodeResource(getResources(), R.drawable.dropwater);
+		Bitmap poo = BitmapFactory.decodeResource(getResources(), R.drawable.poo);
+		Bitmap bottle = BitmapFactory.decodeResource(getResources(), R.drawable.bottle2);
 		while(i < routine.size()){//start from last activity
 			String date = routine.get(i).getDate().toString();
 			String time = routine.get(i).getTime().toString();
@@ -303,11 +338,17 @@ private void drawChartByDateAsc(Paint paint, Canvas canvas){
 			float j = Integer.parseInt(time.substring(0, 2)) + (float)Integer.parseInt(time.substring(3, 5)) / 60;
 			float x = 30 + 30 * j;
 			if(type.equals("FeedMilk")){
-				paint.setColor(Color.RED);
-				canvas.drawText("F", x, y, paint);
+				/*paint.setColor(Color.RED);
+				canvas.drawText("F", x, y, paint);*/
+				canvas.drawBitmap(bottle, x,  y, paint);
 			} else if(type.equals("Diaper")){
-				paint.setColor(Color.GREEN);
-				canvas.drawText("D", x, y, paint);
+				/*paint.setColor(Color.GREEN);
+				canvas.drawText("D", x, y, paint);*/
+				if(info.length() > 4){
+					canvas.drawBitmap(poo, x,  y, paint);
+				} else {
+					canvas.drawBitmap(pee, x, y, paint);
+				}
 			} else if(type.equals("Nap") && info.equals("End")){
 				paint.setColor(Color.YELLOW);
 				paint.setStrokeWidth(10);
