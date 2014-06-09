@@ -11,7 +11,9 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -131,7 +133,7 @@ public class Summary extends Activity {
 		canvas.drawColor(Color.BLACK);
 		
 		/*-------------------------------------------draw x and y axis--------------------------------*/
-		// Create a paint object for us to draw with, and set our drawing color to blue.
+		// Create a paint object for us to draw with, and set our drawing color.
 		Paint paint = new Paint();
 		paint.setColor(Color.WHITE);
 		
@@ -157,6 +159,16 @@ public class Summary extends Activity {
 			canvas.rotate(-45, 30 * i, 440);
 			canvas.drawText(x, 30 * i, 440, paint);
 			canvas.restore();
+			
+			//draw dashline on 6:00AM, 12:00PM, 6:00PM
+			if(i == 6 || i == 12 || i == 18){
+				Paint dashpaint = new Paint();
+				dashpaint.setColor(Color.WHITE);
+				dashpaint.setStyle(Style.STROKE);
+				dashpaint.setPathEffect(new DashPathEffect(new float[] {10, 20}, 0));
+				canvas.drawLine(30 + 30 * i, 30, 30 + 30 * i, 400, dashpaint);
+				canvas.drawText(x, 10 + 30 * i, 20, paint);
+			}
 		}
 		for(int i = 1; i <= 7; i++){
 			canvas.drawLine(20, 400 - 50 * i, 30, 400 - 50 * i, paint);
@@ -234,7 +246,7 @@ public class Summary extends Activity {
 				endDate = date;
 			} else if(type.equals("Nap") && info.equals("Start")){
 				paint.setColor(Color.YELLOW);
-				paint.setStrokeWidth(5);
+				paint.setStrokeWidth(10);
 				if(!endFlag){
 					canvas.drawLine(x, y, 30 + 30 * 24, y, paint);//draw current to 12:00AM
 				} else if(endFlag && date.equals(endDate)){//start end in the same day
@@ -282,24 +294,11 @@ private void drawChartByDateAsc(Paint paint, Canvas canvas){
 			if(!date.equals(prevDate)){
 				paint.setColor(Color.WHITE);
 				count++;
-				y = 400 - 50 * count;
+				y = 0 + 50 * count;
 				canvas.drawText(date.substring(0, 5), 0, y, paint);
 				prevDate = date;
 			}
 			
-			/*//date transfer 12hours to 24hours
-			String time24 = "";
-			SimpleDateFormat h_mm_a   = new SimpleDateFormat("h:mma");
-			SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
-
-			try {
-			    Date t = h_mm_a.parse(time);
-			    time24 = hh_mm.format(t).toString();
-			} catch (Exception e) {
-			    e.printStackTrace();
-			    i++;
-			    continue;
-			}*/
 			
 			float j = Integer.parseInt(time.substring(0, 2)) + (float)Integer.parseInt(time.substring(3, 5)) / 60;
 			float x = 30 + 30 * j;
@@ -311,7 +310,7 @@ private void drawChartByDateAsc(Paint paint, Canvas canvas){
 				canvas.drawText("D", x, y, paint);
 			} else if(type.equals("Nap") && info.equals("End")){
 				paint.setColor(Color.YELLOW);
-				paint.setStrokeWidth(5);
+				paint.setStrokeWidth(10);
 				if(!startFlag){
 					canvas.drawLine(30, y, x, y, paint);//draw 12:00am to x,y
 				} else if(startFlag && date.equals(startDate)){//start end in the same day
