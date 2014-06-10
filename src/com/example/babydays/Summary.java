@@ -16,6 +16,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -117,13 +118,22 @@ public class Summary extends Activity {
 	
 	
 	private void createChartOfDayActivity(boolean byDateAscOrDesc){
+		Display display = getWindowManager().getDefaultDisplay(); 
+		int windowwidth = display.getWidth();  // deprecated
+		int windowheight = display.getHeight();  // deprecated
+		
 		// We'll be creating an image that is 100 pixels wide and 200 pixels tall.
-		int width = 800;
-		int height = 450;
+		//int width = 800;
+		//int height = 450;
+		int w = windowwidth;
+		if(windowwidth < 1500){
+			w = windowwidth * 3 / 2;
+		}
+		int h = windowheight;
 		 
 		// Create a bitmap with the dimensions we defined above, and with a 16-bit pixel format. We'll
 		// get a little more in depth with pixel formats in a later post.
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.RGB_565);
+		Bitmap bitmap = Bitmap.createBitmap(w, h, Config.RGB_565);
 		 
 		// Create a new canvas to draw on, and link it to the bitmap that we created above. Any drawing
 		// operations performed on the canvas will have an immediate effect on the pixel data of the
@@ -137,26 +147,31 @@ public class Summary extends Activity {
 		Paint paint = new Paint();
 		paint.setColor(Color.YELLOW);
 		paint.setFakeBoldText(true);
+		paint.setTextSize(30);
 		
-		/*draw sign*/
+		//y axis start 100
+		int ystart = 100;
+		
+		/*//draw sign
 		Bitmap pee = BitmapFactory.decodeResource(getResources(), R.drawable.dropwater);
 		Bitmap poo = BitmapFactory.decodeResource(getResources(), R.drawable.poo);
 		Bitmap bottle = BitmapFactory.decodeResource(getResources(), R.drawable.bottle2);
-		canvas.drawBitmap(bottle, 70,  20, paint);
-		canvas.drawText("Feed Milk", 90, 30, paint);
-		canvas.drawBitmap(pee, 250,  20, paint);
-		canvas.drawText("Diaper wet", 270, 30, paint);
-		canvas.drawBitmap(poo, 410,  20, paint);
-		canvas.drawText("Diaper wet and poopy", 430, 30, paint);
+		canvas.drawBitmap(bottle, ystart + 50,  20, paint);
+		canvas.drawText("Feed Milk", ystart + 80, 40, paint);
+		canvas.drawBitmap(pee, (w - ystart) / 4 + 50,  20, paint);
+		canvas.drawText("Diaper wet", (w - ystart) / 4 + 80, 40, paint);
+		canvas.drawBitmap(poo, (w - ystart) / 4 * 2 + 50,  20, paint);
+		canvas.drawText("Diaper wet and poopy", (w - ystart) / 4 * 2 + 80, 40, paint);
 		//paint.setColor(Color.YELLOW);
 		paint.setStrokeWidth(10);
-		canvas.drawLine(600, 20, 630, 20, paint);
-		canvas.drawText("Nap/Sleep", 640, 30, paint);
+		canvas.drawLine((w - ystart) / 4 * 3 + 50, 30, (w - ystart) / 4 * 3 + 80, 30, paint);
+		canvas.drawText("Nap/Sleep", (w - ystart) / 4 * 3 + 100, 40, paint);*/
 		paint.setStrokeWidth(1);
 		
 		/*-------------------------------------------draw x and y axis--------------------------------*/
 		paint.setColor(Color.WHITE);
 		paint.setFakeBoldText(false);
+		paint.setTextSize(25);
 		
 		Paint dashpaint = new Paint();
 		dashpaint.setColor(Color.WHITE);
@@ -164,12 +179,15 @@ public class Summary extends Activity {
 		dashpaint.setPathEffect(new DashPathEffect(new float[] {10, 20}, 0));
 		
 		// canvas draw x and y coordination, (0, 0) left bottom corner--> (30, 400) 
-		canvas.drawLine(30, 0, 30, 400, paint);//y
-		canvas.drawLine(30, 400, 900, 400, paint);//x
-		canvas.drawLine(30, 30, 900, 30, dashpaint);//top dash line
+		int gapx = (w - ystart - 60) / 24;
+		int gapy = (h - ystart - 60) / 7;
+		canvas.drawLine(ystart, 0, ystart, h - 60, paint);//canvas.drawLine(30, 0, 30, 400, paint);//y
+		canvas.drawLine(ystart, h - 60, w - 60, h - 60, paint);//canvas.drawLine(30, 400, 900, 400, paint);//x
+		canvas.drawLine(ystart, 60, w - 60 , 60, dashpaint);//canvas.drawLine(30, 30, 900, 30, dashpaint);//top dash line
 		//x
 		for(int i = 0; i <= 24; i++){
-			canvas.drawLine(30 + 30 * i, 390, 30 + 30 * i, 400, paint);
+			//canvas.drawLine(30 + 30 * i, 390, 30 + 30 * i, 400, paint);
+			canvas.drawLine(ystart + gapx * i, h - 70, ystart + gapx * i, h - 60, paint);
 			String x;
 			if(i == 0){
 				x = "12:00AM";
@@ -183,25 +201,30 @@ public class Summary extends Activity {
 				x = Integer.toString(i - 12) + ":00PM";
 			}
 			canvas.save();
-			canvas.rotate(-45, 30 * i, 440);
-			canvas.drawText(x, 30 * i, 440, paint);
+			//canvas.rotate(-45, 30 * i, 440);
+			//canvas.drawText(x, 30 * i, 440, paint);
+			canvas.rotate(-45, ystart - 30 + gapx * i, h - 10);
+			canvas.drawText(x, ystart - 30 + gapx * i, h - 10, paint);
 			canvas.restore();
 			
 			//draw dashline on 6:00AM, 12:00PM, 6:00PM
-			if(i == 6 || i == 12 || i == 18){
-				canvas.drawLine(30 + 30 * i, 30, 30 + 30 * i, 400, dashpaint);
-				canvas.drawText(x, 10 + 30 * i, 20, paint);
+			if(i == 6 || i == 12 || i == 18 || i == 24){
+				//canvas.drawLine(30 + 30 * i, 30, 30 + 30 * i, 400, dashpaint);
+				//canvas.drawText(x, 10 + 30 * i, 20, paint);
+				canvas.drawLine(ystart + gapx * i, 30, ystart + gapx * i, h - 60, dashpaint);
+				canvas.drawText(x, 40 + gapx * i, 50, paint);
 			}
 		}
 		for(int i = 1; i <= 7; i++){
-			canvas.drawLine(20, 400 - 50 * i, 30, 400 - 50 * i, paint);
+			//canvas.drawLine(20, 400 - 50 * i, 30, 400 - 50 * i, paint);
+			canvas.drawLine(ystart - 10, h - 60 - gapy * i, ystart, h - 60 - gapy * i, paint);
 		}
 		
 		/*--------------------------------------draw chart-----------------------------------------*/
 		if(byDateAscOrDesc){
-			drawChartByDateAsc(paint, canvas);
+			drawChartByDateAsc(paint, canvas, w, h, gapx, gapy, ystart);
 		} else {
-			drawChartByDateDesc(paint, canvas);
+			drawChartByDateDesc(paint, canvas, w, h, gapx, gapy, ystart);
 		}
 		 
 		// In order to display this image in our activity, we need to create a new ImageView that we
@@ -214,7 +237,7 @@ public class Summary extends Activity {
 		
 	}
 	
-	private void drawChartByDateDesc(Paint paint, Canvas canvas){
+	private void drawChartByDateDesc(Paint paint, Canvas canvas, int w, int h, int gapx, int gapy, int ystart){
 		
 		String prevDate = "";
 		int count = 0;
@@ -238,8 +261,8 @@ public class Summary extends Activity {
 			if(!date.equals(prevDate)){
 				paint.setColor(Color.WHITE);
 				count++;
-				y = 400 - 50 * count;
-				canvas.drawText(date.substring(0, 5), 0, y, paint);
+				y = h - 60 - gapy * count;
+				canvas.drawText(date.substring(0, 5), 10, y, paint);
 				prevDate = date;
 			}
 			
@@ -259,7 +282,7 @@ public class Summary extends Activity {
 			}*/
 			
 			float j = Integer.parseInt(time.substring(0, 2)) + (float)Integer.parseInt(time.substring(3, 5)) / 60;
-			float x = 30 + 30 * j;
+			float x = ystart + gapx * j;
 			if(type.equals("FeedMilk")){
 				//paint.setColor(Color.RED);
 				//canvas.drawText("F", x, y, paint);
@@ -280,12 +303,12 @@ public class Summary extends Activity {
 				paint.setColor(Color.YELLOW);
 				paint.setStrokeWidth(10);
 				if(!endFlag){
-					canvas.drawLine(x, y, 30 + 30 * 24, y, paint);//draw current to 12:00AM
+					canvas.drawLine(x, y, ystart + gapx * 24, y, paint);//draw current to 12:00AM
 				} else if(endFlag && date.equals(endDate)){//start end in the same day
 					canvas.drawLine(x, y, endTime, y, paint);
 				} else if(endFlag && !date.equals(endDate) && endTime == lastx){//start end in different day
-					canvas.drawLine(30, lasty, lastx, lasty, paint);//draw 12:00am to lastx,lasty
-					canvas.drawLine(x, y, 30 + 30 * 24, y, paint);//draw current to 12:00AM
+					canvas.drawLine(ystart, lasty, lastx, lasty, paint);//draw 12:00am to lastx,lasty
+					canvas.drawLine(x, y, ystart + gapx * 24, y, paint);//draw current to 12:00AM
 				}
 				//reset
 				endFlag = false;
@@ -305,7 +328,7 @@ public class Summary extends Activity {
 		Log.e("recordIndex", Integer.toString(recordIndex));
 	}
 	
-private void drawChartByDateAsc(Paint paint, Canvas canvas){
+private void drawChartByDateAsc(Paint paint, Canvas canvas, int w, int h, int gapx, int gapy, int ystart){
 		
 		String prevDate = "";
 		int count = 0;
@@ -329,14 +352,14 @@ private void drawChartByDateAsc(Paint paint, Canvas canvas){
 			if(!date.equals(prevDate)){
 				paint.setColor(Color.WHITE);
 				count++;
-				y = 0 + 50 * count;
-				canvas.drawText(date.substring(0, 5), 0, y, paint);
+				y = (h - 60) - gapy * (8 - count);
+				canvas.drawText(date.substring(0, 5), 10, y, paint);
 				prevDate = date;
 			}
 			
 			
 			float j = Integer.parseInt(time.substring(0, 2)) + (float)Integer.parseInt(time.substring(3, 5)) / 60;
-			float x = 30 + 30 * j;
+			float x = ystart + gapx * j;
 			if(type.equals("FeedMilk")){
 				/*paint.setColor(Color.RED);
 				canvas.drawText("F", x, y, paint);*/
@@ -353,12 +376,12 @@ private void drawChartByDateAsc(Paint paint, Canvas canvas){
 				paint.setColor(Color.YELLOW);
 				paint.setStrokeWidth(10);
 				if(!startFlag){
-					canvas.drawLine(30, y, x, y, paint);//draw 12:00am to x,y
+					canvas.drawLine(ystart, y, x, y, paint);//draw 12:00am to x,y
 				} else if(startFlag && date.equals(startDate)){//start end in the same day
 					canvas.drawLine(x, y, startTime, y, paint);
 				} else if(startFlag && !date.equals(startDate) && startTime == lastx){//start end in different day
-					canvas.drawLine(30, y, x, y, paint);//draw 12:00am to x,y
-					canvas.drawLine(lastx, lasty, 30 + 30 * 24, lasty, paint);//draw lastx,lasty to 12:00AM
+					canvas.drawLine(ystart, y, x, y, paint);//draw 12:00am to x,y
+					canvas.drawLine(lastx, lasty, ystart + gapx * 24, lasty, paint);//draw lastx,lasty to 12:00AM
 				}
 				//reset
 				startFlag = false;

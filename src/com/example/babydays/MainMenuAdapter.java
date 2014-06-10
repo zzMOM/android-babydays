@@ -55,13 +55,13 @@ public class MainMenuAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.menu_imgtext, null);
 			//set value into textview
 			holder.textView = (TextView) convertView.findViewById(R.id.items);
-			(holder.textView).setTextSize(28);
-			(holder.textView).setHeight(100);
-			(holder.textView).setMinimumHeight(100);
+			(holder.textView).setTextSize(30);
+			(holder.textView).setHeight(150);
+			(holder.textView).setMinimumHeight(150);
 			(holder.textView).setGravity(Gravity.CENTER_VERTICAL);
 			//set image based on selected text
 			holder.imageView = (ImageView) convertView.findViewById(R.id.img);
-			(holder.imageView).setMinimumHeight(100);
+			(holder.imageView).setMinimumHeight(150);
 			
 			convertView.setTag(holder);
 		} else {

@@ -61,14 +61,14 @@
     
 	    <Button 
 	        android:id="@+id/preMonth"
-	        android:layout_width="wrap_content"
+	        android:layout_width="50sp"
 	        android:layout_height="wrap_content"
 	        android:text="@string/pre_month"
 	        android:onClick="DecreaseMonth"/>
 	    
 	    <Button 
 	        android:id="@+id/preDay"
-	        android:layout_width="wrap_content"
+	        android:layout_width="50sp"
 	        android:layout_height="wrap_content"
 	        android:text="@string/pre_day"
 	        android:onClick="DecreaseDay"/>
@@ -81,14 +81,14 @@
 	    
 	    <Button 
 	        android:id="@+id/nextDay"
-	        android:layout_width="wrap_content"
+	        android:layout_width="50sp"
 	        android:layout_height="wrap_content"
 	        android:text="@string/next_day"
 	        android:onClick="IncreaseDay"/>
 	    
 	    <Button 
 	        android:id="@+id/nextMonth"
-	        android:layout_width="wrap_content"
+	        android:layout_width="50sp"
 	        android:layout_height="wrap_content"
 	        android:text="@string/next_month"
 	        android:onClick="IncreaseMonth"/>

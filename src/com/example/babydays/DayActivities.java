@@ -122,7 +122,7 @@ public class DayActivities extends Activity {
 		return null;
 	}
 	
-	private DatePickerDialog.OnDateSetListener datePickerListener= new DatePickerDialog.OnDateSetListener() {
+	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 		
 		// when dialog box is closed, below method will be called.
 		@Override
@@ -267,7 +267,7 @@ public class DayActivities extends Activity {
 		//time is 24hour format, show with 12hour format
 		//date transfer 24hours to 12hours
 		String time12 = "";
-		SimpleDateFormat h_mm_a   = new SimpleDateFormat("h:mma");
+		SimpleDateFormat h_mm_a = new SimpleDateFormat("h:mma");
 		SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
 		
 		for(int i = 0; i < activitiesByDate.size(); i++){
