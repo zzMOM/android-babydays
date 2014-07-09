@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import android.R.layout;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -64,8 +65,8 @@ public class DayActivities extends Activity {
 	private Spinner manageSpinner;
 	private Button changeDate, changeTime;
 	private ImageButton searchID;
-	private EditText recordsIDEdit, typeEdit, infoEdit;
-	private TextView showIDDate, showIDTime;
+	private EditText recordsIDEdit, infoEdit;
+	private TextView typeEdit, showIDDate, showIDTime;
 	private LinearLayout idResultLayout;
 	
 	private int maxRecordID;
@@ -387,18 +388,26 @@ public class DayActivities extends Activity {
         dialog.show();
         
         
-        changeDate = (Button) findViewById(R.id.changeDate);
-        changeTime = (Button) findViewById(R.id.changeTime);
-    	searchID = (ImageButton) findViewById(R.id.searchID);
-    	recordsIDEdit = (EditText) findViewById(R.id.recordsIDEdit);
-    	typeEdit = (EditText) findViewById(R.id.typeEdit);
-    	infoEdit = (EditText) findViewById(R.id.infoEdit);
-    	showIDDate = (TextView) findViewById(R.id.showIDDate);
-    	showIDTime = (TextView) findViewById(R.id.showIDTime);
-    	idResultLayout = (LinearLayout) findViewById(R.id.idResultLayout);
+        changeDate = (Button) dialog.findViewById(R.id.changeDate);
+        changeTime = (Button) dialog.findViewById(R.id.changeTime);
+    	searchID = (ImageButton) dialog.findViewById(R.id.searchID);
+    	recordsIDEdit = (EditText) dialog.findViewById(R.id.recordsIDEdit);
+    	typeEdit = (TextView) dialog.findViewById(R.id.typeEdit);
+    	infoEdit = (EditText) dialog.findViewById(R.id.infoEdit);
+    	showIDDate = (TextView) dialog.findViewById(R.id.showIDDate);
+    	showIDTime = (TextView) dialog.findViewById(R.id.showIDTime);
+    	//idResultLayout = (LinearLayout) dialog.findViewById(R.id.idResultLayout);
     	
-        manageSpinner = (Spinner) findViewById(R.id.manageSpinner);
-        /*manageSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+        manageSpinner = (Spinner) dialog.findViewById(R.id.manageSpinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.manageSp, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        manageSpinner.setAdapter(adapter);
+        
+        manageSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, 
@@ -406,14 +415,14 @@ public class DayActivities extends Activity {
 				// TODO Auto-generated method stub
 				switch(pos){
 				case 0:		//edit
-					idResultLayout.setEnabled(true);
+					idResultLayoutDisabled();
 					break;
 				case 1:		//insert
-					recordsIDEdit.setEnabled(true);
-					searchID.setEnabled(true);
+					recordsIDEdit.setEnabled(false);
+					searchID.setEnabled(false);
 					break;
 				case 2:		//delete
-					idResultLayout.setEnabled(true);
+					idResultLayoutDisabled();
 					break;
 				}
 				
@@ -424,13 +433,13 @@ public class DayActivities extends Activity {
 				// TODO Auto-generated method stub
 				
 			}
-		});*/
+		});
 	}
 	
-	private void editRecord(){
-		//input ID then search, enable except ID
-		//ID vaild
-		
+	private void idResultLayoutDisabled(){
+		changeDate.setEnabled(false);
+		changeTime.setEnabled(false);
+		infoEdit.setEnabled(false);
 		
 	}
 	

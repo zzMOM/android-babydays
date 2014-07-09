@@ -47,6 +47,12 @@
         	android:layout_height="wrap_content"
         	android:text="@string/last"/>
         
+        <Button 
+            android:id="@+id/readSample"
+            android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:text="@string/read_sample"/>
+        
     </LinearLayout>
             
 	<ScrollView 

@@ -242,6 +242,12 @@
         <item >Month</item>
     </string-array>
     
+    <string-array name="manageSp">
+        <item >Edit</item>
+        <item >Insert</item>
+        <item >Delete</item>
+    </string-array>
+    
         <string name="reset">Reset</string>
         <string name="summary">Summary</string>
         <string name="chart_image">chart image</string>
@@ -251,6 +257,18 @@
         <string name="y_axis">y axis</string>
         <string name="first">&lt;&lt;</string>
         <string name="last">>></string>
+        <string name="read_sample">Read Sample</string>
+        <string name="pick_date">Pick Date</string>
+        <string name="set_time">Set Time</string>
+        <string name="manage_records">Edit Insert Delete Records</string>
+        <string name="records_id_">"Records ID: "</string>
+        <string name="search_id">search ID</string>
+        <string name="type">Type: </string>
+        <string name="info">Info: </string>
+        <string name="date">Date: </string>
+        <string name="time">Time: </string>
+        <string name="change_date">Change Date</string>
+        <string name="change_time">Change Time</string>
 	    
 
 </resources>

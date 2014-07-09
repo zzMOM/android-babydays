@@ -14,6 +14,7 @@
     <LinearLayout 
         android:layout_width="match_parent"
    		android:layout_height="wrap_content"
+   		android:layout_weight="1"
    		android:orientation="horizontal">
    	
         <TextView 
@@ -31,6 +32,7 @@
     <LinearLayout 
         android:layout_width="match_parent"
    		android:layout_height="wrap_content"
+   		android:layout_weight="1"
    		android:orientation="horizontal">
         
 	    <Button
@@ -57,6 +59,7 @@
     <LinearLayout 
         android:layout_width="match_parent"
    		android:layout_height="wrap_content"
+   		android:layout_weight="1"
    		android:orientation="horizontal">
     
 	    <Button 
@@ -97,7 +100,8 @@
 	    
 	    <ScrollView 
 	        android:layout_width="match_parent"
-	        android:layout_height="match_parent">
+	        android:layout_height="wrap_content"
+	        android:layout_weight="10">
 	    
 		    <TextView 
 		        android:id="@+id/dayActivity"
@@ -107,6 +111,14 @@
 		        android:background="@drawable/textlines"/>
 
 		</ScrollView>
+		
+	    <Button 
+	        android:id="@+id/manageRecords"
+	        android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:text="@string/manage_records"
+		    android:onClick="manageRecord"/>
 </LinearLayout>
 
 
