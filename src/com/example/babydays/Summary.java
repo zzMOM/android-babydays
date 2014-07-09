@@ -30,6 +30,7 @@ public class Summary extends Activity {
 	private Button prevButton;
 	private Button nextButton;
 	private Button lastButton;
+	private Button readSample;
 	
 	private int recordIndex;
 	private List<BabyActivity> routine;
@@ -100,6 +101,34 @@ public class Summary extends Activity {
 						recordIndex = 0;
 					}
 					createChartOfDayActivity(true);
+				}
+			}
+		});
+		
+		//readSample button
+		readSample = (Button)findViewById(R.id.readSample);
+		readSample.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(readSample.getText().equals("Read Sample")){
+					
+					//set button text to "Clear Sample" and other button unclick
+					readSample.setText("Clear Sample");
+					firstButton.setClickable(false);
+					nextButton.setClickable(false);
+					prevButton.setClickable(false);
+					lastButton.setClickable(false);
+				} else {
+					//show default chart
+					createChartOfDayActivity(false);
+					//reset button text and other button clickable
+					readSample.setText("Read Sample");
+					firstButton.setClickable(true);
+					nextButton.setClickable(true);
+					prevButton.setClickable(true);
+					lastButton.setClickable(true);
 				}
 			}
 		});
@@ -286,14 +315,14 @@ public class Summary extends Activity {
 			if(type.equals("FeedMilk")){
 				//paint.setColor(Color.RED);
 				//canvas.drawText("F", x, y, paint);
-				canvas.drawBitmap(bottle, x,  y, paint);
+				canvas.drawBitmap(bottle, x - 10,  y, paint);
 			} else if(type.equals("Diaper")){
 				//paint.setColor(Color.GREEN);
 				//canvas.drawText("D", x, y, paint);
 				if(info.length() > 4){
-					canvas.drawBitmap(poo, x,  y, paint);
+					canvas.drawBitmap(poo, x - 10,  y, paint);
 				} else {
-					canvas.drawBitmap(pee, x, y, paint);
+					canvas.drawBitmap(pee, x - 10, y, paint);
 				}
 			} else if(type.equals("Nap") && info.equals("End")){
 				endFlag = true;
@@ -328,7 +357,7 @@ public class Summary extends Activity {
 		Log.e("recordIndex", Integer.toString(recordIndex));
 	}
 	
-private void drawChartByDateAsc(Paint paint, Canvas canvas, int w, int h, int gapx, int gapy, int ystart){
+	private void drawChartByDateAsc(Paint paint, Canvas canvas, int w, int h, int gapx, int gapy, int ystart){
 		
 		String prevDate = "";
 		int count = 0;
@@ -363,14 +392,14 @@ private void drawChartByDateAsc(Paint paint, Canvas canvas, int w, int h, int ga
 			if(type.equals("FeedMilk")){
 				/*paint.setColor(Color.RED);
 				canvas.drawText("F", x, y, paint);*/
-				canvas.drawBitmap(bottle, x,  y, paint);
+				canvas.drawBitmap(bottle, x - 10,  y, paint);
 			} else if(type.equals("Diaper")){
 				/*paint.setColor(Color.GREEN);
 				canvas.drawText("D", x, y, paint);*/
 				if(info.length() > 4){
-					canvas.drawBitmap(poo, x,  y, paint);
+					canvas.drawBitmap(poo, x - 10,  y, paint);
 				} else {
-					canvas.drawBitmap(pee, x, y, paint);
+					canvas.drawBitmap(pee, x - 10, y, paint);
 				}
 			} else if(type.equals("Nap") && info.equals("End")){
 				paint.setColor(Color.YELLOW);
@@ -404,5 +433,83 @@ private void drawChartByDateAsc(Paint paint, Canvas canvas, int w, int h, int ga
 		recordIndex = i;
 		Log.e("recordIndex", Integer.toString(recordIndex));
 	}
+
+
+private void drawChartBySample(Paint paint, Canvas canvas, int w, int h, int gapx, int gapy, int ystart){
+		
+		String prevDate = "";
+		int count = 0;
+		int i = recordIndex;
+		int y = 0;
+		float endTime = 0;
+		String endDate = "";
+		boolean endFlag = false;
+		float lastx = 0;
+		float lasty = 0;
+		Bitmap pee = BitmapFactory.decodeResource(getResources(), R.drawable.dropwater);
+		Bitmap poo = BitmapFactory.decodeResource(getResources(), R.drawable.poo);
+		Bitmap bottle = BitmapFactory.decodeResource(getResources(), R.drawable.bottle2);
+		while(i >= 0){//start from last activity
+			String date = routine.get(i).getDate().toString();
+			String time = routine.get(i).getTime().toString();
+			String type = routine.get(i).getType().toString();
+			String info = routine.get(i).getInfo().toString();
+			
+			//draw date on y axis when start a new date
+			if(!date.equals(prevDate)){
+				paint.setColor(Color.WHITE);
+				count++;
+				y = h - 60 - gapy * count;
+				canvas.drawText(date.substring(0, 5), 10, y, paint);
+				prevDate = date;
+			}
+			
+			float j = Integer.parseInt(time.substring(0, 2)) + (float)Integer.parseInt(time.substring(3, 5)) / 60;
+			float x = ystart + gapx * j;
+			if(type.equals("FeedMilk")){
+				//paint.setColor(Color.RED);
+				//canvas.drawText("F", x, y, paint);
+				canvas.drawBitmap(bottle, x - 10,  y, paint);
+			} else if(type.equals("Diaper")){
+				//paint.setColor(Color.GREEN);
+				//canvas.drawText("D", x, y, paint);
+				if(info.length() > 4){
+					canvas.drawBitmap(poo, x - 10,  y, paint);
+				} else {
+					canvas.drawBitmap(pee, x - 10, y, paint);
+				}
+			} else if(type.equals("Nap") && info.equals("End")){
+				endFlag = true;
+				endTime = x;
+				endDate = date;
+			} else if(type.equals("Nap") && info.equals("Start")){
+				paint.setColor(Color.YELLOW);
+				paint.setStrokeWidth(10);
+				if(!endFlag){
+					canvas.drawLine(x, y, ystart + gapx * 24, y, paint);//draw current to 12:00AM
+				} else if(endFlag && date.equals(endDate)){//start end in the same day
+					canvas.drawLine(x, y, endTime, y, paint);
+				} else if(endFlag && !date.equals(endDate) && endTime == lastx){//start end in different day
+					canvas.drawLine(ystart, lasty, lastx, lasty, paint);//draw 12:00am to lastx,lasty
+					canvas.drawLine(x, y, ystart + gapx * 24, y, paint);//draw current to 12:00AM
+				}
+				//reset
+				endFlag = false;
+				endTime = 0;
+				endDate = "";
+			}
+			
+			lastx = x;
+			lasty = y;
+			i--;
+			if(count >=7){
+				break;//current the bitmap just can show 7 days.
+			}
+				
+		}
+		recordIndex = i;
+		Log.e("recordIndex", Integer.toString(recordIndex));
+	}
+
 
 }

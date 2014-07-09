@@ -20,8 +20,15 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 /**
@@ -53,6 +60,15 @@ public class DayActivities extends Activity {
 	private Button nextDay;		//increase day button
 	private Button nextMonth;	//increase month button
 	private Button recordFilter;//filter records button
+	
+	private Spinner manageSpinner;
+	private Button changeDate, changeTime;
+	private ImageButton searchID;
+	private EditText recordsIDEdit, typeEdit, infoEdit;
+	private TextView showIDDate, showIDTime;
+	private LinearLayout idResultLayout;
+	
+	private int maxRecordID;
 	
 
 	@Override
@@ -258,6 +274,11 @@ public class DayActivities extends Activity {
 			dayActivity.append(totalMilkDiaper.get(i).toString() + "\n");
 		}
 		dayActivity.append("---------------------------------------------------------\n\n");
+		dayActivity.append("ID"  + "\t\t");
+		dayActivity.append("Time" + "\t\t\t");
+		dayActivity.append("Type" + "\t\t\t");
+		dayActivity.append("Info");
+		dayActivity.append("\n\n");
 		
 		
 		//search recodes in sqlite db march date
@@ -279,6 +300,7 @@ public class DayActivities extends Activity {
 			} catch (Exception e) {
 			    e.printStackTrace();
 			}
+			dayActivity.append(activitiesByDate.get(i).getId()  + "\t\t");
 			dayActivity.append(time12 + "\t\t");
 			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t");
 			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
@@ -337,6 +359,7 @@ public class DayActivities extends Activity {
 			       			    e.printStackTrace();
 			       			}
 			       			
+			       			dayActivity.append(activitiesByDate.get(i).getId()  + "\t\t");
 		           			dayActivity.append(time12 + "\t\t");
 		           			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t");
 		           			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
@@ -352,5 +375,70 @@ public class DayActivities extends Activity {
 	public void resetResults(View v){
 		setCurrentDateAndActivities();
 		recordFilter.setText("Record Filter");
+	}
+	
+	public void manageRecord(View v){
+		// Create custom dialog object
+        final Dialog dialog = new Dialog(DayActivities.this);
+        // Include dialog.xml file
+        dialog.setContentView(R.layout.dialog_manage_records);
+        // Set dialog title
+        dialog.setTitle("Manage Records");
+        dialog.show();
+        
+        
+        changeDate = (Button) findViewById(R.id.changeDate);
+        changeTime = (Button) findViewById(R.id.changeTime);
+    	searchID = (ImageButton) findViewById(R.id.searchID);
+    	recordsIDEdit = (EditText) findViewById(R.id.recordsIDEdit);
+    	typeEdit = (EditText) findViewById(R.id.typeEdit);
+    	infoEdit = (EditText) findViewById(R.id.infoEdit);
+    	showIDDate = (TextView) findViewById(R.id.showIDDate);
+    	showIDTime = (TextView) findViewById(R.id.showIDTime);
+    	idResultLayout = (LinearLayout) findViewById(R.id.idResultLayout);
+    	
+        manageSpinner = (Spinner) findViewById(R.id.manageSpinner);
+        /*manageSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, 
+		            int pos, long id) {
+				// TODO Auto-generated method stub
+				switch(pos){
+				case 0:		//edit
+					idResultLayout.setEnabled(true);
+					break;
+				case 1:		//insert
+					recordsIDEdit.setEnabled(true);
+					searchID.setEnabled(true);
+					break;
+				case 2:		//delete
+					idResultLayout.setEnabled(true);
+					break;
+				}
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});*/
+	}
+	
+	private void editRecord(){
+		//input ID then search, enable except ID
+		//ID vaild
+		
+		
+	}
+	
+	private void insertRecord(){
+		
+	}
+	
+	private void deleteRecord(){
+		
 	}
 }

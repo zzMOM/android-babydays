@@ -24,14 +24,17 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class MainMenu extends Activity {
@@ -129,6 +132,7 @@ public class MainMenu extends Activity {
 				    
 			}
 		});
+		
  
 	}
 
@@ -218,6 +222,7 @@ public class MainMenu extends Activity {
             }
         });
     }
+	
 	
 	public void creatSleepDialog(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
