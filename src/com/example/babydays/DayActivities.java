@@ -63,7 +63,7 @@ public class DayActivities extends Activity {
 	private Button recordFilter;//filter records button
 	
 	private Spinner manageSpinner;
-	private Button changeDate, changeTime;
+	private Button pickDate, pickTime;
 	private ImageButton searchID;
 	private EditText recordsIDEdit, infoEdit;
 	private TextView typeEdit, showIDDate, showIDTime;
@@ -388,8 +388,8 @@ public class DayActivities extends Activity {
         dialog.show();
         
         
-        changeDate = (Button) dialog.findViewById(R.id.changeDate);
-        changeTime = (Button) dialog.findViewById(R.id.changeTime);
+        pickDate = (Button) dialog.findViewById(R.id.changeDate);
+        pickTime = (Button) dialog.findViewById(R.id.changeTime);
     	searchID = (ImageButton) dialog.findViewById(R.id.searchID);
     	recordsIDEdit = (EditText) dialog.findViewById(R.id.recordsIDEdit);
     	typeEdit = (TextView) dialog.findViewById(R.id.typeEdit);
@@ -437,17 +437,9 @@ public class DayActivities extends Activity {
 	}
 	
 	private void idResultLayoutDisabled(){
-		changeDate.setEnabled(false);
-		changeTime.setEnabled(false);
+		pickDate.setEnabled(false);
+		pickTime.setEnabled(false);
 		infoEdit.setEnabled(false);
-		
-	}
-	
-	private void insertRecord(){
-		
-	}
-	
-	private void deleteRecord(){
 		
 	}
 }
