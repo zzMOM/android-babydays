@@ -85,7 +85,7 @@ public class MainMenu extends Activity {
 		Log.e("default nap clock", Boolean.toString(isStart));
 		
 		mPrefsTime = getSharedPreferences(START_TIME, 0);
-		Log.e("default start time", mPrefsTime.getString(START_TIME, df.format(c.getTime())));
+		//Log.e("default start time", mPrefsTime.getString(START_TIME, df.format(c.getTime())));
 		
 		
 		viewAct = (Button)findViewById(R.id.babyActivities);
@@ -156,30 +156,50 @@ public class MainMenu extends Activity {
 	 * stop nap clock and record nap status
 	 */
 	private void updateNapStatusAndDatabaseRecord(){
+		String info;
 		//record current status info and change SharedPreferences status
-		String info;//status info for database
-		Editor editor = mPrefsStart.edit();
-		isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
-		if(isStart){
-			info = "Stop";
-			//stop the clock, set NAP_CLOCK false
-			editor.putBoolean(NAP_CLOCK, false);
-			editor.commit();//SharedPreferences modified
-	        
-			//debug
-			/*Log.e("current nap clock", info);
-			Log.e("NAP_CLOCK change", Boolean.toString(mPrefs.getBoolean(NAP_CLOCK, false)));*/
-	        
-			//get date and insert into database-TABLE baby_activities
-			//MINUTE - 5mins, to separate nap with eat and diaper
-			String formattedDate = df.format(c.getTime());
-			String[] s = formattedDate.split(" ");
-			String date = s[0];
-			String time = s[1];
-			String type = "Nap";
-			
-			dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
-		}
+ 	    Editor editorStart = mPrefsStart.edit();
+		//stop the clock, set NAP_CLOCK false
+  	   	editorStart.putBoolean(NAP_CLOCK, false);
+  	   	editorStart.commit();//SharedPreferences modified
+  	   	Log.e("put napclock to be", Boolean.toString(mPrefsStart.getBoolean(NAP_CLOCK, false)));
+  	   
+  	   	//get date and insert into database-TABLE baby_activities
+         String formatedDate = mPrefsTime.getString(START_TIME, "0");
+         String[] s = formatedDate.split(" ");
+         String date = s[0];
+         String time = s[1];
+         String type = "Nap";
+         
+         //calculate the difference between start and stop
+         Date startTime = null;
+			try {
+				startTime = df.parse(formatedDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+         Date currentTime = null;
+			try {
+				currentTime = df.parse(df.format(c.getTime()));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+         long diff = currentTime.getTime() - startTime.getTime();
+         Log.e("current time and start time", currentTime + " " + startTime);
+         
+         long timeInSeconds = diff / 1000;
+         int hours, min;
+         hours = (int) (timeInSeconds / 3600);
+         timeInSeconds = timeInSeconds - (hours * 3600);
+         min = (int) (timeInSeconds / 60);
+         String h, m;
+         h = hours < 10 ? "0" + hours : hours + "";
+         m = min < 10 ? "0" + min : min + "";
+         info = h + "h" + m + "min";
+         
+     	   dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
 	}
 	
 	public void createFeedDialog() {
@@ -214,7 +234,10 @@ public class MainMenu extends Activity {
             @Override
             public void onClick(View v) {
             	//check and change nap status
-            	updateNapStatusAndDatabaseRecord();
+            	isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
+            	if(isStart){
+            		updateNapStatusAndDatabaseRecord();
+            	}
             	
             	//get date to insert into database-TABLE baby_activities
                 String formattedDate = df.format(c.getTime());
@@ -243,6 +266,7 @@ public class MainMenu extends Activity {
 	    //if isStart is true, means nap is started
 	    //only choice is nap stop
 	    String message;
+	    isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
 	    if(isStart){
 	    	message = "Nap Stop!";
 	    } else {
@@ -264,59 +288,27 @@ public class MainMenu extends Activity {
 	           .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 		               @Override
 		               public void onClick(DialogInterface dialog, int id) {
-		            	   //record current status info and change SharedPreferences status
-		            	   String info;//status info for database
-		            	   Editor editorTime = mPrefsTime.edit();
-		            	   Editor editorStart = mPrefsStart.edit();
 		            	   isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
+		            	   Log.e("nap clock isStart is ", Boolean.toString(isStart));
 		                   if(isStart){		//isStart true, then stop clock
-		                	   //stop the clock, set NAP_CLOCK false
-		                	   editorStart.putBoolean(NAP_CLOCK, false);
-		                	   
-		                	 //get date and insert into database-TABLE baby_activities
-			                   String formatedDate = mPrefsTime.getString(START_TIME, df.format(c.getTime()));
-			                   String[] s = formatedDate.split(" ");
-			                   String date = s[0];
-			                   String time = s[1];
-			                   String type = "Nap";
-			                   
-			                   //calculate the difference between start and stop
-			                   Date startTime = null;
-							try {
-								startTime = df.parse(formatedDate);
-							} catch (ParseException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-			                   Date currentTime = null;
-							try {
-								currentTime = df.parse(df.format(c.getTime()));
-							} catch (ParseException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-			                   long diff = currentTime.getTime() - startTime.getTime();
-			                   
-			                   long timeInSeconds = diff / 1000;
-			                   int hours, min;
-			                   hours = (int) (timeInSeconds / 3600);
-			                   timeInSeconds = timeInSeconds - (hours * 3600);
-			                   min = (int) (timeInSeconds / 60);
-			                   String h, m;
-			                   h = hours < 10 ? "0" + hours : hours + "";
-			                   m = min < 10 ? "0" + min : min + "";
-			                   info = h + "h" + m + "min";
-			                   
-			               	   dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
+		                	   updateNapStatusAndDatabaseRecord();
 		                   } else {
+		                	   //record current status info and change SharedPreferences status
+			            	   Editor editorStart = mPrefsStart.edit();
 		                	   //start nap, set NAP_CLOCK true;
 		                	   editorStart.putBoolean(NAP_CLOCK, true);
-		                	  //start clock, set START_TIME current clock time
+		                	   editorStart.commit();//SharedPreferences modified
+		                	   Log.e("put napclock to be", Boolean.toString(mPrefsStart.getBoolean(NAP_CLOCK, false)));
+		                	   
+		                	   //start clock, set START_TIME current clock time
+		                	   Editor editorTime = mPrefsTime.edit();
 		                	   String currentTime = df.format(c.getTime());
 		                	   editorTime.putString(START_TIME, currentTime);
+		                	   editorTime.commit();
+			                   Log.e("start time current", mPrefsTime.getString(START_TIME, "0"));
+		                	   
+			                   
 		                   }
-		                   editorStart.commit();//SharedPreferences modified
-		                   Log.e("start time current", mPrefsTime.getString(START_TIME, "0"));
 		                   
 		                   //debug
 		                   /*Log.e("current nap clock", info);
@@ -368,7 +360,10 @@ public class MainMenu extends Activity {
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
 	            	   //check and change nap status
-	               	   updateNapStatusAndDatabaseRecord();
+	            	   isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
+		               if(isStart){
+		               		updateNapStatusAndDatabaseRecord();
+		               }
 	               	
 	           	       //get date to insert into database-TABLE baby_activities
 	                   String formattedDate = df.format(c.getTime());
