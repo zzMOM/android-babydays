@@ -232,7 +232,7 @@
         <item>Diaper</item>
     </string-array>
     <string-array name="typeSp">
-        <item>Pick Type</item>
+        <item>New Type</item>
         <item>FeedMilk</item>
         <item>Nap</item>
         <item>Diaper</item>

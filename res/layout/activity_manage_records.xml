@@ -19,7 +19,9 @@
         <TextView 
 	        android:id="@+id/recordsID"
 	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:textSize="22sp"
 	        android:textStyle="bold"
 	        android:textColor="@color/crimson"
 	        android:text="@string/records_id_"/>
@@ -28,6 +30,7 @@
             android:id="@+id/recordsIDEdit"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
             android:ems="6"
             android:inputType="number"
             android:textSize="20sp"/>
@@ -36,10 +39,15 @@
             android:id="@+id/searchID"
             android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
 	        android:src="@android:drawable/ic_menu_search"
 	        android:contentDescription="@string/search_id"/>
     </LinearLayout>
     
+    <ScrollView 
+        android:layout_width="wrap_content"
+	    android:layout_height="wrap_content">
+        
     <LinearLayout
         android:id="@+id/idResultLayout" 
         android:layout_width="match_parent"
@@ -52,12 +60,14 @@
 	    <LinearLayout 
 	        android:layout_width="match_parent"
 	    	android:layout_height="wrap_content"
-	    	android:orientation="vertical">
+	    	android:orientation="horizontal">
 	        
 	        <TextView 
 		        android:id="@+id/idDate"
 		        android:layout_width="wrap_content"
-		        android:layout_height="match_parent"
+		        android:layout_height="wrap_content"
+	        	android:layout_gravity="center_vertical"
+	        	android:textSize="22sp"
 		        android:textStyle="bold"
 		        android:textColor="@color/crimson"
 		        android:text="@string/date"/>
@@ -65,25 +75,29 @@
 	        <TextView
 	            android:id="@+id/showIDDate"
 		        android:layout_width="wrap_content"
-		        android:layout_height="match_parent"
+		        android:layout_height="wrap_content"
+		        android:paddingLeft="10dp"
+		        android:ems="5"
 				android:textSize="20sp"/>
 	        
 	        <Button 
 	            android:id="@+id/changeDate"
 		        android:layout_width="wrap_content"
-		        android:layout_height="match_parent"
+		        android:layout_height="wrap_content"
 		        android:text="@string/pick_date"/>
 	    </LinearLayout>
 	    
 	    <LinearLayout 
 	        android:layout_width="match_parent"
 	    	android:layout_height="wrap_content"
-	    	android:orientation="vertical">
+	    	android:orientation="horizontal">
 	        
 	        <TextView 
 		        android:id="@+id/idTime"
 		        android:layout_width="wrap_content"
-		        android:layout_height="match_parent"
+		        android:layout_height="wrap_content"
+	        	android:layout_gravity="center_vertical"
+	        	android:textSize="22sp"
 		        android:textStyle="bold"
 		        android:textColor="@color/crimson"
 		        android:text="@string/time"/>
@@ -91,13 +105,15 @@
 	        <TextView 
 	            android:id="@+id/showIDTime"
 		        android:layout_width="wrap_content"
-		        android:layout_height="match_parent"
+		        android:layout_height="wrap_content"
+		        android:paddingLeft="10dp"
+		        android:ems="5"
 		        android:textSize="20sp"/>
 	        
 	        <Button 
 	            android:id="@+id/changeTime"
 		        android:layout_width="wrap_content"
-		        android:layout_height="match_parent"
+		        android:layout_height="wrap_content"
 		        android:text="@string/pick_time"/>
 	    </LinearLayout>
 	    
@@ -110,15 +126,24 @@
 	        <TextView 
 		        android:id="@+id/idType"
 		        android:layout_width="wrap_content"
-		        android:layout_height="match_parent"
+		        android:layout_height="wrap_content"
+	        	android:layout_gravity="center_vertical"
+	        	android:textSize="22sp"
 		        android:textStyle="bold"
 		        android:textColor="@color/crimson"
 		        android:text="@string/type"/>
 	        
+	        <TextView 
+		        android:id="@+id/showIDType"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:ems="5"
+		        android:paddingLeft="10dp"/>
+	        
 	        <Spinner 
 	            android:id="@+id/typeSpinner"
 	            android:layout_width="wrap_content"
-		        android:layout_height="match_parent"
+		        android:layout_height="wrap_content"
 		        android:entries="@array/typeSp"/>
 	        
 	    </LinearLayout>
@@ -131,7 +156,9 @@
 	        <TextView 
 		        android:id="@+id/idInfo"
 		        android:layout_width="wrap_content"
-		        android:layout_height="match_parent"
+		        android:layout_height="wrap_content"
+	        	android:layout_gravity="center_vertical"
+	        	android:textSize="22sp"
 		        android:textStyle="bold"
 		        android:textColor="@color/crimson"
 		        android:text="@string/info"/>
@@ -140,11 +167,13 @@
 	            android:id="@+id/infoText"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
+		        android:paddingLeft="10dp"
 	            android:textSize="20sp"
 	            android:ems="10"/>
 	        
 	    </LinearLayout>
 	</LinearLayout>
+	</ScrollView>
 	    
     <LinearLayout 
         android:layout_width="match_parent"

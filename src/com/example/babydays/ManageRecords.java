@@ -3,6 +3,7 @@ package com.example.babydays;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.R.color;
 import android.os.Bundle;
@@ -37,7 +38,7 @@ public class ManageRecords extends Activity {
 	private Button pickDate, pickTime;
 	private ImageButton searchID;
 	private EditText recordsIDEdit;
-	private TextView showIDDate, showIDTime, infoText;
+	private TextView showIDDate, showIDTime, showIDType, infoText;
 	private LinearLayout idResultLayout;
 	
 	private MySQLiteHelper dbHelper;
@@ -65,6 +66,7 @@ public class ManageRecords extends Activity {
     	infoText = (TextView) findViewById(R.id.infoText);
     	showIDDate = (TextView) findViewById(R.id.showIDDate);
     	showIDTime = (TextView) findViewById(R.id.showIDTime);
+    	showIDType = (TextView) findViewById(R.id.showIDType);
     	//idResultLayout = (LinearLayout) dialog.findViewById(R.id.idResultLayout);
     	
     	//manageSpinner function
@@ -170,6 +172,51 @@ public class ManageRecords extends Activity {
 			}
 		});
         
+        //searchID button
+        searchID.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(recordsIDEdit.getText().toString().length() == 0){
+					return;
+				}
+				
+				int id = Integer.parseInt(recordsIDEdit.getText().toString());
+				//search by ID
+				BabyActivity activity = dbHelper.getBabyActivity(id);
+				//show current ID values
+				showIDDate.setText(activity.getDate().toString());
+				//date transfer 24hours to 12hours
+				String time12 = "";
+				SimpleDateFormat h_mm_a = new SimpleDateFormat("h:mma");
+				SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
+				String time24 = activity.getTime().toString();
+				try {
+				    Date t = hh_mm.parse(time24);
+				    time12 = h_mm_a.format(t).toString();
+				} catch (Exception e) {
+				    e.printStackTrace();
+				}
+				showIDTime.setText(time12);
+				showIDType.setText(activity.getType().toString());
+				infoText.setText(activity.getInfo().toString());
+				
+				//change components status by manageSpinner selection
+				int manageSpinnerPos = manageSpinner.getSelectedItemPosition();
+				switch(manageSpinnerPos){
+				case 0:		//edit
+					recordsIDEdit.setEnabled(false);
+					searchID.setEnabled(false);
+					pickDate.setEnabled(true);
+					pickTime.setEnabled(true);
+					typeSpinner.setEnabled(true);
+					break;
+				default:
+					break;
+					
+				}
+			}
+		});
 	}
 	
 	private void editFeed(){
