@@ -197,78 +197,78 @@
     <string name="next_day">></string>
     <string name="next_month">>></string>
     <string name="record_filter">Record Filter</string>
-    
+
     <string-array name="diaper">
-        <item >wet</item>
-        <item >poopy</item>
+        <item>wet</item>
+        <item>poopy</item>
     </string-array>
-    
     <string-array name="mileStone">
-        <item >First Smile</item>
-	    <item >First Roll Over</item>
-	    <item >First Time to Sit up</item>
-	    <item >First Time Crawing Back</item>
-	    <item >First Time Crawing Forward</item>
-	    <item >First Time Stand Support</item>
-	    <item >First Time Stand by Self</item>
-	    <item >First Time Walking when holding</item>
-	    <item >First Time Walk by self</item>
-	    <item >Speak First Word</item>
+        <item>First Smile</item>
+        <item>First Roll Over</item>
+        <item>First Time to Sit up</item>
+        <item>First Time Crawing Back</item>
+        <item>First Time Crawing Forward</item>
+        <item>First Time Stand Support</item>
+        <item>First Time Stand by Self</item>
+        <item>First Time Walking when holding</item>
+        <item>First Time Walk by self</item>
+        <item>Speak First Word</item>
     </string-array>
-    
     <string-array name="recordFilter">
-        <item >All</item>
-        <item >FeedMilk</item>
-        <item >Nap</item>
-        <item >Diaper</item>
-        <item >Diary</item>
+        <item>All</item>
+        <item>FeedMilk</item>
+        <item>Nap</item>
+        <item>Diaper</item>
+        <item>Diary</item>
     </string-array>
-    
     <string-array name="nap">
-        <item >Start</item>
-        <item >End</item>
+        <item>Start</item>
+        <item>End</item>
     </string-array>
-    
     <string-array name="attrSp">
-        <item >All</item>
-        <item >FeedMilk</item>
-        <item >Nap</item>
-        <item >Diaper</item>
+        <item>All</item>
+        <item>FeedMilk</item>
+        <item>Nap</item>
+        <item>Diaper</item>
     </string-array>
-    
+    <string-array name="typeSp">
+        <item>Pick Type</item>
+        <item>FeedMilk</item>
+        <item>Nap</item>
+        <item>Diaper</item>
+        <item>Milestone</item>
+    </string-array>
     <string-array name="rangeBySp">
-        <item >Day</item>
-        <item >Week</item>
-        <item >Month</item>
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
     </string-array>
-    
     <string-array name="manageSp">
-        <item >Edit</item>
-        <item >Insert</item>
-        <item >Delete</item>
+        <item>Edit</item>
+        <item>Insert</item>
+        <item>Delete</item>
     </string-array>
-    
-        <string name="reset">Reset</string>
-        <string name="summary">Summary</string>
-        <string name="chart_image">chart image</string>
-        <string name="next">></string>
-        <string name="prev">&lt;</string>
-        <string name="x_axis">x axis</string>
-        <string name="y_axis">y axis</string>
-        <string name="first">&lt;&lt;</string>
-        <string name="last">>></string>
-        <string name="read_sample">Read Sample</string>
-        <string name="pick_date">Pick Date</string>
-        <string name="set_time">Set Time</string>
-        <string name="manage_records">Edit Insert Delete Records</string>
-        <string name="records_id_">"Records ID: "</string>
-        <string name="search_id">search ID</string>
-        <string name="type">Type: </string>
-        <string name="info">Info: </string>
-        <string name="date">Date: </string>
-        <string name="time">Time: </string>
-        <string name="change_date">Change Date</string>
-        <string name="change_time">Change Time</string>
-	    
+
+    <string name="reset">Reset</string>
+    <string name="summary">Summary</string>
+    <string name="chart_image">chart image</string>
+    <string name="next">></string>
+    <string name="prev">&lt;</string>
+    <string name="x_axis">x axis</string>
+    <string name="y_axis">y axis</string>
+    <string name="first">&lt;&lt;</string>
+    <string name="last">>></string>
+    <string name="read_sample">Read Sample</string>
+    <string name="pick_date">Pick Date</string>
+    <string name="set_time">Set Time</string>
+    <string name="manage_records">Edit Insert Delete Records</string>
+    <string name="records_id_">"Records ID: "</string>
+    <string name="search_id">search ID</string>
+    <string name="type">Type: </string>
+    <string name="info">Info: </string>
+    <string name="date">Date: </string>
+    <string name="time">Time: </string>
+    <string name="pick_time">Pick Time</string>
+    <string name="title_activity_manage_records">ManageRecords</string>
 
 </resources>

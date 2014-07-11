@@ -136,8 +136,8 @@
 		        android:textColor="@color/crimson"
 		        android:text="@string/info"/>
 	        
-	        <EditText 
-	            android:id="@+id/infoEdit"
+	        <TextView 
+	            android:id="@+id/infoText"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 	            android:textSize="20sp"

@@ -15,6 +15,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,14 +63,7 @@ public class DayActivities extends Activity {
 	private Button nextMonth;	//increase month button
 	private Button recordFilter;//filter records button
 	
-	private Spinner manageSpinner;
-	private Button pickDate, pickTime;
-	private ImageButton searchID;
-	private EditText recordsIDEdit, infoEdit;
-	private TextView typeEdit, showIDDate, showIDTime;
-	private LinearLayout idResultLayout;
 	
-	private int maxRecordID;
 	
 
 	@Override
@@ -379,67 +373,7 @@ public class DayActivities extends Activity {
 	}
 	
 	public void manageRecord(View v){
-		// Create custom dialog object
-        final Dialog dialog = new Dialog(DayActivities.this);
-        // Include dialog.xml file
-        dialog.setContentView(R.layout.dialog_manage_records);
-        // Set dialog title
-        dialog.setTitle("Manage Records");
-        dialog.show();
-        
-        
-        pickDate = (Button) dialog.findViewById(R.id.changeDate);
-        pickTime = (Button) dialog.findViewById(R.id.changeTime);
-    	searchID = (ImageButton) dialog.findViewById(R.id.searchID);
-    	recordsIDEdit = (EditText) dialog.findViewById(R.id.recordsIDEdit);
-    	typeEdit = (TextView) dialog.findViewById(R.id.typeEdit);
-    	infoEdit = (EditText) dialog.findViewById(R.id.infoEdit);
-    	showIDDate = (TextView) dialog.findViewById(R.id.showIDDate);
-    	showIDTime = (TextView) dialog.findViewById(R.id.showIDTime);
-    	//idResultLayout = (LinearLayout) dialog.findViewById(R.id.idResultLayout);
-    	
-        manageSpinner = (Spinner) dialog.findViewById(R.id.manageSpinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.manageSp, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        manageSpinner.setAdapter(adapter);
-        
-        manageSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, 
-		            int pos, long id) {
-				// TODO Auto-generated method stub
-				switch(pos){
-				case 0:		//edit
-					idResultLayoutDisabled();
-					break;
-				case 1:		//insert
-					recordsIDEdit.setEnabled(false);
-					searchID.setEnabled(false);
-					break;
-				case 2:		//delete
-					idResultLayoutDisabled();
-					break;
-				}
-				
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-	}
-	
-	private void idResultLayoutDisabled(){
-		pickDate.setEnabled(false);
-		pickTime.setEnabled(false);
-		infoEdit.setEnabled(false);
-		
+		Intent intent = new Intent(DayActivities.this, ManageRecords.class);
+		startActivity(intent);
 	}
 }
