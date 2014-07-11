@@ -8,11 +8,14 @@ import android.R.color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -20,11 +23,13 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class ManageRecords extends Activity {
@@ -40,6 +45,8 @@ public class ManageRecords extends Activity {
 	private SimpleDateFormat df;
 	
 	private ArrayList<Integer> mSelectedItems;
+	static final int DATE_DIALOG_ID = 100;
+	static final int TIME_DIALOG_ID = 999;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +67,7 @@ public class ManageRecords extends Activity {
     	showIDTime = (TextView) findViewById(R.id.showIDTime);
     	//idResultLayout = (LinearLayout) dialog.findViewById(R.id.idResultLayout);
     	
+    	//manageSpinner function
         manageSpinner = (Spinner) findViewById(R.id.manageSpinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -108,7 +116,7 @@ public class ManageRecords extends Activity {
 			}
 		});
         
-        
+        //typeSpinner function
         typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
         typeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -143,6 +151,25 @@ public class ManageRecords extends Activity {
 			}
         	
 		});
+        
+        //pickDate button and pickTime button
+        pickDate.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showDialog(DATE_DIALOG_ID);
+			}
+		});
+        pickTime.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showDialog(TIME_DIALOG_ID);
+			}
+		});
+        
 	}
 	
 	private void editFeed(){
@@ -320,6 +347,49 @@ public class ManageRecords extends Activity {
 	    builder.show();
 	}
 
+	@Override
+	protected Dialog onCreateDialog(int id) {
+        c = Calendar.getInstance();
+		switch (id) {
+		case DATE_DIALOG_ID:
+			int year = c.get(Calendar.YEAR);
+	        int month = c.get(Calendar.MONTH);
+	        int day = c.get(Calendar.DAY_OF_MONTH);
+	        //Log.e("year month day", year + " " + month + " " + day);
+		    // set date picker as current date
+		    return new DatePickerDialog(this, datePickerListener, 
+                         year, month, day);
+		case TIME_DIALOG_ID:
+			//use current date as default date show in the DatePicker
+			int hour = c.get(Calendar.HOUR);
+			int min = c.get(Calendar.MINUTE);
+			return new TimePickerDialog(this, timePickerListener, hour, min, false);
+		}
+		return null;
+	}
+	
+	private DatePickerDialog.OnDateSetListener datePickerListener 
+    		= new DatePickerDialog.OnDateSetListener() {
+    	
+				@Override
+				public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+					// set selected date into textview
+					showIDDate.setText(new StringBuilder().append(selectedMonth + 1)
+								   .append("-").append(selectedDay).append("-").append(selectedYear)
+								   .toString());
+				}
+			};
+	
+	private TimePickerDialog.OnTimeSetListener timePickerListener
+			= new TimePickerDialog.OnTimeSetListener() {
+				
+				@Override
+				public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+					// set selected time to textview
+					showIDTime.setText(new StringBuilder().append(hourOfDay).append(":").append(minute).toString());
+				}
+			};
+	
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
