@@ -35,10 +35,10 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 public class ManageRecords extends Activity {
 	private Spinner manageSpinner, typeSpinner;
-	private Button pickDate, pickTime;
+	private Button pickDate, pickTime, cancelRecord, okRecord;
 	private ImageButton searchID;
 	private EditText recordsIDEdit;
-	private TextView showIDDate, showIDTime, showIDType, infoText;
+	private TextView showIDDate, showIDTime, showIDType, infoText, infoTextNew;
 	private LinearLayout idResultLayout;
 	
 	private MySQLiteHelper dbHelper;
@@ -64,9 +64,12 @@ public class ManageRecords extends Activity {
     	searchID = (ImageButton) findViewById(R.id.searchID);
     	recordsIDEdit = (EditText) findViewById(R.id.recordsIDEdit);
     	infoText = (TextView) findViewById(R.id.infoText);
+    	infoTextNew = (TextView) findViewById(R.id.infoTextNew);
     	showIDDate = (TextView) findViewById(R.id.showIDDate);
     	showIDTime = (TextView) findViewById(R.id.showIDTime);
     	showIDType = (TextView) findViewById(R.id.showIDType);
+    	cancelRecord = (Button) findViewById(R.id.cancelRecord);
+    	okRecord = (Button) findViewById(R.id.okRecord);
     	//idResultLayout = (LinearLayout) dialog.findViewById(R.id.idResultLayout);
     	
     	//manageSpinner function
@@ -84,31 +87,8 @@ public class ManageRecords extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, 
 		            int pos, long id) {
-				// TODO Auto-generated method stub
-				switch(pos){
-				case 0:		//edit
-					recordsIDEdit.setEnabled(true);
-					searchID.setEnabled(true);
-					pickDate.setEnabled(false);
-					pickTime.setEnabled(false);
-					typeSpinner.setEnabled(false);
-					break;
-				case 1:		//insert
-					recordsIDEdit.setEnabled(false);
-					searchID.setEnabled(false);
-					pickDate.setEnabled(true);
-					pickTime.setEnabled(true);
-					typeSpinner.setEnabled(true);
-					break;
-				case 2:		//delete
-					recordsIDEdit.setEnabled(true);
-					searchID.setEnabled(true);
-					pickDate.setEnabled(false);
-					pickTime.setEnabled(false);
-					typeSpinner.setEnabled(false);
-					break;
-				}
-				
+				//change status
+				manageSpinnerStatus(pos);
 			}
 
 			@Override
@@ -186,18 +166,8 @@ public class ManageRecords extends Activity {
 				BabyActivity activity = dbHelper.getBabyActivity(id);
 				//show current ID values
 				showIDDate.setText(activity.getDate().toString());
-				//date transfer 24hours to 12hours
-				String time12 = "";
-				SimpleDateFormat h_mm_a = new SimpleDateFormat("h:mma");
-				SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
 				String time24 = activity.getTime().toString();
-				try {
-				    Date t = hh_mm.parse(time24);
-				    time12 = h_mm_a.format(t).toString();
-				} catch (Exception e) {
-				    e.printStackTrace();
-				}
-				showIDTime.setText(time12);
+				showIDTime.setText(convertHourFormat24to12(time24));
 				showIDType.setText(activity.getType().toString());
 				infoText.setText(activity.getInfo().toString());
 				
@@ -217,7 +187,83 @@ public class ManageRecords extends Activity {
 				}
 			}
 		});
+	
+        //cancel button
+        cancelRecord.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				reset();
+			}
+		});
+        
+        //ok button
+        okRecord.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
+	
+	private void manageSpinnerStatus(int pos){
+		pickDate.setText("Pick Date");
+		pickTime.setText("Pick Time");
+		typeSpinner.setSelection(0);
+		switch(pos){
+		case 0:		//edit
+			recordsIDEdit.setEnabled(true);
+			searchID.setEnabled(true);
+			pickDate.setEnabled(false);
+			pickTime.setEnabled(false);
+			typeSpinner.setEnabled(false);
+			break;
+		case 1:		//insert
+			recordsIDEdit.setEnabled(false);
+			searchID.setEnabled(false);
+			pickDate.setEnabled(true);
+			pickTime.setEnabled(true);
+			typeSpinner.setEnabled(true);
+			break;
+		case 2:		//delete
+			recordsIDEdit.setEnabled(true);
+			searchID.setEnabled(true);
+			pickDate.setEnabled(false);
+			pickTime.setEnabled(false);
+			typeSpinner.setEnabled(false);
+			break;
+		}
+	}
+	
+	private String convertHourFormat24to12(String time24){
+		//date transfer 24hours to 12hours
+		String time12 = "";
+		SimpleDateFormat h_mm_a = new SimpleDateFormat("h:mma");
+		SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
+
+		try {
+		    Date t = hh_mm.parse(time24);
+		    time12 = h_mm_a.format(t).toString();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		return time12;
+	}
+	
+	private void reset(){
+		//clear all
+		recordsIDEdit.setText("");
+		showIDDate.setText("");
+		showIDTime.setText("");
+		showIDType.setText("");
+		infoText.setText("");
+		int pos = manageSpinner.getSelectedItemPosition();
+		//change status
+		manageSpinnerStatus(pos);
+	}
+	
 	
 	private void editFeed(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(ManageRecords.this);
@@ -233,8 +279,8 @@ public class ManageRecords extends Activity {
 	               public void onClick(DialogInterface dialog, int id) {
 	            	   //get input and show in infoText
 	                   String info = textOZ.getText().toString() + "oz";
-	                   infoText.setText("");
-	                   infoText.setText(info);
+	                   infoTextNew.setText("");
+	                   infoTextNew.setText(info);
 	                   // Close dialog
 	                   dialog.dismiss();
 	               }
@@ -276,7 +322,7 @@ public class ManageRecords extends Activity {
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
 	            	   //get input and show in infoText
-	            	   infoText.setText("");
+	            	   infoTextNew.setText("");
 	            	   String hh = hour.getText().toString();
 	            	   String mm = minute.getText().toString();
 	            	   if(hh.length() == 1){
@@ -290,7 +336,7 @@ public class ManageRecords extends Activity {
 	            		   mm = "00";
 	            	   }
 	                   String info = hh + "h" + mm + "min";
-	                   infoText.setText(info);
+	                   infoTextNew.setText(info);
 	                   // Close dialog
 	                   dialog.dismiss();
 	               }
@@ -335,8 +381,8 @@ public class ManageRecords extends Activity {
 	                   for(int i = 0; i < mSelectedItems.size(); i++){
 	                	   info.append(diaperSelectedItems[(Integer) mSelectedItems.get(i)] + " ");
 	                   }
-	                   infoText.setText("");
-	                   infoText.setText(info.toString());
+	                   infoTextNew.setText("");
+	                   infoTextNew.setText(info.toString());
 	                   
 	                   dialog.dismiss();
 	               }
@@ -380,8 +426,8 @@ public class ManageRecords extends Activity {
 	                	   info.append(milestoneSelectedItems[(Integer) mSelectedItems.get(i)] + " ");
 	                   }
 	                   
-	                   infoText.setText("");
-	                   infoText.setText(info.toString());
+	                   infoTextNew.setText("");
+	                   infoTextNew.setText(info.toString());
 	                   
 	                   dialog.dismiss();
 	               }
@@ -421,8 +467,11 @@ public class ManageRecords extends Activity {
 				@Override
 				public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
 					// set selected date into textview
-					showIDDate.setText(new StringBuilder().append(selectedMonth + 1)
-								   .append("-").append(selectedDay).append("-").append(selectedYear)
+					String m, d;
+					m = selectedMonth + 1 < 10? "0" + (selectedMonth + 1) : (selectedMonth + 1) + "";
+					d = selectedDay < 10? "0" + selectedDay : selectedDay + "";
+					pickDate.setText(new StringBuilder().append(m)
+								   .append("-").append(d).append("-").append(selectedYear)
 								   .toString());
 				}
 			};
@@ -433,7 +482,14 @@ public class ManageRecords extends Activity {
 				@Override
 				public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 					// set selected time to textview
-					showIDTime.setText(new StringBuilder().append(hourOfDay).append(":").append(minute).toString());
+					String a_p = "";
+					if(hourOfDay > 12){
+						hourOfDay -= 12;
+						a_p = "PM";
+					} else {
+						a_p = "AM";
+					}
+					pickTime.setText(new StringBuilder().append(hourOfDay).append(":").append(minute).append(a_p).toString());
 				}
 			};
 	
