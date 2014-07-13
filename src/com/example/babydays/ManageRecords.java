@@ -38,16 +38,19 @@ public class ManageRecords extends Activity {
 	private Button pickDate, pickTime, cancelRecord, okRecord;
 	private ImageButton searchID;
 	private EditText recordsIDEdit;
-	private TextView showIDDate, showIDTime, showIDType, infoText, infoTextNew;
+	private TextView errorMessage, showIDDate, showIDTime, showIDType, infoText, infoTextNew;
 	private LinearLayout idResultLayout;
 	
 	private MySQLiteHelper dbHelper;
 	private Calendar c;
 	private SimpleDateFormat df;
+	private BabyActivity oldActivity, newActivity;
 	
 	private ArrayList<Integer> mSelectedItems;
 	static final int DATE_DIALOG_ID = 100;
 	static final int TIME_DIALOG_ID = 999;
+	
+	private String timePick24 = "";//used for save timePick value in 24-hour format
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,7 @@ public class ManageRecords extends Activity {
     	showIDType = (TextView) findViewById(R.id.showIDType);
     	cancelRecord = (Button) findViewById(R.id.cancelRecord);
     	okRecord = (Button) findViewById(R.id.okRecord);
+    	errorMessage = (TextView) findViewById(R.id.errorMessage);
     	//idResultLayout = (LinearLayout) dialog.findViewById(R.id.idResultLayout);
     	
     	//manageSpinner function
@@ -163,13 +167,21 @@ public class ManageRecords extends Activity {
 				
 				int id = Integer.parseInt(recordsIDEdit.getText().toString());
 				//search by ID
-				BabyActivity activity = dbHelper.getBabyActivity(id);
+				oldActivity = dbHelper.getBabyActivity(id);
+				//check whether id exists
+				if(oldActivity == null){
+					recordsIDEdit.setText("");
+					errorMessage.setText("Can't find record");
+					return;
+				}
+				//enable okRecord button
+				okRecord.setEnabled(true);
 				//show current ID values
-				showIDDate.setText(activity.getDate().toString());
-				String time24 = activity.getTime().toString();
+				showIDDate.setText(oldActivity.getDate().toString());
+				String time24 = oldActivity.getTime().toString();
 				showIDTime.setText(convertHourFormat24to12(time24));
-				showIDType.setText(activity.getType().toString());
-				infoText.setText(activity.getInfo().toString());
+				showIDType.setText(oldActivity.getType().toString());
+				infoText.setText(oldActivity.getInfo().toString());
 				
 				//change components status by manageSpinner selection
 				int manageSpinnerPos = manageSpinner.getSelectedItemPosition();
@@ -202,8 +214,19 @@ public class ManageRecords extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+				//get manageSpinner value
+				int pos = manageSpinner.getSelectedItemPosition();
+				switch(pos){
+				case 0:	//edit
+					editRecord();
+					break;
+				case 1:	//insert
+					insertNewRecord();
+					break;
+				case 2:	//delet
+					deleteRecord();
+					break;
+				}
 			}
 		});
 	}
@@ -219,6 +242,7 @@ public class ManageRecords extends Activity {
 			pickDate.setEnabled(false);
 			pickTime.setEnabled(false);
 			typeSpinner.setEnabled(false);
+			okRecord.setEnabled(false);
 			break;
 		case 1:		//insert
 			recordsIDEdit.setEnabled(false);
@@ -226,6 +250,7 @@ public class ManageRecords extends Activity {
 			pickDate.setEnabled(true);
 			pickTime.setEnabled(true);
 			typeSpinner.setEnabled(true);
+			okRecord.setEnabled(true);
 			break;
 		case 2:		//delete
 			recordsIDEdit.setEnabled(true);
@@ -233,6 +258,7 @@ public class ManageRecords extends Activity {
 			pickDate.setEnabled(false);
 			pickTime.setEnabled(false);
 			typeSpinner.setEnabled(false);
+			okRecord.setEnabled(false);
 			break;
 		}
 	}
@@ -254,11 +280,13 @@ public class ManageRecords extends Activity {
 	
 	private void reset(){
 		//clear all
+		errorMessage.setText("");
 		recordsIDEdit.setText("");
 		showIDDate.setText("");
 		showIDTime.setText("");
 		showIDType.setText("");
 		infoText.setText("");
+		infoTextNew.setText("");
 		int pos = manageSpinner.getSelectedItemPosition();
 		//change status
 		manageSpinnerStatus(pos);
@@ -475,6 +503,8 @@ public class ManageRecords extends Activity {
 								   .toString());
 				}
 			};
+			
+			
 	
 	private TimePickerDialog.OnTimeSetListener timePickerListener
 			= new TimePickerDialog.OnTimeSetListener() {
@@ -482,6 +512,7 @@ public class ManageRecords extends Activity {
 				@Override
 				public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 					// set selected time to textview
+					timePick24 = new StringBuilder().append(hourOfDay).append(":").append(minute).toString();
 					String a_p = "";
 					if(hourOfDay > 12){
 						hourOfDay -= 12;
@@ -494,6 +525,87 @@ public class ManageRecords extends Activity {
 			};
 	
 	
+			
+	
+	
+			
+	private void editRecord(){
+		newActivity = new BabyActivity(oldActivity);
+		String d = pickDate.getText().toString();
+		if(!d.equals("Pick Date")){
+			newActivity.setDate(d);
+		}
+		String t = pickTime.getText().toString();
+		if(!t.equals("Pick Time")){
+			newActivity.setTime(timePick24);
+		}
+		if(typeSpinner.getSelectedItemPosition() != 0){
+			Resources res = getResources();
+			String[] typeItems = res.getStringArray(R.array.typeSp);
+			newActivity.setType(typeItems[typeSpinner.getSelectedItemPosition()]);
+		}
+		String i = infoTextNew.getText().toString();
+		if(i.length() != 0){
+			newActivity.setInfo(i);
+		}
+		
+		//Log.e("newActivity", newActivity.getId() + " " + newActivity.getDate().toString() + " " + newActivity.getTime() + " "
+				//+ newActivity.getType().toString() + " " + newActivity.getInfo().toString());
+		
+		//update
+		dbHelper.updateBabyActivity(newActivity);
+		reset();
+	}
+	
+	private void insertNewRecord(){
+		Boolean isMissing = false;
+		newActivity = new BabyActivity();
+		String d = pickDate.getText().toString();
+		if(d.equals("Pick Date")){
+			isMissing = true;
+			pickDate.setTextColor(Color.RED);
+		} else {
+			newActivity.setDate(d);
+			pickDate.setTextColor(Color.BLACK);
+		}
+		String t = pickTime.getText().toString();
+		if(t.equals("Pick Time")){
+			isMissing = true;
+			pickTime.setTextColor(Color.RED);
+		} else {
+			newActivity.setTime(timePick24);
+			pickTime.setTextColor(Color.BLACK);
+		}
+		TextView textView = (TextView) typeSpinner.getChildAt(0);
+		if(typeSpinner.getSelectedItemPosition() == 0){
+			isMissing = true;
+			textView.setTextColor(Color.RED);
+		} else {
+			Resources res = getResources();
+			String[] typeItems = res.getStringArray(R.array.typeSp);
+			newActivity.setType(typeItems[typeSpinner.getSelectedItemPosition()]);
+			textView.setTextColor(Color.BLACK);
+		}
+		String i = infoTextNew.getText().toString();
+		if(i.length() != 0){
+			newActivity.setInfo(i);
+		}
+		
+		//update
+		if(isMissing){
+			errorMessage.setText("Missing infomation!");
+			return;
+		}
+		dbHelper.addBabyActivity(newActivity);
+		reset();
+	}
+	
+	private void deleteRecord(){
+		dbHelper.deleteBabyActivity(oldActivity);
+		reset();
+	}
+			
+			
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

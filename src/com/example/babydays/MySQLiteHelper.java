@@ -152,16 +152,19 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                 null); // h. limit
  
         // 3. if we got results get the first one
-        if (cursor != null)
+        BabyActivity babyActivity = new BabyActivity();
+        if (cursor != null && cursor.getCount() > 0){
             cursor.moveToFirst();
  
-        // 4. build babyactivity object
-        BabyActivity babyActivity = new BabyActivity();
-        babyActivity.setId(Integer.parseInt(cursor.getString(0)));
-        babyActivity.setDate(cursor.getString(1));
-        babyActivity.setTime(cursor.getString(2));
-        babyActivity.setType(cursor.getString(3));
-        babyActivity.setInfo(cursor.getString(4));
+	        // 4. build babyactivity object
+	        babyActivity.setId(Integer.parseInt(cursor.getString(0)));
+	        babyActivity.setDate(cursor.getString(1));
+	        babyActivity.setTime(cursor.getString(2));
+	        babyActivity.setType(cursor.getString(3));
+	        babyActivity.setInfo(cursor.getString(4));
+        } else {
+        	return null;
+        }
  
         //Log.d("getBabyActivity("+id+")", babyActivity.toString());
  

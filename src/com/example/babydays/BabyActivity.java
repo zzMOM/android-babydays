@@ -25,6 +25,14 @@ public class BabyActivity {
 		this.info = info;
 	}
 	
+	public BabyActivity(BabyActivity newActivity){
+		this.id = newActivity.id;
+		this.date = newActivity.date;
+		this.time = newActivity.time;
+		this.type = newActivity.type;
+		this.info = newActivity.info;
+	}
+	
 	public int getId() {
 		return id;
 	}

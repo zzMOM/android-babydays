@@ -270,5 +270,7 @@
     <string name="time">Time: </string>
     <string name="pick_time">Pick Time</string>
     <string name="title_activity_manage_records">ManageRecords</string>
+    <string name="current">Current</string>
+    <string name="newvalue">NewValue</string>
 
 </resources>
