@@ -544,7 +544,10 @@ public class ManageRecords extends Activity {
 					} else {
 						a_p = "AM";
 					}
-					pickTime.setText(new StringBuilder().append(hourOfDay).append(":").append(minute).append(a_p).toString());
+					String h, m;
+					h = hourOfDay < 10? "0" + hourOfDay : hourOfDay + "";
+					m = minute < 10? "0" + minute : minute + "";
+					pickTime.setText(new StringBuilder().append(h).append(":").append(m).append(a_p).toString());
 				}
 			};
 	

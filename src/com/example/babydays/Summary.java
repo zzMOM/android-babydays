@@ -1,6 +1,7 @@
 package com.example.babydays;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -272,11 +273,6 @@ public class Summary extends Activity {
 		int count = 0;
 		int i = recordIndex;
 		int y = 0;
-		float endTime = 0;
-		String endDate = "";
-		boolean endFlag = false;
-		float lastx = 0;
-		float lasty = 0;
 		Bitmap pee = BitmapFactory.decodeResource(getResources(), R.drawable.dropwater);
 		Bitmap poo = BitmapFactory.decodeResource(getResources(), R.drawable.poo);
 		Bitmap bottle = BitmapFactory.decodeResource(getResources(), R.drawable.bottle2);
@@ -295,22 +291,8 @@ public class Summary extends Activity {
 				prevDate = date;
 			}
 			
-			/*//change datebase time type to 24hour format, don't need to transfer again
-			//date transfer 12hours to 24hours
-			String time24 = "";
-			SimpleDateFormat h_mm_a   = new SimpleDateFormat("h:mma");
-			SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
-
-			try {
-			    Date t = h_mm_a.parse(time);
-			    time24 = hh_mm.format(t).toString();
-			} catch (Exception e) {
-			    e.printStackTrace();
-			    i--;
-			    continue;
-			}*/
-			
-			float j = Integer.parseInt(time.substring(0, 2)) + (float)Integer.parseInt(time.substring(3, 5)) / 60;
+			String[] tsplit = time.split(":");
+			float j = Integer.parseInt(tsplit[0]) + (float)Integer.parseInt(tsplit[1]) / 60;
 			float x = ystart + gapx * j;
 			if(type.equals("FeedMilk")){
 				//paint.setColor(Color.RED);
@@ -324,29 +306,33 @@ public class Summary extends Activity {
 				} else {
 					canvas.drawBitmap(pee, x - 10, y, paint);
 				}
-			} else if(type.equals("Nap") && info.equals("End")){
-				endFlag = true;
-				endTime = x;
-				endDate = date;
-			} else if(type.equals("Nap") && info.equals("Start")){
+			} else if(type.equals("Nap")){
+				StringBuilder endDateb = new StringBuilder();
+				StringBuilder endTimeb = new StringBuilder();
+				getNapEndDateTime(date, time, info, endDateb, endTimeb);
+				String endDate = endDateb.toString();
+				String endTime = endTimeb.toString();
+				
 				paint.setColor(Color.YELLOW);
 				paint.setStrokeWidth(10);
-				if(!endFlag){
+				tsplit = endTime.split(":");
+				j = Integer.parseInt(tsplit[0]) + (float)Integer.parseInt(tsplit[1]) / 60;
+				float endx = ystart + gapx * j;
+				if(endDate.equals(date)){
+					//draw same day
+					canvas.drawLine(x, y, endx, y, paint);
+				} else {
+					//draw two different day
+					//date to 12:00am
 					canvas.drawLine(x, y, ystart + gapx * 24, y, paint);//draw current to 12:00AM
-				} else if(endFlag && date.equals(endDate)){//start end in the same day
-					canvas.drawLine(x, y, endTime, y, paint);
-				} else if(endFlag && !date.equals(endDate) && endTime == lastx){//start end in different day
-					canvas.drawLine(ystart, lasty, lastx, lasty, paint);//draw 12:00am to lastx,lasty
-					canvas.drawLine(x, y, ystart + gapx * 24, y, paint);//draw current to 12:00AM
+					//12:00am to endDate
+					int endy = h - 60 - gapy * (count - 1);
+					canvas.drawLine(ystart, endy, endx, endy, paint);//draw 12:00am to enddate endtime
 				}
-				//reset
-				endFlag = false;
-				endTime = 0;
-				endDate = "";
+				
+				
 			}
 			
-			lastx = x;
-			lasty = y;
 			i--;
 			if(count >=7){
 				break;//current the bitmap just can show 7 days.
@@ -363,11 +349,6 @@ public class Summary extends Activity {
 		int count = 0;
 		int i = recordIndex;
 		int y = 0;
-		float startTime = 0;
-		String startDate = "";
-		boolean startFlag = false;
-		float lastx = 0;
-		float lasty = 0;
 		Bitmap pee = BitmapFactory.decodeResource(getResources(), R.drawable.dropwater);
 		Bitmap poo = BitmapFactory.decodeResource(getResources(), R.drawable.poo);
 		Bitmap bottle = BitmapFactory.decodeResource(getResources(), R.drawable.bottle2);
@@ -387,7 +368,8 @@ public class Summary extends Activity {
 			}
 			
 			
-			float j = Integer.parseInt(time.substring(0, 2)) + (float)Integer.parseInt(time.substring(3, 5)) / 60;
+			String[] tsplit = time.split(":");
+			float j = Integer.parseInt(tsplit[0]) + (float)Integer.parseInt(tsplit[1]) / 60;
 			float x = ystart + gapx * j;
 			if(type.equals("FeedMilk")){
 				/*paint.setColor(Color.RED);
@@ -401,29 +383,33 @@ public class Summary extends Activity {
 				} else {
 					canvas.drawBitmap(pee, x - 10, y, paint);
 				}
-			} else if(type.equals("Nap") && info.equals("End")){
+			} else if(type.equals("Nap")){
+				StringBuilder endDateb = new StringBuilder();
+				StringBuilder endTimeb = new StringBuilder();
+				getNapEndDateTime(date, time, info, endDateb, endTimeb);
+				String endDate = endDateb.toString();
+				String endTime = endTimeb.toString();
+				
 				paint.setColor(Color.YELLOW);
 				paint.setStrokeWidth(10);
-				if(!startFlag){
-					canvas.drawLine(ystart, y, x, y, paint);//draw 12:00am to x,y
-				} else if(startFlag && date.equals(startDate)){//start end in the same day
-					canvas.drawLine(x, y, startTime, y, paint);
-				} else if(startFlag && !date.equals(startDate) && startTime == lastx){//start end in different day
-					canvas.drawLine(ystart, y, x, y, paint);//draw 12:00am to x,y
-					canvas.drawLine(lastx, lasty, ystart + gapx * 24, lasty, paint);//draw lastx,lasty to 12:00AM
+				tsplit = endTime.split(":");
+				j = Integer.parseInt(tsplit[0]) + (float)Integer.parseInt(tsplit[1]) / 60;
+				float endx = ystart + gapx * j;
+				if(endDate.equals(date)){
+					//draw same day
+					canvas.drawLine(x, y, endx, y, paint);
+				} else {
+					//draw two different day
+					//date to 12:00am
+					canvas.drawLine(x, y, ystart + gapx * 24, y, paint);//draw current to 12:00AM
+					//12:00am to endDate
+					int endy = h - 60 - gapy * (count + 1);
+					canvas.drawLine(ystart, endy, endx, endy, paint);//draw 12:00am to enddate endtime
 				}
-				//reset
-				startFlag = false;
-				startTime = 0;
-				startDate = "";
-			} else if(type.equals("Nap") && info.equals("Start")){
-				startFlag = true;
-				startTime = x;
-				startDate = date;
+				
+				
 			}
 			
-			lastx = x;
-			lasty = y;
 			i++;
 			if(count >=7){
 				break;//current the bitmap just can show 7 days.
@@ -512,4 +498,26 @@ private void drawChartBySample(Paint paint, Canvas canvas, int w, int h, int gap
 	}
 
 
+	private void getNapEndDateTime(String date, String time, String info, StringBuilder endDate, StringBuilder endTime){
+		Calendar cal = Calendar.getInstance();
+		String[] d = date.split("-");
+		String[] t = time.split(":");
+		cal.set(Integer.parseInt(d[2]), Integer.parseInt(d[0]) - 1, Integer.parseInt(d[1]), 
+				Integer.parseInt(t[0]), Integer.parseInt(t[1]));
+		Log.e("set time: ", cal.getTime().toString());
+		cal.add(Calendar.MINUTE, Integer.parseInt(info.substring(3, 5)));
+		cal.add(Calendar.HOUR_OF_DAY, Integer.parseInt(info.substring(0, 2)));
+		Log.e("time after add ", cal.get(Calendar.MINUTE) + "  " + cal.get(Calendar.HOUR_OF_DAY));
+		
+		//get endDate endTime
+		String m, day;
+		m = cal.get(Calendar.MONTH) + 1 < 10? "0" + (cal.get(Calendar.MONTH) + 1) : (cal.get(Calendar.MONTH) + 1) + "";
+		day = cal.get(Calendar.DAY_OF_MONTH) < 10? "0" + cal.get(Calendar.DAY_OF_MONTH) : cal.get(Calendar.DAY_OF_MONTH) + "";
+		endDate.append(m).append("-").append(day).append("-")
+				.append(cal.get(Calendar.YEAR)).toString();
+		String hour, min;
+		hour = cal.get(Calendar.HOUR_OF_DAY) < 10? "0" + cal.get(Calendar.HOUR_OF_DAY) : cal.get(Calendar.HOUR_OF_DAY) + "";
+		min = cal.get(Calendar.MINUTE) < 10? "0" + cal.get(Calendar.MINUTE) : cal.get(Calendar.MINUTE) + "";
+		endTime.append(hour).append(":").append(min).toString();
+	}
 }

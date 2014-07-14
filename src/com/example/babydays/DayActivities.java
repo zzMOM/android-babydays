@@ -376,4 +376,12 @@ public class DayActivities extends Activity {
 		Intent intent = new Intent(DayActivities.this, ManageRecords.class);
 		startActivity(intent);
 	}
+	
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		//super.onBackPressed();
+		Intent intent = new Intent(this, MainMenu.class);
+		startActivity(intent);
+	}
 }
