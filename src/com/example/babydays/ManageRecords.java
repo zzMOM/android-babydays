@@ -13,14 +13,17 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.InputType;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,6 +33,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.TimePicker;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -92,6 +96,7 @@ public class ManageRecords extends Activity {
 			public void onItemSelected(AdapterView<?> parent, View view, 
 		            int pos, long id) {
 				//change status
+				reset();
 				manageSpinnerStatus(pos);
 			}
 
@@ -156,47 +161,27 @@ public class ManageRecords extends Activity {
 			}
 		});
         
+        
+        //recordsIDEdit press enter
+        recordsIDEdit.setOnEditorActionListener(new OnEditorActionListener() {
+			
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				// TODO Auto-generated method stub
+				if((actionId == EditorInfo.IME_ACTION_DONE) || (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) &&
+		                (event.getAction() == KeyEvent.ACTION_DOWN )){
+					doSearch();
+				}
+				return false;
+			}
+		});
+        
         //searchID button
         searchID.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				if(recordsIDEdit.getText().toString().length() == 0){
-					return;
-				}
-				
-				int id = Integer.parseInt(recordsIDEdit.getText().toString());
-				//search by ID
-				oldActivity = dbHelper.getBabyActivity(id);
-				//check whether id exists
-				if(oldActivity == null){
-					recordsIDEdit.setText("");
-					errorMessage.setText("Can't find record");
-					return;
-				}
-				//enable okRecord button
-				okRecord.setEnabled(true);
-				//show current ID values
-				showIDDate.setText(oldActivity.getDate().toString());
-				String time24 = oldActivity.getTime().toString();
-				showIDTime.setText(convertHourFormat24to12(time24));
-				showIDType.setText(oldActivity.getType().toString());
-				infoText.setText(oldActivity.getInfo().toString());
-				
-				//change components status by manageSpinner selection
-				int manageSpinnerPos = manageSpinner.getSelectedItemPosition();
-				switch(manageSpinnerPos){
-				case 0:		//edit
-					recordsIDEdit.setEnabled(false);
-					searchID.setEnabled(false);
-					pickDate.setEnabled(true);
-					pickTime.setEnabled(true);
-					typeSpinner.setEnabled(true);
-					break;
-				default:
-					break;
-					
-				}
+				doSearch();
 			}
 		});
 	
@@ -292,6 +277,45 @@ public class ManageRecords extends Activity {
 		manageSpinnerStatus(pos);
 	}
 	
+	
+	private void doSearch(){
+		if(recordsIDEdit.getText().toString().length() == 0){
+			return;
+		}
+		
+		int id = Integer.parseInt(recordsIDEdit.getText().toString());
+		//search by ID
+		oldActivity = dbHelper.getBabyActivity(id);
+		//check whether id exists
+		if(oldActivity == null){
+			recordsIDEdit.setText("");
+			errorMessage.setText("Can't find record");
+			return;
+		}
+		//enable okRecord button
+		okRecord.setEnabled(true);
+		//show current ID values
+		showIDDate.setText(oldActivity.getDate().toString());
+		String time24 = oldActivity.getTime().toString();
+		showIDTime.setText(convertHourFormat24to12(time24));
+		showIDType.setText(oldActivity.getType().toString());
+		infoText.setText(oldActivity.getInfo().toString());
+		
+		//change components status by manageSpinner selection
+		int manageSpinnerPos = manageSpinner.getSelectedItemPosition();
+		switch(manageSpinnerPos){
+		case 0:		//edit
+			recordsIDEdit.setEnabled(false);
+			searchID.setEnabled(false);
+			pickDate.setEnabled(true);
+			pickTime.setEnabled(true);
+			typeSpinner.setEnabled(true);
+			break;
+		default:
+			break;
+			
+		}
+	}
 	
 	private void editFeed(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(ManageRecords.this);
@@ -611,6 +635,14 @@ public class ManageRecords extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.manage_records, menu);
 		return true;
+	}
+	
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		//super.onBackPressed();
+		Intent intent = new Intent(this, DayActivities.class);
+		startActivity(intent);
 	}
 
 }

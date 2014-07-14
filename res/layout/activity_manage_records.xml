@@ -41,7 +41,8 @@
 	        android:layout_gravity="center_vertical"
             android:ems="6"
             android:inputType="number"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:imeOptions="actionDone"/>
         
         <ImageButton 
             android:id="@+id/searchID"
@@ -159,6 +160,7 @@
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 			        android:ems="5"
+			        android:textSize="20sp"
 			        android:paddingLeft="10dp"/>
 		        
 		        <Spinner 
@@ -197,6 +199,7 @@
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 			        android:ems="5"
+			        android:textSize="20sp"
 			        android:paddingLeft="10dp"/>
             </TableRow>  
         </TableLayout>

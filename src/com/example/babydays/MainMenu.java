@@ -212,6 +212,7 @@ public class MainMenu extends Activity {
 
         // set values for custom dialog components - text, edit text and button
         TextView showTime = (TextView) dialog.findViewById(R.id.showTime);
+        c = Calendar.getInstance();
         String formattedDate = df.format(c.getTime());
         showTime.setText(formattedDate);
         
@@ -302,6 +303,7 @@ public class MainMenu extends Activity {
 		                	   
 		                	   //start clock, set START_TIME current clock time
 		                	   Editor editorTime = mPrefsTime.edit();
+		                	   c = Calendar.getInstance();
 		                	   String currentTime = df.format(c.getTime());
 		                	   editorTime.putString(START_TIME, currentTime);
 		                	   editorTime.commit();
@@ -366,6 +368,7 @@ public class MainMenu extends Activity {
 		               }
 	               	
 	           	       //get date to insert into database-TABLE baby_activities
+		               c = Calendar.getInstance();
 	                   String formattedDate = df.format(c.getTime());
 	                   String[] s = formattedDate.split(" ");
 	                   String date = s[0];
@@ -423,6 +426,7 @@ public class MainMenu extends Activity {
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
 	            	 //get date to insert into database-TABLE baby_activities
+	            	   c = Calendar.getInstance();
 	                   String formattedDate = df.format(c.getTime());
 	                   String[] s = formattedDate.split(" ");
 	                   String date = s[0];
