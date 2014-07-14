@@ -58,8 +58,10 @@
 	    android:layout_height="wrap_content">
         
         <TableLayout 
-            android:layout_width="fill_parent"
-        	android:layout_height="fill_parent">
+            android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:background="@drawable/border">
+        	
             
             <TableRow 
                 android:id="@+id/tableRowAttr"
@@ -70,12 +72,14 @@
                     android:layout_width="wrap_content"
         			android:layout_height="wrap_content"
         			android:layout_column='1'
+        			android:layout_gravity="center"
         			android:text="@string/current"/>
                 
                 <TextView 
                     android:layout_width="wrap_content"
         			android:layout_height="wrap_content"
         			android:layout_column='2'
+        			android:layout_gravity="center"
         			android:text="@string/newvalue"/>
                 
             </TableRow>

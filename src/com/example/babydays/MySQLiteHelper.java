@@ -200,7 +200,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         }
  
         //Log.d("getAllBabyActivity()", babyActivityList.toString());
- 
+     // 4. close
+        db.close();
         // return books
         return babyActivityList;
     }
