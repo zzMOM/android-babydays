@@ -19,25 +19,44 @@
         
     </ListView>
     
-    
-    <Button 
-        android:id="@+id/summary"
+    <LinearLayout 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/navy"
-        android:textColor="@color/white"
-        android:text="@string/summary"/>
+        android:orientation="horizontal">
+        
+        <Button 
+	        android:id="@+id/babyMemoryBook"
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1"
+	        android:layout_margin="1dip"
+	        android:background="@color/navy"
+	        android:textColor="@color/white"
+	        android:text="@string/memory_book"/>
+	    
+	    <Button 
+	        android:id="@+id/summary"
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1"
+	        android:layout_margin="1dip"
+	        android:background="@color/navy"
+	        android:textColor="@color/white"
+	        android:text="@string/summary"/>
+	    
+	    <Button 
+	        android:id="@+id/babyActivities"
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1"
+	        android:layout_margin="1dip"
+	        android:background="@color/navy"
+	        android:textColor="@color/white"
+	        android:text="@string/babyactivity"/>
+        
+    </LinearLayout>
     
-    <Button 
-        android:id="@+id/babyActivities"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/summary"
-        android:background="@color/navy"
-        android:textColor="@color/white"
-        android:text="@string/babyactivity"/>
     
     
 

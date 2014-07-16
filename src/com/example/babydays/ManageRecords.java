@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.R.color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,7 +18,6 @@ import android.graphics.Color;
 import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,11 +41,9 @@ public class ManageRecords extends Activity {
 	private ImageButton searchID;
 	private EditText recordsIDEdit;
 	private TextView errorMessage, showIDDate, showIDTime, showIDType, infoText, infoTextNew;
-	private LinearLayout idResultLayout;
 	
 	private MySQLiteHelper dbHelper;
 	private Calendar c;
-	private SimpleDateFormat df;
 	private BabyActivity oldActivity, newActivity;
 	
 	private ArrayList<Integer> mSelectedItems;
@@ -64,7 +60,6 @@ public class ManageRecords extends Activity {
 		dbHelper = new MySQLiteHelper(this);
 		//date and time format
 		c = Calendar.getInstance();
-		df = new SimpleDateFormat("MM-dd-yyyy HH:mm");
 		
 		pickDate = (Button) findViewById(R.id.changeDate);
         pickTime = (Button) findViewById(R.id.changeTime);
@@ -403,7 +398,7 @@ public class ManageRecords extends Activity {
 	}
 	
 	private void editDiaper(){
-		mSelectedItems = new ArrayList();
+		mSelectedItems = new ArrayList<Integer>();
 		AlertDialog.Builder builder = new AlertDialog.Builder(ManageRecords.this);
 	    builder//.setView(inflater.inflate(R.layout.dialog_diaper, null))
 	    	   .setTitle("Edit Diaper Change!")
@@ -448,7 +443,7 @@ public class ManageRecords extends Activity {
 	}
 	
 	private void editMilestone(){
-		mSelectedItems = new ArrayList();
+		mSelectedItems = new ArrayList<Integer>();
 		AlertDialog.Builder builder = new AlertDialog.Builder(ManageRecords.this);
 	    builder//.setView(inflater.inflate(R.layout.dialop_milstones, null))
 	    	   .setTitle("MileStones")

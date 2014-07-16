@@ -1,15 +1,11 @@
 package com.example.babydays;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,10 +13,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Bitmap.CompressFormat;
-import android.text.TextPaint;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -113,7 +105,6 @@ public class Diary extends Activity {
 	
 	public void cancelDialog(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(Diary.this);
-		LayoutInflater inflater = Diary.this.getLayoutInflater();
 		builder.setMessage("Do you want to delete all the text in text area? If yes, you can't recover it.");
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			

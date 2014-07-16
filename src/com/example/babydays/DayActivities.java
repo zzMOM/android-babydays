@@ -1,36 +1,23 @@
 package com.example.babydays;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import android.R.layout;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 /**
@@ -53,14 +40,14 @@ public class DayActivities extends Activity {
 
 	private Calendar c;
 
-	private DatePicker datePicker;	//DatePicker
+	//private DatePicker datePicker;	//DatePicker
 	private TextView showDate;
 	private TextView showSetDate;	//show DatePicker or <> set date
 	private Button setDate;		//show DatePicker dialog
-	private Button preMonth;	//decrease month button
-	private Button preDay;		//decrease day button
-	private Button nextDay;		//increase day button
-	private Button nextMonth;	//increase month button
+	//private Button preMonth;	//decrease month button
+	//private Button preDay;		//decrease day button
+	//private Button nextDay;		//increase day button
+	//private Button nextMonth;	//increase month button
 	private Button recordFilter;//filter records button
 	
 	
@@ -73,16 +60,14 @@ public class DayActivities extends Activity {
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
-		//get all records
-		List<BabyActivity> routine = dbHelper.getAllBabyActivity();
 		
 		dayActivity = (TextView)findViewById(R.id.dayActivity);
 		showDate = (TextView) findViewById(R.id.showDate);
 		showSetDate = (TextView)findViewById(R.id.showSetDate);
-		preMonth = (Button)findViewById(R.id.preMonth);
-		preDay = (Button)findViewById(R.id.preDay);
-		nextDay = (Button)findViewById(R.id.nextDay);
-		nextMonth = (Button)findViewById(R.id.nextMonth);
+		//preMonth = (Button)findViewById(R.id.preMonth);
+		//preDay = (Button)findViewById(R.id.preDay);
+		//nextDay = (Button)findViewById(R.id.nextDay);
+		//nextMonth = (Button)findViewById(R.id.nextMonth);
 		
 		
 		setDate = (Button)findViewById(R.id.setDate);
@@ -306,8 +291,6 @@ public class DayActivities extends Activity {
 	
 	public void creatFilterDialog(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(DayActivities.this);
-	    // Get the layout inflater
-	    LayoutInflater inflater = DayActivities.this.getLayoutInflater();
 	    
 	    // Inflate and set the layout for the dialog
 	    // Pass null as the parent view because its going in the dialog layout

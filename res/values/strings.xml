@@ -176,7 +176,7 @@
     <string name="walkself">First Time Walk by self</string>
     <string name="speakfirstword">Speak First Word</string>
     <string name="note">Note:</string>
-    <string name="babyactivity">baby Activities</string>
+    <string name="babyactivity">Activities</string>
     <string name="title_activity_summary">Summary</string>
     <string name="datebutton_text">Pick Date</string>
     <string name="today">Today: </string>
@@ -250,7 +250,7 @@
     </string-array>
 
     <string name="reset">Reset</string>
-    <string name="summary">Summary</string>
+    <string name="summary">Chart</string>
     <string name="chart_image">chart image</string>
     <string name="next">></string>
     <string name="prev">&lt;</string>
@@ -272,5 +272,8 @@
     <string name="title_activity_manage_records">ManageRecords</string>
     <string name="current">Current</string>
     <string name="newvalue">NewValue</string>
+    <string name="memory_book">Memory</string>
+    <string name="title_activity_memory_book">MemoryBook</string>
+    <string name="profile">Profile</string>
 
 </resources>

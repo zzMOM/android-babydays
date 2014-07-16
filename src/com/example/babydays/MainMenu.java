@@ -7,11 +7,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,22 +21,16 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class MainMenu extends Activity {
@@ -62,15 +56,16 @@ public class MainMenu extends Activity {
 	private Calendar c;
 	private EditText textOZ;
 	private MySQLiteHelper dbHelper;
-	private CheckBox wetCheckBox;
-	private CheckBox poopyCheckBox;
-	private List mSelectedItems;
-	private int selectedItem;
+	private ArrayList<Integer> mSelectedItems;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
+		
+		//show action bar
+		ActionBar actionBar = getActionBar();
+		actionBar.show();
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
@@ -147,8 +142,21 @@ public class MainMenu extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main_menu, menu);
+		getMenuInflater().inflate(R.menu.main_menu_actionbar, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch(item.getItemId()){
+		case R.id.action_profile:
+			Toast.makeText(this, "profile selected", Toast.LENGTH_SHORT).show();
+			break;
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 	
 	/*
@@ -258,10 +266,6 @@ public class MainMenu extends Activity {
 	
 	public void creatSleepDialog(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
-	    // Get the layout inflater
-		// Inflate and set the layout for the dialog
-	    // Pass null as the parent view because its going in the dialog layout
-	    LayoutInflater inflater = MainMenu.this.getLayoutInflater();
 	    
 	    //check SharedPreferences and edit if nap status change
 	    //if isStart is true, means nap is started
@@ -332,10 +336,8 @@ public class MainMenu extends Activity {
 	}
 	
 	public void creatDiaperDialog(){
-		mSelectedItems = new ArrayList();
+		mSelectedItems = new ArrayList<Integer>();
 		AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
-	    // Get the layout inflater
-	    LayoutInflater inflater = MainMenu.this.getLayoutInflater();
 	    
 	    // Inflate and set the layout for the dialog
 	    // Pass null as the parent view because its going in the dialog layout
@@ -397,10 +399,8 @@ public class MainMenu extends Activity {
 	}
 	
 	public void creatMilestonesDialog(){
-		mSelectedItems = new ArrayList();
+		mSelectedItems = new ArrayList<Integer>();
 		AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
-	    // Get the layout inflater
-	    LayoutInflater inflater = MainMenu.this.getLayoutInflater();
 
 	    // Inflate and set the layout for the dialog
 	    // Pass null as the parent view because its going in the dialog layout
