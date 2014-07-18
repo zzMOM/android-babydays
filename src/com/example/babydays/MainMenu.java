@@ -47,8 +47,7 @@ public class MainMenu extends Activity {
 	private static final String START_TIME = "starttime";
 	private SharedPreferences mPrefsTime;
 	
-	private Button viewAct;
-	private Button summaryButton;
+	private Button viewAct, summaryButton, memoryButton;
 	private ListView lv;
 	private MediaPlayer littlestar;
 	private int backButtonCount = 0;
@@ -94,13 +93,24 @@ public class MainMenu extends Activity {
 			}
 		});
 		
-		summaryButton = (Button)findViewById(R.id.summary);
+		summaryButton = (Button)findViewById(R.id.summary);//chart button
 		summaryButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(MainMenu.this, Summary.class);
+				startActivity(intent);
+			}
+		});
+		
+		memoryButton = (Button) findViewById(R.id.babyMemoryBook);
+		memoryButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(MainMenu.this, MemoryBook.class);
 				startActivity(intent);
 			}
 		});

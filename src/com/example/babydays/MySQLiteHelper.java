@@ -393,5 +393,54 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         return babyActivityList;
     }
     
+    /*select record by tpye*/
+    public List<BabyActivity> getBabyActivityByType(String type){
+    	List<BabyActivity> babyActivityList = new LinkedList<BabyActivity>();
+    	 
+        // 1. build the query
+        /*String query = 	"SELECT * FROM "+ TABLE_BABY_ACTIVITIES +
+        				" WHERE " + KEY_DATE + "=" + date;--error*/
+ 
+        // 2. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        String whereClause = "type = ?";
+        String[] whereArgs = new String[] {
+        	    type
+        	};
+        
+        
+        Cursor cursor = 
+                db.query(TABLE_BABY_ACTIVITIES, // a. table
+                COLUMNS, // b. column names
+                whereClause, // c. selections 
+                whereArgs, // d. selections args
+                null, // e. group by
+                null, // f. having
+                KEY_DATE, // g. order by
+                null); // h. limit
+ 
+        // 3. go over each row, build babyActivity and add it to list
+        BabyActivity babyActivity = null;
+        if (cursor.moveToFirst()) {
+            do {
+            	babyActivity = new BabyActivity();
+            	babyActivity.setId(Integer.parseInt(cursor.getString(0)));
+            	babyActivity.setDate(cursor.getString(1));
+            	babyActivity.setTime(cursor.getString(2));
+            	babyActivity.setType(cursor.getString(3));
+            	babyActivity.setInfo(cursor.getString(4));
+ 
+                // Add babyActivity to babyActivities 
+            	babyActivityList.add(babyActivity);
+            } while (cursor.moveToNext());
+        }
+ 
+        //Log.d("getBabyActivityByDate()", babyActivityList.toString());
+ 
+        // return books
+        return babyActivityList;
+    }
+    
 
 }

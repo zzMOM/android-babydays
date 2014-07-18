@@ -12,9 +12,11 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -50,6 +52,7 @@ public class DayActivities extends Activity {
 	//private Button nextMonth;	//increase month button
 	private Button recordFilter;//filter records button
 	
+	private int width;//text length
 	
 	
 
@@ -253,10 +256,12 @@ public class DayActivities extends Activity {
 		for(int i = 0; i < totalMilkDiaper.size(); i++){
 			dayActivity.append(totalMilkDiaper.get(i).toString() + "\n");
 		}
-		dayActivity.append("---------------------------------------------------------\n\n");
+
+		
+		dayActivity.append("-------------------------------------------------\n\n");
 		dayActivity.append("ID"  + "\t\t");
-		dayActivity.append("Time" + "\t\t\t");
-		dayActivity.append("Type" + "\t\t\t");
+		dayActivity.append("Time" + "\t\t\t\t\t\t\t");
+		dayActivity.append("Type" + "\t\t\t\t\t\t\t");
 		dayActivity.append("Info");
 		dayActivity.append("\n\n");
 		
@@ -282,7 +287,10 @@ public class DayActivities extends Activity {
 			}
 			dayActivity.append(activitiesByDate.get(i).getId()  + "\t\t");
 			dayActivity.append(time12 + "\t\t");
-			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t");
+			StringBuffer b = new StringBuffer(activitiesByDate.get(i).getType().toString());
+			b.append("          ");
+			b.setLength(10);
+			dayActivity.append(b.toString() + "\t\t\t");
 			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
 			dayActivity.append("\n\n");
 		}
@@ -336,12 +344,11 @@ public class DayActivities extends Activity {
 			       			} catch (Exception e) {
 			       			    e.printStackTrace();
 			       			}
-			       			
 			       			dayActivity.append(activitiesByDate.get(i).getId()  + "\t\t");
-		           			dayActivity.append(time12 + "\t\t");
-		           			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t");
-		           			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
-		           			dayActivity.append("\n\n");
+			    			dayActivity.append(time12 + "\t\t\t\t\t");
+			    			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t\t\t\t\t");
+			    			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
+			    			dayActivity.append("\n\n");
 		           	   }
 	               }
 	           });
