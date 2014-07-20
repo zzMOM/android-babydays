@@ -22,7 +22,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     private static final String DATABASE_NAME = "RoutineDB";
     
     // Table Names
-    private static final String TABLE_BABY_ACTIVITIES = "baby_activities";
+    private static final String TABLE_BABY_ACTIVITIES = "baby_activities";//table 1
+    private static final String TABLE_BABY_USER = "baby_user"; //table 2
     
     // baby_activities Table Columns names
     private static final String KEY_ID = "id";
@@ -31,6 +32,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     private static final String KEY_TYPE = "type";
     private static final String KEY_INFO = "info";
     private static final String[] COLUMNS = {KEY_ID,KEY_DATE,KEY_TIME,KEY_TYPE,KEY_INFO};
+    //baby_user Table Columns' names
+    private static final String BABY_ID = "id";
+    private static final String BABY_NAME = "name";
+    private static final String BABY_BIRTH_DATE = "birth_day";
+    private static final String BABY_BIRTH_TIME = "birth_time";
+    private static final String BABY_BIRTH_HEIGHT = "birth_height";
+    private static final String BABY_BIRTH_WEIGHT = "birth_weight";
     
  
     public MySQLiteHelper(Context context) {
@@ -47,22 +55,27 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     						+ KEY_TYPE + " TEXT,"
     						+ KEY_INFO + " TEXT )";
     	
-    	/*String CREATE_TABLE_BABY_ACTIVITIES = "CREATE TABLE baby_activities ( " +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-                "date TEXT, "+
-                "time TEXT, "+
-                "type TEXT, "+
-                "info   TEXT )";*/
+    	// SQL statement to create baby_user table
+    	String CREATE_TABLE_BABY_USER = "CREATE TABLE " + TABLE_BABY_USER + "(" 
+    						+ BABY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
+    						+ BABY_NAME + " TEXT," 
+    						+ BABY_BIRTH_DATE + " TEXT," 
+    						+ BABY_BIRTH_TIME + " TEXT,"
+    						+ BABY_BIRTH_HEIGHT + " TEXT,"
+    						+ BABY_BIRTH_WEIGHT + " TEXT )";
  
         // create baby_activities table
         db.execSQL(CREATE_TABLE_BABY_ACTIVITIES);
+     // create baby_udrt table
+        db.execSQL(CREATE_TABLE_BABY_USER);
     }
  
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older baby_activities table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BABY_ACTIVITIES);
- 
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BABY_USER);
+        
         // create fresh books table
         this.onCreate(db);
     }
@@ -442,5 +455,4 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         return babyActivityList;
     }
     
-
 }

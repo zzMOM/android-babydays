@@ -161,7 +161,8 @@ public class MainMenu extends Activity {
 		// TODO Auto-generated method stub
 		switch(item.getItemId()){
 		case R.id.action_profile:
-			Toast.makeText(this, "profile selected", Toast.LENGTH_SHORT).show();
+			Intent i = new Intent(MainMenu.this, Profile.class);
+			startActivity(i);
 			break;
 		default:
 			break;
