@@ -277,7 +277,8 @@
     <string name="profile">Profile</string>
     <string name="title_activity_profile">Profile</string>
     <string name="date_pick_calendar">date pick calendar</string>
-    <string name="baby_birth_date_">"Baby Birth Date Time"</string>
+    <string name="baby_birth_date_">"Baby Birth Date"</string>
+    <string name="baby_birth_time_">"Baby Birth Time"</string>
     <string name="baby_name_">"Baby Name"</string>
     <string name="birth_height_">"Birth Height(Inch)"</string>
     <string name="birth_weight_lb_">"Birth Weight(LB)"</string>

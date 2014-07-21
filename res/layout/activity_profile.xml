@@ -48,7 +48,9 @@
         <TextView
             android:id="@+id/babyName" 
             android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"/>
+        	android:layout_height="wrap_content"
+        	android:clickable="true"
+        	android:background="@color/lightgray"/>
     </TableRow>
     
     <TableRow 
@@ -65,9 +67,33 @@
         	android:text="@string/baby_birth_date_"/>
         
         <TextView
-            android:id="@+id/birthDateTime" 
+            android:id="@+id/birthDate" 
             android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"/>
+        	android:layout_height="wrap_content"
+        	android:clickable="true"
+        	android:background="@color/lightgray"/>
+        
+    </TableRow>
+    
+    <TableRow 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dip">
+        
+        <TextView
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:textSize="15sp"
+        	android:textColor="@color/darkblue"
+        	android:textStyle="bold"
+        	android:text="@string/baby_birth_time_"/>
+        
+        <TextView
+            android:id="@+id/birthTime" 
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:clickable="true"
+        	android:background="@color/lightgray"/>
         
     </TableRow>
     
@@ -87,7 +113,9 @@
         <TextView
             android:id="@+id/birthHeight" 
             android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"/>
+        	android:layout_height="wrap_content"
+        	android:clickable="true"
+        	android:background="@color/lightgray"/>
     </TableRow>
     
     <TableRow 
@@ -106,7 +134,9 @@
         <TextView
             android:id="@+id/birthWeight" 
             android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"/>
+        	android:layout_height="wrap_content"
+        	android:clickable="true"
+        	android:background="@color/lightgray"/>
     </TableRow>
 
 </TableLayout>
