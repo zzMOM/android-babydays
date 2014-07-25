@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -77,7 +78,7 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
   			}
   		});
   		
-	    
+	    Log.e("list", "onCreateView");
 	    return view;
     }
 	
@@ -85,12 +86,13 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
+		Log.e("list", "onActivityCreated");
 		
-		if (savedInstanceState == null) {
+		/*if (savedInstanceState == null) {
             // During initial setup, plug in the details fragment.
             DetailLandFragment details = new DetailLandFragment();
             getFragmentManager().beginTransaction().add(R.id.detailFragLand, details).commit();
-        }
+        }*/
 		
 		if(this.dateListView != null){
 			this.dateListView.setOnItemClickListener(this);
@@ -163,6 +165,55 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 		dateListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		//dateListView.invalidateViews();
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		Log.e("list", "onAttach");
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		Log.e("list", "onCreate");
+	}
+	
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		Log.e("list", "onStart");
+	}
+	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.e("list", "onResume");
+	}
+	
+	@Override
+	public void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		Log.e("list", "onStop");
+	}
+	
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		Log.e("list", "onDestroy");
+	}
+	
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Log.e("list", "onPause");
 	}
 	
 }

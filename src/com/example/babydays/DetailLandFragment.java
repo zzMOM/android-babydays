@@ -1,12 +1,11 @@
 package com.example.babydays;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,9 +56,11 @@ public class DetailLandFragment extends Fragment {
 	    
 	    List<BabyActivity> resultActivities = dbHelper.getBabyActivityByDateAttr(getSelectedDate(), getSelectedType());
 		printResult(resultActivities);
-	    
+		
+		Log.e("detail", "onCreateView");
 	    return view;
 	}
+	
 	
 	
 	private void printResult(List<BabyActivity> resultActivities){
@@ -81,6 +82,62 @@ public class DetailLandFragment extends Fragment {
 			
 			lastdate = curdate;
 		}
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		Log.e("detail", "onAttach");
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		Log.e("detail", "onCreate");
+	}
+	
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		Log.e("detail", "onStart");
+	}
+	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.e("detail", "onResume");
+	}
+	
+	@Override
+	public void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		Log.e("detail", "onStop");
+	}
+	
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		Log.e("detail", "onDestroy");
+	}
+	
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Log.e("detail", "onPause");
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onActivityCreated(savedInstanceState);
+		Log.e("detail", "onActivityCreated");
 	}
 	
 }
