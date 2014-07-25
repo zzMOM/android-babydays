@@ -31,7 +31,7 @@ import android.view.View.OnClickListener;
 
 public class Profile extends Activity{
 	private ImageView profilePhoto;
-	private TextView babyName, birthDate, birthTime;
+	private TextView babyName, birthDate, birthTime, birthHeight, birthWeight;
 	private SharedPreferences mPrefsInfo;
 	private static final String BABY_INFO = " , , , , ";
 	Editor infoEditor;
@@ -49,14 +49,19 @@ public class Profile extends Activity{
 		babyName = (TextView) findViewById(R.id.babyName);
 		birthDate = (TextView) findViewById(R.id.birthDate);
 		birthTime = (TextView) findViewById(R.id.birthTime);
+		birthHeight = (TextView) findViewById(R.id.birthHeight);
+		birthWeight = (TextView) findViewById(R.id.birthWeight);
 		
 		mPrefsInfo = getSharedPreferences(BABY_INFO, 0);
 		String str = mPrefsInfo.getString(BABY_INFO, " , , , , ");
+		Log.e("BABY_INFO", str);
 		String[] info = str.split(",");
 		
 		babyName.setText(info[0]);
 		birthDate.setText(info[1]);
 		birthTime.setText(info[2]);
+		birthHeight.setText(info[3]);
+		birthWeight.setText(info[4]);
 		
 		babyName.setOnClickListener(new OnClickListener() {
 			
@@ -82,6 +87,24 @@ public class Profile extends Activity{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				showDialog(TIME_DIALOG_ID);
+			}
+		});
+		
+		birthHeight.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				setHeight();
+			}
+		});
+		
+		birthWeight.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				setWeight();
 			}
 		});
 	}
@@ -219,6 +242,58 @@ public class Profile extends Activity{
 				infoEditor.commit();
 				
 				babyName.setText(newStr);
+			}
+		});
+		builder.show();
+	}
+	
+	private void setHeight(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
+		builder.setTitle("Edit baby birth height");
+		final EditText inputText = new EditText(this);
+		inputText.setEms(15);
+		builder.setView(inputText);
+		
+		builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				String s = mPrefsInfo.getString(BABY_INFO, "");
+				String newStr = inputText.getText().toString();
+				
+				//update mPrefsInfo
+				infoEditor = mPrefsInfo.edit();
+				infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 3));
+				infoEditor.commit();
+				
+				birthHeight.setText(newStr);
+			}
+		});
+		builder.show();
+	}
+	
+	private void setWeight(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
+		builder.setTitle("Edit baby birth weight");
+		final EditText inputText = new EditText(this);
+		inputText.setEms(15);
+		builder.setView(inputText);
+		
+		builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				String s = mPrefsInfo.getString(BABY_INFO, "");
+				String newStr = inputText.getText().toString();
+				
+				//update mPrefsInfo
+				infoEditor = mPrefsInfo.edit();
+				infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 4));
+				infoEditor.commit();
+				
+				birthWeight.setText(newStr);
 			}
 		});
 		builder.show();

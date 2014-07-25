@@ -280,10 +280,16 @@
     <string name="baby_birth_date_">"Baby Birth Date"</string>
     <string name="baby_birth_time_">"Baby Birth Time"</string>
     <string name="baby_name_">"Baby Name"</string>
-    <string name="birth_height_">"Birth Height(Inch)"</string>
-    <string name="birth_weight_lb_">"Birth Weight(LB)"</string>
+    <string name="birth_height_">"Birth Height"</string>
+    <string name="birth_weight_lb_">"Birth Weight"</string>
     <string name="profile_photo">Profile Photo</string>
     <string name="edit">Edit</string>
     <string name="save">Save</string>
+    <string name="title_activity_memory_fragment1">MemoryFragment1</string>
+    <string name="title_activity_memory_fragment2">MemoryFragment2</string>
+    <string name="title_activity_list_fragment">ListFragment</string>
+    <string name="title_activity_detail_fragment">DetailFragment</string>
+    <string name="title_activity_detailport_fragment">DetailportFragment</string>
+    <string name="title_activity_detail_port">DetailPort</string>
 
 </resources>

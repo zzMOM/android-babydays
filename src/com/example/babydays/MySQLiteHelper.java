@@ -1,6 +1,7 @@
 package com.example.babydays;
 
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -453,6 +454,50 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
  
         // return books
         return babyActivityList;
+    }
+    
+    /*select record by tpye and output date list*/
+    public List<String> getDateListByType(String type){
+    	List<String> datelist = new ArrayList<String>();
+    	 
+        // 1. build the query
+        /*String query = 	"SELECT * FROM "+ TABLE_BABY_ACTIVITIES +
+        				" WHERE " + KEY_DATE + "=" + date;--error*/
+ 
+        // 2. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        String[] columnNames = new String[]{KEY_DATE};
+        String whereClause = "type = ?";
+        String[] whereArgs = new String[] {
+        	    type
+        	};
+        
+        
+        boolean distinct = true;//distinct
+		Cursor cursor = 
+                db.query(distinct, 
+                TABLE_BABY_ACTIVITIES, // a. table
+                columnNames, // b. column names
+                whereClause, // c. selections 
+                whereArgs, // d. selections args
+                null, // e. group by
+                null, // f. having
+                KEY_DATE, // g. order by
+                null); // h. limit
+ 
+        // 3. go over each row, and add it to list
+        if (cursor.moveToFirst()) {
+            do {
+                // Add babyActivity to babyActivities 
+            	datelist.add(cursor.getString(0).toString());
+            } while (cursor.moveToNext());
+        }
+ 
+        //Log.d("getDateList", datelist.toString());
+ 
+        // return books
+        return datelist;
     }
     
 }
