@@ -109,42 +109,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     }
     
     
-    /*
-     * edit time from 12 hour formate to 24hour formate in each babyActivity
-     */
-    /*public void editBabyActivity(int id) throws ParseException{
-    	// get reference to writable DB
-        SQLiteDatabase db = this.getWritableDatabase();
-        
-        //get babyActivity time search by id
-        BabyActivity babyActivity = getBabyActivity(id);
-        String time = babyActivity.getTime().toString();
-        
-        //date transfer 12hours to 24hours
-		String time24 = "";
-		SimpleDateFormat h_mm_a   = new SimpleDateFormat("h:mma");
-		SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
-
-		java.util.Date t = h_mm_a.parse(time);
-		time24 = hh_mm.format(t).toString();
- 
-        // 2. create ContentValues to add key "column"/value
-        ContentValues values = new ContentValues();
-        values.put(KEY_DATE, babyActivity.getDate()); // get date 
-        values.put(KEY_TIME, time24); // get time
-        values.put(KEY_TYPE, babyActivity.getType()); // get type
-        values.put(KEY_INFO, babyActivity.getInfo()); // get info
- 
-        // 3. updating row
-        db.update(TABLE_BABY_ACTIVITIES, //table
-                values, // column/value
-                KEY_ID+" = "+id, // selections
-                null); //selection args
- 
-        // 4. close
-        db.close();
-    }*/
-    
     
  
     public BabyActivity getBabyActivity(int id){
@@ -179,7 +143,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         }
  
         //Log.d("getBabyActivity("+id+")", babyActivity.toString());
- 
+      //close db and cursor
+        cursor.close();
+        db.close();
         // 5. return babyActivity
         return babyActivity;
     }
@@ -212,7 +178,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         }
  
         //Log.d("getAllBabyActivity()", babyActivityList.toString());
-     // 4. close
+      //close db and cursor
+        cursor.close();
         db.close();
         // return books
         return babyActivityList;
@@ -258,7 +225,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         // 3. close
         db.close();
  
-        Log.d("deleteBabyActivity", babyActivity.toString());
+        //Log.d("deleteBabyActivity", babyActivity.toString());
  
     }
     
@@ -300,7 +267,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         }
  
         //Log.d("getBabyActivityByDate()", babyActivityList.toString());
- 
+      //close db and cursor
+        cursor.close();
+        db.close();
         // return books
         return babyActivityList;
     }
@@ -351,8 +320,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
             } while (cursor2.moveToNext());
         }
  
-        Log.d("getTotalByDate()", babyActivityList.toString());
- 
+        //Log.d("getTotalByDate()", babyActivityList.toString());
+      //close db and cursor
+        cursor1.close();
+        cursor2.close();
+        db.close();
         // return books
         return babyActivityList;
     }
@@ -402,7 +374,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         }
  
         //Log.d("getBabyActivityByDate()", babyActivityList.toString());
- 
+      //close db and cursor
+        cursor.close();
+        db.close();
         // return books
         return babyActivityList;
     }
@@ -451,7 +425,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         }
  
         //Log.d("getBabyActivityByDate()", babyActivityList.toString());
- 
+      //close db and cursor
+        cursor.close();
+        db.close();
         // return books
         return babyActivityList;
     }
@@ -495,7 +471,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         }
  
         //Log.d("getDateList", datelist.toString());
- 
+        //close db and cursor
+        cursor.close();
+        db.close();
         // return books
         return datelist;
     }

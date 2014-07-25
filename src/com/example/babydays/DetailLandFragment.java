@@ -3,26 +3,20 @@ package com.example.babydays;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.Fragment;
-import android.content.res.Configuration;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 public class DetailLandFragment extends Fragment {
 	private TextView memoryText;
-	private List<BabyActivity> resultActivities;
+	//private List<BabyActivity> resultActivities;
 	private MySQLiteHelper dbHelper;
-	private Spinner memoryBookSpinner;
-	private ArrayList<String> spinnerlist;
+	private static boolean isUpdate = false;
 
 	
 	/**
@@ -30,6 +24,7 @@ public class DetailLandFragment extends Fragment {
      * show the text at 'index'.
      */
     public static DetailLandFragment newInstance(String date, String type) {
+    	isUpdate = true;
         DetailLandFragment f = new DetailLandFragment();
 
         // Supply index input as an argument.
@@ -53,27 +48,17 @@ public class DetailLandFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 		      Bundle savedInstanceState) {
 	    View view = inflater.inflate(R.layout.fragment_detail_land, container, false);
-	    
-	    //search from database
-		dbHelper = new MySQLiteHelper(getActivity());
-	    
+	    dbHelper = new MySQLiteHelper(getActivity());
 	    memoryText = (TextView) view.findViewById(R.id.memoryText);
 	    
+	    if(!isUpdate){
+	    	return view;
+	    }
 	    
+	    List<BabyActivity> resultActivities = dbHelper.getBabyActivityByDateAttr(getSelectedDate(), getSelectedType());
+		printResult(resultActivities);
 	    
 	    return view;
-	}
-	
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onActivityCreated(savedInstanceState);
-		
-	}
-	
-	public void showDetail(){
-		resultActivities = dbHelper.getBabyActivityByDateAttr(getSelectedDate(), getSelectedType());
-		printResult(resultActivities);
 	}
 	
 	

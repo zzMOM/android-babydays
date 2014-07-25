@@ -28,7 +28,6 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 	protected ListView dateListView;
 	private ArrayAdapter<String> adapter;
 	protected Spinner memoryDateListSpinner;
-	private MySQLiteHelper dbHelper;
 	private String spinnerValue;
 	private boolean mDualPane;
     private int mCurCheckPosition = 0;
@@ -40,9 +39,6 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 		      Bundle savedInstanceState) {
 	    View view = inflater.inflate(R.layout.fragment_date_list, container, false);
-	    
-	    //search from database
-		dbHelper = new MySQLiteHelper(getActivity());
 		
 		//dateListView
 		dateListView = (ListView) view.findViewById(R.id.dateListView);
@@ -68,10 +64,9 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
   		            int pos, long id) {
   				// TODO Auto-generated method stub
   				String type = spinnerlist.get(pos);
-  				
+  				MySQLiteHelper dbHelper = new MySQLiteHelper(getActivity());
   				List<String> list = dbHelper.getDateListByType(type); 				
   				setDatelist(list);
-  				
   				showDetails(mCurCheckPosition);
   			}
 
@@ -144,11 +139,11 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
             // Check what fragment is currently shown, replace if needed.
             DetailLandFragment details = (DetailLandFragment)
                     getFragmentManager().findFragmentById(R.id.detailFragLand);
-            if (details == null || !details.getSelectedDate().equals(datelist.get(mCurCheckPosition))) {
+            if (details == null || mCurCheckPosition == 0 || !details.getSelectedDate().equals(datelist.get(mCurCheckPosition))) {
                 // Make new fragment to show this selection.
                 details = DetailLandFragment.newInstance(datelist.get(mCurCheckPosition), 
                 		spinnerlist.get(memoryDateListSpinner.getSelectedItemPosition()));
-
+                
                 // Execute a transaction, replacing any existing fragment
                 // with this one inside the frame.
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -164,6 +159,8 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 	private void setDatelist(List<String> list){
 		datelist = list;
 		//update listview
+		adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, datelist);
+		dateListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		//dateListView.invalidateViews();
 	}
