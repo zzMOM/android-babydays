@@ -44,7 +44,6 @@ public class DayActivities extends Activity {
 
 	//private DatePicker datePicker;	//DatePicker
 	private TextView dayActivity, dayActivitySummary;
-	private TextView showDate;
 	private TextView showSetDate;	//show DatePicker or <> set date
 	private Button setDate;		//show DatePicker dialog
 	//private Button preMonth;	//decrease month button
@@ -70,7 +69,6 @@ public class DayActivities extends Activity {
 		
 		dayActivitySummary = (TextView)findViewById(R.id.dayActivitySummary);
 		dayActivity = (TextView)findViewById(R.id.dayActivity);
-		showDate = (TextView) findViewById(R.id.showDate);
 		showSetDate = (TextView)findViewById(R.id.showSetDate);
 		//preMonth = (Button)findViewById(R.id.preMonth);
 		//preDay = (Button)findViewById(R.id.preDay);
@@ -161,7 +159,8 @@ public class DayActivities extends Activity {
 		SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy");
 		String formattedDate = df.format(c.getTime());
 		showSetDate.setText(formattedDate);
-		showDate.setText(formattedDate);
+		//showDate.setText(formattedDate);
+		getActionBar().setTitle("Today: " + formattedDate);
 		
 		//show search by date
 		showSearchByDateResult(formattedDate);

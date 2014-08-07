@@ -9,27 +9,6 @@
     android:background="@color/backgroundblue"
     android:orientation="vertical"
     tools:context=".DayActivities" >
-    
-    	
-    <LinearLayout 
-        android:layout_width="match_parent"
-   		android:layout_height="wrap_content"
-   		android:layout_weight="1"
-   		android:orientation="horizontal">
-   	
-        <TextView 
-	        android:id="@+id/today"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textSize="15sp"
-	        android:text="@string/today"/>
-	    
-	    <TextView 
-	        android:id="@+id/showDate"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textSize="15sp"/>
-	</LinearLayout>
    
     <LinearLayout 
         android:layout_width="match_parent"

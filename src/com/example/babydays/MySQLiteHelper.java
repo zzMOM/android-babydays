@@ -307,6 +307,19 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                 null, // g. order by
                 null); // h. limit
         
+      //get Diaper change times -- count
+        String[] newColumns3 = {KEY_TYPE, "SUM(SUBSTR(info, 1, 2)) + ROUND(SUM(SUBSTR(info, 4, 2))/60-0.5) AS hour"
+        						, "SUM(SUBSTR(info, 4, 2))%60 AS min"};
+        Cursor cursor3 = 
+                db.query(TABLE_BABY_ACTIVITIES, // a. table
+                newColumns3, // b. column names
+                " type = 'Nap' and date = ?", // c. selections 
+                new String[] { date }, // d. selections args
+                KEY_TYPE, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        
         // add sum and count to list
         if (cursor1.moveToFirst()) {
             do {
@@ -318,6 +331,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
             do {
             	babyActivityList.add("Total diaper change times: " + cursor2.getString(1));
             } while (cursor2.moveToNext());
+        }
+        if (cursor3.moveToFirst()) {
+            do {
+            	babyActivityList.add("Total sleep time: " + cursor3.getString(1) + " hours "
+            						+ cursor3.getString(2) + " minutes");
+            } while (cursor3.moveToNext());
         }
  
         //Log.d("getTotalByDate()", babyActivityList.toString());
