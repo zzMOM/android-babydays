@@ -57,7 +57,7 @@ public class DetailLandFragment extends Fragment {
 	    List<BabyActivity> resultActivities = dbHelper.getBabyActivityByDateAttr(getSelectedDate(), getSelectedType());
 		printResult(resultActivities);
 		
-		Log.e("detail", "onCreateView");
+		//Log.e("detail", "onCreateView");
 	    return view;
 	}
 	
@@ -84,7 +84,7 @@ public class DetailLandFragment extends Fragment {
 		}
 	}
 	
-	@Override
+	/*@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
@@ -138,6 +138,6 @@ public class DetailLandFragment extends Fragment {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		Log.e("detail", "onActivityCreated");
-	}
+	}*/
 	
 }

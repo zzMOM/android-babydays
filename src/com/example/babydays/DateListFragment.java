@@ -78,7 +78,7 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
   			}
   		});
   		
-	    Log.e("list", "onCreateView");
+	    //Log.e("list", "onCreateView");
 	    return view;
     }
 	
@@ -86,7 +86,7 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		Log.e("list", "onActivityCreated");
+		//Log.e("list", "onActivityCreated");
 		
 		/*if (savedInstanceState == null) {
             // During initial setup, plug in the details fragment.
@@ -167,11 +167,11 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 		//dateListView.invalidateViews();
 	}
 	
-	@Override
+	/*@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
-		Log.e("list", "onAttach");
+		//.e("list", "onAttach");
 	}
 	
 	@Override
@@ -214,6 +214,6 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 		// TODO Auto-generated method stub
 		super.onPause();
 		Log.e("list", "onPause");
-	}
+	}*/
 	
 }

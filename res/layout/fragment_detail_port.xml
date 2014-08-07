@@ -15,14 +15,14 @@
 
     <ScrollView 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/memoryBookSpinner">
     <TextView
         android:id="@+id/memoryText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/border"
-        android:minLines="30" />
+        android:background="@color/wheat"
+        android:minLines="20" />
     </ScrollView>
 
 </RelativeLayout>

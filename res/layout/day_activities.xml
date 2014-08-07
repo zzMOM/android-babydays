@@ -135,6 +135,12 @@
 
 		</ScrollView>
 		
+	    <View 
+	        android:layout_width="fill_parent"
+	        android:layout_height="2dp"
+	        android:layout_marginTop="5dp"
+	        android:background="@drawable/line_separator"/>
+		
 	    <Button 
 	        android:id="@+id/manageRecords"
 	        android:layout_width="fill_parent"
@@ -144,6 +150,11 @@
 		    android:text="@string/manage_records"
 		    android:textColor="@color/white"
 		    android:onClick="manageRecord"/>
+	    <View 
+	        android:layout_width="fill_parent"
+	        android:layout_height="2dp"
+	        android:layout_marginTop="5dp"
+	        android:background="@drawable/line_separator"/>
 </LinearLayout>
 
 
