@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -17,6 +18,7 @@ import android.graphics.Paint.Style;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -43,6 +45,9 @@ public class Summary extends Activity {
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
 		routine = dbHelper.getAllBabyActivity();
+		
+		//actionbar
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		//set recordIndex to be the last record
 		recordIndex = routine.size() - 1;
@@ -143,7 +148,20 @@ public class Summary extends Activity {
 		return true;
 	}
 	
-	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch(item.getItemId()){
+		case android.R.id.home:
+			// app icon in action bar clicked; go home
+            Intent intent = new Intent(this, MainMenu.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 	
 	private void createChartOfDayActivity(boolean byDateAscOrDesc){
 		Display display = getWindowManager().getDefaultDisplay(); 

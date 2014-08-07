@@ -14,8 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10sp">
+        android:divider="@color/lightgray"
+        android:dividerHeight="1dp">
         
     </ListView>
     
@@ -23,41 +23,56 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-        
-        <Button 
-	        android:id="@+id/babyMemoryBook"
-	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
-	        android:layout_weight="1"
-	        android:layout_margin="1dip"
-	        android:background="@color/navy"
-	        android:textColor="@color/white"
-	        android:text="@string/memory_book"/>
+        android:orientation="vertical">
+    
+	    <View 
+	        android:layout_width="fill_parent"
+	        android:layout_height="2dp"
+	        android:layout_marginBottom="5dp"
+	        android:background="@drawable/line_separator"/>
 	    
-	    <Button 
-	        android:id="@+id/summary"
-	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
-	        android:layout_weight="1"
-	        android:layout_margin="1dip"
-	        android:background="@color/navy"
-	        android:textColor="@color/white"
-	        android:text="@string/summary"/>
+	    <LinearLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal">
+	        
+	        <Button 
+		        android:id="@+id/babyMemoryBook"
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1"
+		        android:layout_margin="1dip"
+		        android:background="@color/navy"
+		        android:textColor="@color/white"
+		        android:text="@string/memory_book"/>
+		    
+		    <Button 
+		        android:id="@+id/summary"
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1"
+		        android:layout_margin="1dip"
+		        android:background="@color/navy"
+		        android:textColor="@color/white"
+		        android:text="@string/summary"/>
+		    
+		    <Button 
+		        android:id="@+id/babyActivities"
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1"
+		        android:layout_margin="1dip"
+		        android:background="@color/navy"
+		        android:textColor="@color/white"
+		        android:text="@string/babyactivity"/>
+	        
+	    </LinearLayout>
 	    
-	    <Button 
-	        android:id="@+id/babyActivities"
-	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
-	        android:layout_weight="1"
-	        android:layout_margin="1dip"
-	        android:background="@color/navy"
-	        android:textColor="@color/white"
-	        android:text="@string/babyactivity"/>
-        
+	    <View 
+	        android:layout_width="fill_parent"
+	        android:layout_height="2dp"
+	        android:layout_marginTop="5dp"
+	        android:background="@drawable/line_separator"/>
     </LinearLayout>
-    
-    
-    
 
 </RelativeLayout>

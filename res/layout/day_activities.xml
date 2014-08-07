@@ -41,13 +41,19 @@
 	        android:id="@+id/setDate"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:layout_margin="2dp"
+	        android:layout_weight="1"
 	        android:textSize="15sp"
+	        android:background="@drawable/day_activities_button"
 	        android:text="@string/set_date"/>
 	    
 	    <Button 
 	        android:id="@+id/recordFilter"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:layout_margin="2dp"
+	        android:layout_weight="1"
+	        android:background="@drawable/day_activities_button"
 	        android:textSize="15sp"
 	        android:text="@string/record_filter"/>
 	    
@@ -55,6 +61,9 @@
 	        android:id="@+id/reset"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:layout_margin="2dp"
+	        android:layout_weight="1"
+	        android:background="@drawable/day_activities_button"
 	        android:textSize="15sp"
 	        android:text="@string/reset"
 	        android:onClick="resetResults"/>
@@ -69,16 +78,22 @@
     
 	    <Button 
 	        android:id="@+id/preMonth"
-	        android:layout_width="50sp"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:minWidth="50dp"
+	        android:layout_weight="1"
+	        android:background="@drawable/day_activities_button"
 	        android:text="@string/pre_month"
 	        android:textSize="15sp"
 	        android:onClick="DecreaseMonth"/>
 	    
 	    <Button 
 	        android:id="@+id/preDay"
-	        android:layout_width="50sp"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:minWidth="50dp"
+	        android:layout_weight="1"
+	        android:background="@drawable/day_activities_button"
 	        android:text="@string/pre_day"
 	        android:textSize="15sp"
 	        android:onClick="DecreaseDay"/>
@@ -87,25 +102,44 @@
 	        android:id="@+id/showSetDate"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:textSize="20sp"/>
+	        android:gravity="center_horizontal"
+	        android:layout_weight="5"
+	        android:textSize="15sp"/>
 	    
 	    <Button 
 	        android:id="@+id/nextDay"
-	        android:layout_width="50sp"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:minWidth="50dp"
+	        android:layout_weight="1"
+	        android:background="@drawable/day_activities_button"
 	        android:text="@string/next_day"
 	        android:textSize="15sp"
 	        android:onClick="IncreaseDay"/>
 	    
 	    <Button 
 	        android:id="@+id/nextMonth"
-	        android:layout_width="50sp"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:minWidth="50dp"
+	        android:layout_weight="1"
+	        android:background="@drawable/day_activities_button"
 	        android:text="@string/next_month"
 	        android:textSize="15sp"
 	        android:onClick="IncreaseMonth"/>
 	
 	    </LinearLayout>
+	    
+	 	<TextView 
+	        android:id="@+id/dayActivitySummary"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="2dp"
+	        android:layout_marginBottom="2dp"
+	        android:paddingTop="2dp"
+	        android:minLines="2"
+	        android:background="@color/gainsboro"
+	        android:textSize="15sp"/>
 	    
 	    <ScrollView 
 	        android:layout_width="match_parent"
@@ -116,8 +150,8 @@
 		        android:id="@+id/dayActivity"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
-		        android:minLines="20"
-		        android:background="@drawable/textlines"
+		        android:minLines="15"
+		        android:background="@color/gainsboro"
 		        android:textSize="20sp"/>
 
 		</ScrollView>
@@ -127,7 +161,9 @@
 	        android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="1"
+		    android:background="@color/navy"
 		    android:text="@string/manage_records"
+		    android:textColor="@color/white"
 		    android:onClick="manageRecord"/>
 </LinearLayout>
 

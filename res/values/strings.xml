@@ -105,7 +105,6 @@
     <color name="lawngreen">#7CFC00</color> <!-- 草绿色 -->
     <color name="mediumslateblue">#7B68EE</color> <!-- 中暗蓝色 -->
     <color name="lightslategray">#778899</color> <!-- 亮蓝灰 -->
-    <color name="lightslategrey">#778899</color> <!-- 亮蓝灰 -->
     <color name="slategray">#708090</color> <!-- 灰石色 -->
     <color name="slategrey">#708090</color> <!-- 灰石色 -->
     <color name="olivedrab">#6B8E23</color> <!-- 深绿褐色 -->

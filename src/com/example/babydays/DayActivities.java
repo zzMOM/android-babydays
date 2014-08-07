@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.os.Bundle;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -15,6 +16,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
@@ -38,11 +40,10 @@ public class DayActivities extends Activity {
  
 	static final int DATE_DIALOG_ID = 999;
 
-	private TextView dayActivity;
-
 	private Calendar c;
 
 	//private DatePicker datePicker;	//DatePicker
+	private TextView dayActivity, dayActivitySummary;
 	private TextView showDate;
 	private TextView showSetDate;	//show DatePicker or <> set date
 	private Button setDate;		//show DatePicker dialog
@@ -64,6 +65,10 @@ public class DayActivities extends Activity {
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
 		
+		//action bar
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		dayActivitySummary = (TextView)findViewById(R.id.dayActivitySummary);
 		dayActivity = (TextView)findViewById(R.id.dayActivity);
 		showDate = (TextView) findViewById(R.id.showDate);
 		showSetDate = (TextView)findViewById(R.id.showSetDate);
@@ -252,13 +257,13 @@ public class DayActivities extends Activity {
 		
 		//show total of FeedMilk and Diaper times
 		List<String> totalMilkDiaper = dbHelper.getTotalByDate(date);
-		Log.d("search total", date);
+		//Log.d("search total", date);
+		dayActivitySummary.setText("");
 		for(int i = 0; i < totalMilkDiaper.size(); i++){
-			dayActivity.append(totalMilkDiaper.get(i).toString() + "\n");
+			dayActivitySummary.append(totalMilkDiaper.get(i).toString() + "\n");
 		}
-
 		
-		dayActivity.append("-------------------------------------------------\n\n");
+		dayActivity.setText("");
 		dayActivity.append("ID"  + "\t\t");
 		dayActivity.append("Time" + "\t\t\t\t\t\t\t");
 		dayActivity.append("Type" + "\t\t\t\t\t\t\t");
@@ -268,7 +273,7 @@ public class DayActivities extends Activity {
 		
 		//search recodes in sqlite db march date
 		List<BabyActivity> activitiesByDate = dbHelper.getBabyActivityByDate(date);
-		Log.d("search date", date);
+		//Log.d("search date", date);
 		
 		//time is 24hour format, show with 12hour format
 		//date transfer 24hours to 12hours
@@ -373,5 +378,20 @@ public class DayActivities extends Activity {
 		//super.onBackPressed();
 		Intent intent = new Intent(this, MainMenu.class);
 		startActivity(intent);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch(item.getItemId()){
+		case android.R.id.home:
+			// app icon in action bar clicked; go home
+            Intent intent = new Intent(this, MainMenu.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 }

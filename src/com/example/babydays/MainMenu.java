@@ -65,6 +65,8 @@ public class MainMenu extends Activity {
 		//show action bar
 		ActionBar actionBar = getActionBar();
 		actionBar.show();
+		actionBar.setTitle("Baby Days");//change action bar title
+		//actionBar.setIcon(icon);
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
