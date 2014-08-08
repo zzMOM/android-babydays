@@ -147,6 +147,8 @@
     <color name="navy">#000080</color> <!-- 海军色 -->
     <color name="black">#000000</color> <!-- 黑色 -->
     <color name="backgroundblue">#dfe9ff</color>
+    <color name="gray95">#F2F2F2</color>
+    <color name="gray90">#E5E5E5</color>
 
     <string name="app_name">BabyDays</string>
     <string name="action_settings">Settings</string>

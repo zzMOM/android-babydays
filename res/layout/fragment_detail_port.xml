@@ -21,7 +21,7 @@
         android:id="@+id/memoryText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/wheat"
+        android:background="@color/gray95"
         android:minLines="20" />
     </ScrollView>
 

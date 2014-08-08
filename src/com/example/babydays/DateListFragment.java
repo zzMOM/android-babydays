@@ -32,6 +32,7 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 	private String spinnerValue;
 	private boolean mDualPane;
     private int mCurCheckPosition = 0;
+    private View previous;
 
     
     
@@ -40,6 +41,9 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 		      Bundle savedInstanceState) {
 	    View view = inflater.inflate(R.layout.fragment_date_list, container, false);
+	    
+	    //initialize previous view
+	    previous = new View(getActivity());
 		
 		//dateListView
 		dateListView = (ListView) view.findViewById(R.id.dateListView);
@@ -102,20 +106,18 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 		// Check to see if we have a frame in which to embed the details
         // fragment directly in the containing UI.
         View detailFrag = getActivity().findViewById(R.id.detailFragLand);
-		mDualPane =  detailFrag != null && detailFrag.getVisibility() == View.VISIBLE;
+		//mDualPane =  detailFrag != null && detailFrag.getVisibility() == View.VISIBLE;
 
         if (savedInstanceState != null) {
             // Restore last state for checked position.
             mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
         }
 
-        if (mDualPane) {
+        //if (mDualPane) {
             // In dual-pane mode, the list view highlights the selected item.
         	dateListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             // Make sure our UI is in the correct state.
-            
-            
-        }
+        //}
 	}
 	
 	@Override
@@ -127,13 +129,17 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+	public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
 		// TODO Auto-generated method stub
+		//set selected item highlight color
+		previous.setBackgroundResource(R.color.gray90);
+		v.setBackgroundResource(R.color.blue);
+		previous = v;
 		showDetails(position);
 	}
 	
 	private void showDetails(int mCurCheckPosition){
-		if (mDualPane) {
+		//if (mDualPane) {
             // We can display everything in-place with fragments, so update
             // the list to highlight the selected item and show the data.
 			dateListView.setItemChecked(mCurCheckPosition, true);
@@ -155,7 +161,7 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
                 ft.commit();
             }
 
-        }
+        //}
     }
 	
 	private void setDatelist(List<String> list){
