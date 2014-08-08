@@ -11,17 +11,27 @@
     <Spinner 
         android:id="@+id/memoryBookSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@color/backgroundblue"
+        android:spinnerMode="dropdown"/>
+    
+    <View 
+        android:id="@+id/v"
+        android:layout_below="@id/memoryBookSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/line_separator"/>
 
     <ScrollView 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/memoryBookSpinner">
+        android:layout_below="@id/v">
     <TextView
         android:id="@+id/memoryText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/gray95"
         android:minLines="20" />
     </ScrollView>
 

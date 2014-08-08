@@ -92,12 +92,6 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 		super.onActivityCreated(savedInstanceState);
 		//Log.e("list", "onActivityCreated");
 		
-		/*if (savedInstanceState == null) {
-            // During initial setup, plug in the details fragment.
-            DetailLandFragment details = new DetailLandFragment();
-            getFragmentManager().beginTransaction().add(R.id.detailFragLand, details).commit();
-        }*/
-		
 		if(this.dateListView != null){
 			this.dateListView.setOnItemClickListener(this);
 			this.dateListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -106,18 +100,14 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 		// Check to see if we have a frame in which to embed the details
         // fragment directly in the containing UI.
         View detailFrag = getActivity().findViewById(R.id.detailFragLand);
-		//mDualPane =  detailFrag != null && detailFrag.getVisibility() == View.VISIBLE;
 
         if (savedInstanceState != null) {
             // Restore last state for checked position.
             mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
         }
-
-        //if (mDualPane) {
-            // In dual-pane mode, the list view highlights the selected item.
-        	dateListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            // Make sure our UI is in the correct state.
-        //}
+        // In dual-pane mode, the list view highlights the selected item.
+    	dateListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        // Make sure our UI is in the correct state.
 	}
 	
 	@Override
@@ -133,35 +123,32 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 		// TODO Auto-generated method stub
 		//set selected item highlight color
 		previous.setBackgroundResource(R.color.gray90);
-		v.setBackgroundResource(R.color.blue);
+		v.setBackgroundResource(R.color.navy);
 		previous = v;
 		showDetails(position);
-	}
+	} 
 	
 	private void showDetails(int mCurCheckPosition){
-		//if (mDualPane) {
-            // We can display everything in-place with fragments, so update
-            // the list to highlight the selected item and show the data.
-			dateListView.setItemChecked(mCurCheckPosition, true);
+        // We can display everything in-place with fragments, so update
+        // the list to highlight the selected item and show the data.
+		dateListView.setItemChecked(mCurCheckPosition, true);
 
-            // Check what fragment is currently shown, replace if needed.
-            DetailLandFragment details = (DetailLandFragment)
-                    getFragmentManager().findFragmentById(R.id.detailFragLand);
-            if (details == null || mCurCheckPosition == 0 || !details.getSelectedDate().equals(datelist.get(mCurCheckPosition))) {
-                // Make new fragment to show this selection.
-                details = DetailLandFragment.newInstance(datelist.get(mCurCheckPosition), 
-                		spinnerlist.get(memoryDateListSpinner.getSelectedItemPosition()));
-                
-                // Execute a transaction, replacing any existing fragment
-                // with this one inside the frame.
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.detailFragLand, details);
-                
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.commit();
-            }
-
-        //}
+        // Check what fragment is currently shown, replace if needed.
+        DetailLandFragment details = (DetailLandFragment)
+                getFragmentManager().findFragmentById(R.id.detailFragLand);
+        if (details == null || mCurCheckPosition == 0 || !details.getSelectedDate().equals(datelist.get(mCurCheckPosition))) {
+            // Make new fragment to show this selection.
+            details = DetailLandFragment.newInstance(datelist.get(mCurCheckPosition), 
+            		spinnerlist.get(memoryDateListSpinner.getSelectedItemPosition()));
+            
+            // Execute a transaction, replacing any existing fragment
+            // with this one inside the frame.
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.detailFragLand, details);
+            
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit();
+        }
     }
 	
 	private void setDatelist(List<String> list){
