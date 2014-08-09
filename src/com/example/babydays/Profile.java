@@ -1,5 +1,10 @@
 package com.example.babydays;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Set;
@@ -9,10 +14,15 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -33,13 +43,17 @@ public class Profile extends Activity{
 	private ImageView profilePhoto;
 	private TextView babyName, birthDate, birthTime, birthHeight, birthWeight;
 	private SharedPreferences mPrefsInfo;
-	private static final String BABY_INFO = " , , , , ";
+	private static final String BABY_INFO = " , , , , , ";
 	Editor infoEditor;
 	
+	private static final int REQUEST_CODE = 1;
 	static final int DATE_DIALOG_ID = 100;
 	static final int TIME_DIALOG_ID = 999;
 	private Calendar c;
 
+	private Bitmap mBitmap;
+	private Uri uri;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,15 +67,21 @@ public class Profile extends Activity{
 		birthWeight = (TextView) findViewById(R.id.birthWeight);
 		
 		mPrefsInfo = getSharedPreferences(BABY_INFO, 0);
-		String str = mPrefsInfo.getString(BABY_INFO, " , , , , ");
+		
+		//initial
+		/*Editor editor = mPrefsInfo.edit();
+		editor.putString(BABY_INFO, " , , , , , ");
+		editor.commit();*/
+		String str = mPrefsInfo.getString(BABY_INFO, " , , , , , ");
 		Log.e("BABY_INFO", str);
 		String[] info = str.split(",");
 		
-		babyName.setText(info[0]);
-		birthDate.setText(info[1]);
-		birthTime.setText(info[2]);
-		birthHeight.setText(info[3]);
-		birthWeight.setText(info[4]);
+		loadImageFromStorage(info[0]);//load image
+		babyName.setText(info[1]);
+		birthDate.setText(info[2]);
+		birthTime.setText(info[3]);
+		birthHeight.setText(info[4]);
+		birthWeight.setText(info[5]);
 		
 		babyName.setOnClickListener(new OnClickListener() {
 			
@@ -117,32 +137,107 @@ public class Profile extends Activity{
 	}
 
 	public void pickProfilePhoto(View view){
-		Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		startActivityForResult(takePicture, 0);//zero can be replaced with any action code
-		Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-		           android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		startActivityForResult(pickPhoto , 1);//one can be replaced with any action code
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType("image/*");
+		startActivityForResult(Intent.createChooser(intent, "Select..."), REQUEST_CODE);
 	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		switch(requestCode) {
-		case 0:
-		    if(resultCode == RESULT_OK){  
-		        Uri selectedImage = data.getData();
-		        profilePhoto.setImageURI(selectedImage);
-		    }
-		    break; 
-		case 1:
-		    if(resultCode == RESULT_OK){  
-		        Uri selectedImage = data.getData();
-		        profilePhoto.setImageURI(selectedImage);
-		    }
-		    break;
+		if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+
+			uri = data.getData();
+
+			try {
+				InputStream stream = getContentResolver().openInputStream(uri);
+
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inJustDecodeBounds = true;
+
+				BitmapFactory.decodeStream(stream, null, options);
+				stream.close();
+
+				int w = options.outWidth;
+				int h = options.outHeight;
+
+				int displayW = getResources().getDisplayMetrics().widthPixels;
+				int displayH = getResources().getDisplayMetrics().heightPixels;
+
+				int sample = 1;
+
+				while (w > displayW * sample || h > displayH * sample) {
+					sample = sample * 2;
+				}
+
+				options.inJustDecodeBounds = false;
+				options.inSampleSize = sample;
+
+				stream = getContentResolver().openInputStream(uri);
+				Bitmap bm = BitmapFactory.decodeStream(stream, null, options);
+				stream.close();
+				if (mBitmap != null) {
+					mBitmap.recycle();
+				}
+				// Make a mutable bitmap...
+				mBitmap = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(),Bitmap.Config.ARGB_8888);
+				Canvas c = new Canvas(mBitmap);
+				c.drawBitmap(bm, 0, 0, null);
+
+				bm.recycle();
+
+				profilePhoto.setImageBitmap(mBitmap);
+				
+				//save mBitmap
+				String path = saveToInternalSorage(mBitmap);
+				String s = mPrefsInfo.getString(BABY_INFO, "");
+				//update mPrefsInfo
+				infoEditor = mPrefsInfo.edit();
+				infoEditor.putString(BABY_INFO, updateSharedPref(s, path, 0));
+				infoEditor.commit();
+			} catch (Exception e) {
+			}
+
 		}
-		super.onActivityResult(requestCode, resultCode, data);
 	}
+	
+	private String saveToInternalSorage(Bitmap bitmapImage){
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+         // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath=new File(directory,"profile.jpg");
+
+        FileOutputStream fos = null;
+        try {           
+
+            fos = new FileOutputStream(mypath);
+
+       // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.e("path", directory.getAbsolutePath());
+        return directory.getAbsolutePath();
+    }
+	
+	private void loadImageFromStorage(String path)
+	{
+
+	    try {
+	        File f=new File(path, "profile.jpg");
+	        Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+	        profilePhoto.setImageBitmap(b);
+	    } 
+	    catch (FileNotFoundException e) 
+	    {
+	        e.printStackTrace();
+	    }
+
+	}
+	
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -182,7 +277,7 @@ public class Profile extends Activity{
 					
 					//update mPrefsInfo
 					infoEditor = mPrefsInfo.edit();
-					infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 1));
+					infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 2));
 					infoEditor.commit();
 					
 					birthDate.setText(newStr);
@@ -214,7 +309,7 @@ public class Profile extends Activity{
 					
 					//update mPrefsInfo
 					infoEditor = mPrefsInfo.edit();
-					infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 2));
+					infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 3));
 					infoEditor.commit();
 					
 					birthTime.setText(newStr);
@@ -238,7 +333,7 @@ public class Profile extends Activity{
 				
 				//update mPrefsInfo
 				infoEditor = mPrefsInfo.edit();
-				infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 0));
+				infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 1));
 				infoEditor.commit();
 				
 				babyName.setText(newStr);
@@ -264,7 +359,7 @@ public class Profile extends Activity{
 				
 				//update mPrefsInfo
 				infoEditor = mPrefsInfo.edit();
-				infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 3));
+				infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 4));
 				infoEditor.commit();
 				
 				birthHeight.setText(newStr);
@@ -290,7 +385,7 @@ public class Profile extends Activity{
 				
 				//update mPrefsInfo
 				infoEditor = mPrefsInfo.edit();
-				infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 4));
+				infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 5));
 				infoEditor.commit();
 				
 				birthWeight.setText(newStr);

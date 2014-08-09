@@ -18,6 +18,11 @@
     	android:layout_weight="1"
     	android:layout_marginRight="-18dp"/>
     
+    <View 
+        android:layout_width="4dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/line_separator"/>
+    
     <FrameLayout 
         android:id="@+id/detailFragLand"
         android:layout_width="0dp"

@@ -58,7 +58,7 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
   		spinnerlist = new ArrayList<String>();//spinner value list
   		spinnerlist.add("Milestone");
   		spinnerlist.add("Diary");
-  		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, spinnerlist);
+  		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.spinner_text, spinnerlist);
   		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
   		memoryDateListSpinner.setAdapter(adapter);
   		
@@ -123,7 +123,7 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 		// TODO Auto-generated method stub
 		//set selected item highlight color
 		previous.setBackgroundResource(R.color.gray90);
-		v.setBackgroundResource(R.color.navy);
+		v.setBackgroundResource(R.color.darkgray);
 		previous = v;
 		showDetails(position);
 	} 

@@ -153,7 +153,8 @@
     <string name="app_name">BabyDays</string>
     <string name="action_settings">Settings</string>
     <string name="hello">Welcome to BabyDays. \n \nWe help you recording baby\'s every moment!</string>
-    <string name="memories">In Memories!</string>
+    <string name="memories">Remember Every Day!</string>
+    <string name="company">Copyright © ZZMOM</string>
     <string name="title_activity_main_menu">MainMenu</string>
     <string name="feedmilk">Time to feed milk!</string>
     <string name="curtime">Current Time: </string>

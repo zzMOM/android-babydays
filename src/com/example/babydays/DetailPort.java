@@ -87,7 +87,7 @@ public class DetailPort extends Activity{
 	  		spinnerlist = new ArrayList<String>();//spinner value list
 	  		spinnerlist.add("Milestone");
 	  		spinnerlist.add("Diary");
-	  		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, spinnerlist);
+	  		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.spinner_text, spinnerlist);
 	  		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	  		memoryBookSpinner.setAdapter(adapter);
 	  		

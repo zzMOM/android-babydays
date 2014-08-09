@@ -11,7 +11,8 @@
     <Spinner 
         android:id="@+id/memoryDateListSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@color/navy"/>
 
     <ListView 
         android:id="@+id/dateListView"

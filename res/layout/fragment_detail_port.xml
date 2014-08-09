@@ -12,7 +12,7 @@
         android:id="@+id/memoryBookSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/backgroundblue"
+        android:background="@color/navy"
         android:spinnerMode="dropdown"/>
     
     <View 
@@ -32,6 +32,7 @@
         android:id="@+id/memoryText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="15sp"
         android:minLines="20" />
     </ScrollView>
 
