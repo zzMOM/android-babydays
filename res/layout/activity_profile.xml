@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.babydays.Profile" >
+    tools:context="com.example.babydays.Profile">
 
     
     <TableRow 
@@ -15,8 +15,9 @@
         android:padding="10dip">
         
         <TextView
-        	android:layout_width="wrap_content"
+        	android:layout_width="0dp"
         	android:layout_height="wrap_content"
+        	android:layout_weight="1"
         	android:textSize="15sp"
         	android:textColor="@color/darkblue"
         	android:textStyle="bold"
@@ -24,8 +25,9 @@
         
         <ImageView
             android:id="@+id/profilePhoto" 
-            android:layout_width="wrap_content"
-        	android:layout_height="30dip"
+            android:layout_width="0dp"
+        	android:layout_height="100dp"
+        	android:layout_weight="2"
         	android:contentDescription="@string/profile_photo"
         	android:src="@drawable/babydays"
         	android:layout_gravity="right"
@@ -38,8 +40,9 @@
         android:padding="10dip">
         
         <TextView
-        	android:layout_width="wrap_content"
+        	android:layout_width="0dp"
         	android:layout_height="wrap_content"
+        	android:layout_weight="1"
         	android:textSize="15sp"
         	android:textColor="@color/darkblue"
         	android:textStyle="bold"
@@ -47,8 +50,9 @@
         
         <TextView
             android:id="@+id/babyName" 
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
         	android:layout_height="wrap_content"
+        	android:layout_weight="2"
         	android:gravity="center_horizontal"
         	android:clickable="true"
         	android:background="@color/lightgray"/>
@@ -60,8 +64,9 @@
         android:padding="10dip">
         
         <TextView
-        	android:layout_width="wrap_content"
+        	android:layout_width="0dp"
         	android:layout_height="wrap_content"
+        	android:layout_weight="1"
         	android:textSize="15sp"
         	android:textColor="@color/darkblue"
         	android:textStyle="bold"
@@ -69,8 +74,9 @@
         
         <TextView
             android:id="@+id/birthDate" 
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
         	android:layout_height="wrap_content"
+        	android:layout_weight="2"
         	android:gravity="center_horizontal"
         	android:clickable="true"
         	android:background="@color/lightgray"/>
@@ -83,8 +89,9 @@
         android:padding="10dip">
         
         <TextView
-        	android:layout_width="wrap_content"
+        	android:layout_width="0dp"
         	android:layout_height="wrap_content"
+        	android:layout_weight="1"
         	android:textSize="15sp"
         	android:textColor="@color/darkblue"
         	android:textStyle="bold"
@@ -92,8 +99,9 @@
         
         <TextView
             android:id="@+id/birthTime" 
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
         	android:layout_height="wrap_content"
+        	android:layout_weight="2"
         	android:gravity="center_horizontal"
         	android:clickable="true"
         	android:background="@color/lightgray"/>
@@ -106,8 +114,9 @@
         android:padding="10dip">
         
         <TextView
-        	android:layout_width="wrap_content"
+        	android:layout_width="0dp"
         	android:layout_height="wrap_content"
+        	android:layout_weight="1"
         	android:textSize="15sp"
         	android:textColor="@color/darkblue"
         	android:textStyle="bold"
@@ -115,8 +124,9 @@
         
         <TextView
             android:id="@+id/birthHeight" 
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
         	android:layout_height="wrap_content"
+        	android:layout_weight="2"
         	android:gravity="center_horizontal"
         	android:clickable="true"
         	android:background="@color/lightgray"/>
@@ -128,8 +138,9 @@
         android:padding="10dip">
         
         <TextView
-        	android:layout_width="wrap_content"
+        	android:layout_width="0dp"
         	android:layout_height="wrap_content"
+        	android:layout_weight="1"
         	android:textSize="15sp"
         	android:textColor="@color/darkblue"
         	android:textStyle="bold"
@@ -137,8 +148,9 @@
         
         <TextView
             android:id="@+id/birthWeight" 
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
         	android:layout_height="wrap_content"
+        	android:layout_weight="2"
         	android:gravity="center_horizontal"
         	android:clickable="true"
         	android:background="@color/lightgray"/>

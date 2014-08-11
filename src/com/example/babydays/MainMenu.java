@@ -11,6 +11,7 @@ import java.util.Date;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -56,6 +57,7 @@ public class MainMenu extends Activity {
 	private EditText textOZ;
 	private MySQLiteHelper dbHelper;
 	private ArrayList<Integer> mSelectedItems;
+	private boolean doubleBackToExitPressedOnce = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -494,31 +496,25 @@ public class MainMenu extends Activity {
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
-		/*AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
-	    // Get the layout inflater
-	    LayoutInflater inflater = MainMenu.this.getLayoutInflater();
+		if (doubleBackToExitPressedOnce) {
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+	        intent.addCategory(Intent.CATEGORY_HOME);
+	        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	        startActivity(intent);
+	        return;
+	    }
 
-	    // Inflate and set the layout for the dialog
-	    // Pass null as the parent view because its going in the dialog layout
-	    builder.setTitle("Exit")
-	    	   .setMessage("Do you want to exit app?")
-	    // Add action buttons
-	           .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-	               @Override
-	               public void onClick(DialogInterface dialog, int id) {
-	            	   	Intent intent = new Intent(Intent.ACTION_MAIN);
-   						intent.addCategory(Intent.CATEGORY_HOME);
-   						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-   						startActivity(intent);
-	               }
-	           })
-	           .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-	               public void onClick(DialogInterface dialog, int id) {
-	                   
-	               }
-	           });      
-	    builder.show();*/
-		if(backButtonCount  >= 1)
+	    this.doubleBackToExitPressedOnce = true;
+	    Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+	    new Handler().postDelayed(new Runnable() {
+
+	        @Override
+	        public void run() {
+	            doubleBackToExitPressedOnce = false;                       
+	        }
+	    }, 2000);
+		/*if(backButtonCount  >= 1)
 	    {
 	        Intent intent = new Intent(Intent.ACTION_MAIN);
 	        intent.addCategory(Intent.CATEGORY_HOME);
@@ -529,7 +525,7 @@ public class MainMenu extends Activity {
 	    {
 	        Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
 	        backButtonCount++;
-	    }
+	    }*/
 	}
 
 }

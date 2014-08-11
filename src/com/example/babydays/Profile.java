@@ -45,6 +45,7 @@ public class Profile extends Activity{
 	private SharedPreferences mPrefsInfo;
 	private static final String BABY_INFO = " , , , , , ";
 	Editor infoEditor;
+	String profilePicPath = null;
 	
 	private static final int REQUEST_CODE = 1;
 	static final int DATE_DIALOG_ID = 100;
@@ -226,7 +227,7 @@ public class Profile extends Activity{
 	private void loadImageFromStorage(String path)
 	{
 
-	    try {
+	    /*try {
 	        File f=new File(path, "profile.jpg");
 	        Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
 	        profilePhoto.setImageBitmap(b);
@@ -234,7 +235,13 @@ public class Profile extends Activity{
 	    catch (FileNotFoundException e) 
 	    {
 	        e.printStackTrace();
-	    }
+	    }*/
+		BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        path = path.trim() + '/' + "profile.jpg";
+        profilePicPath = path;
+        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+        profilePhoto.setImageBitmap(bitmap);
 
 	}
 	
