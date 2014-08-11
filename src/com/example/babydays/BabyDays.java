@@ -22,6 +22,8 @@ public class BabyDays extends Activity {
 	//declare Timer variable
 	private Timer myTimer;
 	private ImageView profileImageFirst;
+	private MySQLiteHelper dbHelper;
+	private BabyInfo babyInfo;
 	
 
 	@Override
@@ -31,12 +33,23 @@ public class BabyDays extends Activity {
 		
 		profileImageFirst = (ImageView) findViewById(R.id.profileImageFirst);
 		
-		Profile p = new Profile();
-		BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        String path = null;
-        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-        profileImageFirst.setImageBitmap(bitmap);
+		dbHelper = new MySQLiteHelper(this);
+		List<BabyInfo> babyInfoList = dbHelper.getAllBabyInfo();
+		//if babyInfoList size is 0, initialize null and insert column
+		if(babyInfoList.size() == 0){
+			babyInfo = new BabyInfo("","","","","","");
+			dbHelper.addBabyInfo(babyInfo);
+		} 
+		
+		babyInfo = babyInfoList.get(0);
+		//if babyInfo path value not null, load saved image
+		if(babyInfo.getProfilePath().length() > 0){
+			String path = babyInfo.getProfilePath();
+		    BitmapFactory.Options options = new BitmapFactory.Options();
+	        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+	        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+	        profileImageFirst.setImageBitmap(bitmap);
+		}
 		
 		myTimer = new Timer();
         delayTask = new TimerTask(){

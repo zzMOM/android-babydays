@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Set;
 
 import android.app.Activity;
@@ -42,10 +43,9 @@ import android.view.View.OnClickListener;
 public class Profile extends Activity{
 	private ImageView profilePhoto;
 	private TextView babyName, birthDate, birthTime, birthHeight, birthWeight;
-	private SharedPreferences mPrefsInfo;
+	/*private SharedPreferences mPrefsInfo;
 	private static final String BABY_INFO = " , , , , , ";
-	Editor infoEditor;
-	String profilePicPath = null;
+	Editor infoEditor;*/
 	
 	private static final int REQUEST_CODE = 1;
 	static final int DATE_DIALOG_ID = 100;
@@ -54,11 +54,17 @@ public class Profile extends Activity{
 
 	private Bitmap mBitmap;
 	private Uri uri;
+	private MySQLiteHelper dbHelper;
+	private BabyInfo babyInfo;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_profile);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		//dbHelper;
+		dbHelper = new MySQLiteHelper(this);
 		
 		profilePhoto = (ImageView) findViewById(R.id.profilePhoto);
 		babyName = (TextView) findViewById(R.id.babyName);
@@ -67,13 +73,24 @@ public class Profile extends Activity{
 		birthHeight = (TextView) findViewById(R.id.birthHeight);
 		birthWeight = (TextView) findViewById(R.id.birthWeight);
 		
-		mPrefsInfo = getSharedPreferences(BABY_INFO, 0);
+		List<BabyInfo> babyInfoList = dbHelper.getAllBabyInfo();
+		babyInfo = babyInfoList.get(0);
+		//if babyInfo path value not null, load saved image
+		if(babyInfo.getProfilePath().length() > 0){
+			loadImageFromStorage(babyInfo.getProfilePath());//load image
+		}
+		babyName.setText(babyInfo.getName());
+		birthDate.setText(babyInfo.getDate());
+		birthTime.setText(babyInfo.getTime());
+		birthHeight.setText(babyInfo.getHeight());
+		birthWeight.setText(babyInfo.getWeight());
 		
+		//mPrefsInfo = getSharedPreferences(BABY_INFO, 0);
 		//initial
 		/*Editor editor = mPrefsInfo.edit();
 		editor.putString(BABY_INFO, " , , , , , ");
 		editor.commit();*/
-		String str = mPrefsInfo.getString(BABY_INFO, " , , , , , ");
+		/*String str = mPrefsInfo.getString(BABY_INFO, " , , , , , ");
 		Log.e("BABY_INFO", str);
 		String[] info = str.split(",");
 		
@@ -82,7 +99,7 @@ public class Profile extends Activity{
 		birthDate.setText(info[2]);
 		birthTime.setText(info[3]);
 		birthHeight.setText(info[4]);
-		birthWeight.setText(info[5]);
+		birthWeight.setText(info[5]);*/
 		
 		babyName.setOnClickListener(new OnClickListener() {
 			
@@ -191,11 +208,12 @@ public class Profile extends Activity{
 				
 				//save mBitmap
 				String path = saveToInternalSorage(mBitmap);
-				String s = mPrefsInfo.getString(BABY_INFO, "");
-				//update mPrefsInfo
+				path = path.trim() + '/' + "profile.jpg";
+				babyInfo.setProfilePath(path);
+				/*String s = mPrefsInfo.getString(BABY_INFO, "");
 				infoEditor = mPrefsInfo.edit();
 				infoEditor.putString(BABY_INFO, updateSharedPref(s, path, 0));
-				infoEditor.commit();
+				infoEditor.commit();*/
 			} catch (Exception e) {
 			}
 
@@ -238,11 +256,8 @@ public class Profile extends Activity{
 	    }*/
 		BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        path = path.trim() + '/' + "profile.jpg";
-        profilePicPath = path;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
         profilePhoto.setImageBitmap(bitmap);
-
 	}
 	
 	
@@ -279,15 +294,18 @@ public class Profile extends Activity{
 					String newStr = new StringBuilder().append(m)
 							   .append("-").append(d).append("-").append(selectedYear)
 							   .toString();
+					birthDate.setText(newStr);
+					babyInfo.setDate(newStr);
 					
-					String s = mPrefsInfo.getString(BABY_INFO, "");
+					
+					/*String s = mPrefsInfo.getString(BABY_INFO, "");
 					
 					//update mPrefsInfo
 					infoEditor = mPrefsInfo.edit();
 					infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 2));
 					infoEditor.commit();
 					
-					birthDate.setText(newStr);
+					birthDate.setText(newStr);*/
 				}
 			};
 			
@@ -311,15 +329,16 @@ public class Profile extends Activity{
 					h = hourOfDay < 10? "0" + hourOfDay : hourOfDay + "";
 					m = minute < 10? "0" + minute : minute + "";
 					String newStr = new StringBuilder().append(h).append(":").append(m).append(a_p).toString();
-					
-					String s = mPrefsInfo.getString(BABY_INFO, "");
+					babyInfo.setTime(newStr);
+					birthTime.setText(newStr);
+					/*String s = mPrefsInfo.getString(BABY_INFO, "");
 					
 					//update mPrefsInfo
 					infoEditor = mPrefsInfo.edit();
 					infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 3));
 					infoEditor.commit();
 					
-					birthTime.setText(newStr);
+					birthTime.setText(newStr);*/
 				}
 			};
 	
@@ -335,15 +354,16 @@ public class Profile extends Activity{
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
-				String s = mPrefsInfo.getString(BABY_INFO, "");
 				String newStr = inputText.getText().toString();
-				
+				babyInfo.setName(newStr);
+				babyName.setText(newStr);
+				/*String s = mPrefsInfo.getString(BABY_INFO, "");
 				//update mPrefsInfo
 				infoEditor = mPrefsInfo.edit();
 				infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 1));
 				infoEditor.commit();
 				
-				babyName.setText(newStr);
+				babyName.setText(newStr);*/
 			}
 		});
 		builder.show();
@@ -361,15 +381,16 @@ public class Profile extends Activity{
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
-				String s = mPrefsInfo.getString(BABY_INFO, "");
 				String newStr = inputText.getText().toString();
-				
+				babyInfo.setHeight(newStr);
+				birthHeight.setText(newStr);
+				/*String s = mPrefsInfo.getString(BABY_INFO, "");
 				//update mPrefsInfo
 				infoEditor = mPrefsInfo.edit();
 				infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 4));
 				infoEditor.commit();
 				
-				birthHeight.setText(newStr);
+				birthHeight.setText(newStr);*/
 			}
 		});
 		builder.show();
@@ -387,21 +408,26 @@ public class Profile extends Activity{
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
-				String s = mPrefsInfo.getString(BABY_INFO, "");
 				String newStr = inputText.getText().toString();
-				
+				babyInfo.setWeight(newStr);
+				birthWeight.setText(newStr);
+				/*String s = mPrefsInfo.getString(BABY_INFO, "");
 				//update mPrefsInfo
 				infoEditor = mPrefsInfo.edit();
 				infoEditor.putString(BABY_INFO, updateSharedPref(s, newStr, 5));
 				infoEditor.commit();
 				
-				birthWeight.setText(newStr);
+				birthWeight.setText(newStr);*/
 			}
 		});
 		builder.show();
 	}
 	
-	private String updateSharedPref(String s, String newStr, int index){
+	private void updateBabyInfo(){
+		dbHelper.updateBabyInfo(babyInfo);
+	}
+	
+	/*private String updateSharedPref(String s, String newStr, int index){
 		String[] arrays = s.split(",");
 		arrays[index] = newStr;
 		StringBuilder b = new StringBuilder();
@@ -412,6 +438,28 @@ public class Profile extends Activity{
 			b.append(" ").append(arrays[i]).append(" ");
 		}
 		return b.toString();
-	}
+	}*/
 
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		updateBabyInfo();
+		super.onBackPressed();
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch(item.getItemId()){
+		case android.R.id.home:
+			// app icon in action bar clicked; go home
+			updateBabyInfo();
+            Intent intent = new Intent(this, MainMenu.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 }

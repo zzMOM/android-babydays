@@ -18,13 +18,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     private static final String LOG = "MySQLiteHelper";
     
 	// Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
     // Database Name
     private static final String DATABASE_NAME = "RoutineDB";
     
     // Table Names
     private static final String TABLE_BABY_ACTIVITIES = "baby_activities";//table 1
-    private static final String TABLE_BABY_USER = "baby_user"; //table 2
+    private static final String TABLE_BABY_INFO = "baby_info"; //table 2
     
     // baby_activities Table Columns names
     private static final String KEY_ID = "id";
@@ -35,6 +35,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     private static final String[] COLUMNS = {KEY_ID,KEY_DATE,KEY_TIME,KEY_TYPE,KEY_INFO};
     //baby_user Table Columns' names
     private static final String BABY_ID = "id";
+    private static final String BABY_PROFILE_PATH = "path";
     private static final String BABY_NAME = "name";
     private static final String BABY_BIRTH_DATE = "birth_day";
     private static final String BABY_BIRTH_TIME = "birth_time";
@@ -57,8 +58,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     						+ KEY_INFO + " TEXT )";
     	
     	// SQL statement to create baby_user table
-    	String CREATE_TABLE_BABY_USER = "CREATE TABLE " + TABLE_BABY_USER + "(" 
+    	String CREATE_TABLE_BABY_INFO = "CREATE TABLE " + TABLE_BABY_INFO + "(" 
     						+ BABY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
+    						+ BABY_PROFILE_PATH + " TEXT,"
     						+ BABY_NAME + " TEXT," 
     						+ BABY_BIRTH_DATE + " TEXT," 
     						+ BABY_BIRTH_TIME + " TEXT,"
@@ -68,14 +70,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         // create baby_activities table
         db.execSQL(CREATE_TABLE_BABY_ACTIVITIES);
      // create baby_udrt table
-        db.execSQL(CREATE_TABLE_BABY_USER);
+        db.execSQL(CREATE_TABLE_BABY_INFO);
     }
  
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older baby_activities table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BABY_ACTIVITIES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BABY_USER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BABY_INFO);
         
         // create fresh books table
         this.onCreate(db);
@@ -86,6 +88,141 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
      * CRUD operations (create "add", read "get", update, delete)  + get all  + delete all 
      */
  
+    
+    
+    //insert new babyinfo
+    public void addBabyInfo(BabyInfo babyInfo){
+    	Log.d("addBabyInfo", babyInfo.toString());
+    	
+    	// 1. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+ 
+        // 2. create ContentValues to add key "column"/value
+        ContentValues values = new ContentValues();
+        values.put(BABY_NAME, babyInfo.getName());
+        values.put(BABY_PROFILE_PATH, babyInfo.getProfilePath());
+        values.put(BABY_NAME, babyInfo.getName());
+        values.put(BABY_BIRTH_DATE, babyInfo.getDate());
+        values.put(BABY_BIRTH_TIME, babyInfo.getTime());
+        values.put(BABY_BIRTH_HEIGHT, babyInfo.getHeight());
+        values.put(BABY_BIRTH_WEIGHT,babyInfo.getWeight());
+        
+ 
+        // 3. insert
+        db.insert(TABLE_BABY_INFO, // table
+                null, //nullColumnHack
+                values); // key/value -> keys = column names/ values = column values
+ 
+        // 4. close
+        db.close();
+    }
+    
+    public BabyInfo getBabyInfo(int id){
+    	 
+        // 1. get reference to readable DB
+        SQLiteDatabase db = this.getReadableDatabase();
+ 
+        // 2. build query
+        Cursor cursor = 
+                db.query(TABLE_BABY_ACTIVITIES, // a. table
+                COLUMNS, // b. column names
+                " id = ?", // c. selections 
+                new String[] { String.valueOf(id) }, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+ 
+        // 3. if we got results get the first one
+        BabyInfo babyInfo = new BabyInfo();
+        if (cursor != null && cursor.getCount() > 0){
+            cursor.moveToFirst();
+ 
+	        // 4. build babyinfo object
+	        babyInfo.setId(Integer.parseInt(cursor.getString(0)));
+	        babyInfo.setProfilePath(cursor.getString(1));
+	        babyInfo.setName(cursor.getString(2));
+	        babyInfo.setDate(cursor.getString(3));
+	        babyInfo.setTime(cursor.getString(4));
+	        babyInfo.setHeight(cursor.getString(5));
+	        babyInfo.setWeight(cursor.getString(6));
+        } else {
+        	return null;
+        }
+ 
+      //close db and cursor
+        db.close();
+        // 5. return babyActivity
+        return babyInfo;
+    }
+    
+ // Updating single babyActivity
+    public int updateBabyInfo(BabyInfo babyInfo) {
+ 
+        // 1. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+ 
+        // 2. create ContentValues to add key "column"/value
+        ContentValues values = new ContentValues();
+        values.put(BABY_PROFILE_PATH, babyInfo.getProfilePath());
+        values.put(BABY_NAME, babyInfo.getName());
+        values.put(BABY_BIRTH_DATE, babyInfo.getDate());
+        values.put(BABY_BIRTH_TIME, babyInfo.getTime());
+        values.put(BABY_BIRTH_HEIGHT, babyInfo.getHeight());
+        values.put(BABY_BIRTH_WEIGHT,babyInfo.getWeight());
+ 
+        // 3. updating row
+        int i = db.update(TABLE_BABY_INFO, //table
+                values, // column/value
+                KEY_ID+" = ?", // selections
+                new String[] { String.valueOf(babyInfo.getId()) }); //selection args
+ 
+        // 4. close
+        db.close();
+ 
+        return i;
+ 
+    }
+    
+ // Get All Books
+    public List<BabyInfo> getAllBabyInfo() {
+        List<BabyInfo> babyInfoList = new LinkedList<BabyInfo>();
+ 
+        // 1. build the query
+        String query = "SELECT  * FROM " + TABLE_BABY_INFO;
+ 
+        // 2. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+ 
+        // 3. go over each row, build babyActivity and add it to list
+        BabyInfo babyInfo = null;
+        if (cursor.moveToFirst()) {
+            do {
+            	babyInfo = new BabyInfo();
+            	babyInfo.setId(Integer.parseInt(cursor.getString(0)));
+    	        babyInfo.setProfilePath(cursor.getString(1));
+    	        babyInfo.setName(cursor.getString(2));
+    	        babyInfo.setDate(cursor.getString(3));
+    	        babyInfo.setTime(cursor.getString(4));
+    	        babyInfo.setHeight(cursor.getString(5));
+    	        babyInfo.setWeight(cursor.getString(6));
+ 
+                // Add babyActivity to babyActivities 
+            	babyInfoList.add(babyInfo);
+            } while (cursor.moveToNext());
+        }
+ 
+      //close db and cursor
+        cursor.close();
+        db.close();
+        // return books
+        return babyInfoList;
+    }
+    
+    
+    
+    
     public void addBabyActivity(BabyActivity babyActivity){
         Log.d("addBook", babyActivity.toString());
         // 1. get reference to writable DB
@@ -109,8 +246,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     }
     
     
-    
- 
     public BabyActivity getBabyActivity(int id){
  
         // 1. get reference to readable DB
