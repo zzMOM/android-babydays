@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -40,6 +41,7 @@ public class Diary extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.diary);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		diaryText = (EditText) findViewById(R.id.diaryText);
 		diaryText.setFocusableInTouchMode(true);
@@ -102,6 +104,20 @@ public class Diary extends Activity {
 		return true;
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch(item.getItemId()){
+		case android.R.id.home:
+            Intent intent = new Intent(this, DayActivities.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
 	
 	public void cancelDialog(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(Diary.this);
@@ -134,7 +150,7 @@ public class Diary extends Activity {
 		startActivityForResult(Intent.createChooser(intent, "Select..."), REQUEST_CODE);
 	}
 	
-	@Override
+	/*@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
 
@@ -175,12 +191,6 @@ public class Diary extends Activity {
 				mBitmap = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(),Bitmap.Config.ARGB_8888);
 				Canvas c = new Canvas(mBitmap);
 				c.drawBitmap(bm, 0, 0, null);
-				/*TextPaint tp = new TextPaint();
-				tp.setTextSize(20);
-				tp.setColor(0xffffffff); // AARRGGBB
-				// 0xff....... Fully opaque
-				// 0x00....... Fully transparent (useless!)
-				c.drawText("photo copy", bm.getWidth() - 100, bm.getHeight() - 100, tp);*/
 
 				bm.recycle();
 
@@ -190,7 +200,7 @@ public class Diary extends Activity {
 			}
 
 		}
-	}
+	}*/
 
 	public void shareIt() {
 		String diaryStr = diaryText.getText().toString();
@@ -208,43 +218,6 @@ public class Diary extends Activity {
 			startActivity(Intent.createChooser(sharingIntent, "Share via"));
 			return;
 		}
-		
-		/*
-		//this part will make a copy of the original photo, put a stamp on photo, and save on device
-		File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-		path.mkdirs();
-
-		// Note, for display purposes
-		// SimpleDateFormat.getTimeInstance()
-		// getDateTimeInstance() or getDateIntance
-		// are more appropriate.
-		// For filenames we can use the following specification
-		String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-
-		String filename = "Imagen_" + timestamp + ".jpg";
-		// Alternatively ... use System.currentTimeMillis()
-
-		// Creating a new File object in Java does not create a new
-		// file on the device. The file object just represents
-		// a location or path that may or may not exist
-		File file = new File(path, filename);
-		FileOutputStream stream;
-		try {
-			// This can fail if the external storage is mounted via USB
-			stream = new FileOutputStream(file);
-			mBitmap.compress(CompressFormat.JPEG, 100, stream);
-			stream.close();
-		} catch (Exception e) {
-			return; // Do not continue
-		}
-		
-		Uri uri = Uri.fromFile(file);
-		
-		// Tell Android that a new public picture exists
-		
-		Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-		intent.setData(uri);
-		sendBroadcast(intent);*/
 
 		// Send the public picture file to my friend... 
 		Intent share = new Intent(Intent.ACTION_SEND);

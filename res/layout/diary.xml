@@ -20,12 +20,12 @@
 	        android:id="@+id/diaryText"
 	        android:layout_width="match_parent"
 	    	android:layout_height="wrap_content"
-	    	android:minLines="10"
+	    	android:minLines="20"
 	    	android:gravity="top"
 	    	android:hint="@string/writediary"
 	    	android:background="@drawable/textlines"/>
    			
-        <TextView 
+        <!--TextView 
             android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
 	    	android:text="@string/addphoto"
@@ -37,7 +37,7 @@
 	    	android:layout_height="wrap_content"
 	    	android:src="@drawable/photo_add_icon"
 	    	android:contentDescription="@string/shareimage"
-	    	android:onClick="choosePhoto"/>
+	    	android:onClick="choosePhoto"/-->
 	</LinearLayout>
 	</ScrollView>
 	
