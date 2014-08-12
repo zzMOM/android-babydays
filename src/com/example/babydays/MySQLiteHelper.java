@@ -76,8 +76,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older baby_activities table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BABY_ACTIVITIES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BABY_INFO);
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_BABY_ACTIVITIES);
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_BABY_INFO);
         
         // create fresh books table
         this.onCreate(db);

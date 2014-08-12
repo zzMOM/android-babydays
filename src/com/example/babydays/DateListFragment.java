@@ -48,7 +48,7 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
 		//dateListView
 		dateListView = (ListView) view.findViewById(R.id.dateListView);
 		datelist = new ArrayList<String>();
-		datelist.add("123");
+		datelist.add("");
 		adapter = new ArrayAdapter<String>(getActivity(), 
 					android.R.layout.simple_list_item_1, datelist);
 		dateListView.setAdapter(adapter);
@@ -138,7 +138,13 @@ public class DateListFragment extends Fragment implements OnItemClickListener{
                 getFragmentManager().findFragmentById(R.id.detailFragLand);
         if (details == null || mCurCheckPosition == 0 || !details.getSelectedDate().equals(datelist.get(mCurCheckPosition))) {
             // Make new fragment to show this selection.
-            details = DetailLandFragment.newInstance(datelist.get(mCurCheckPosition), 
+        	String selectedDate;
+        	if(datelist.size() == 0){
+        		selectedDate = "";
+        	} else {
+        		selectedDate = datelist.get(mCurCheckPosition);
+        	}
+            details = DetailLandFragment.newInstance(selectedDate, 
             		spinnerlist.get(memoryDateListSpinner.getSelectedItemPosition()));
             
             // Execute a transaction, replacing any existing fragment

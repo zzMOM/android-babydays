@@ -19,6 +19,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -56,6 +57,8 @@ public class ManageRecords extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_manage_records);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setTitle("");
 		
 		dbHelper = new MySQLiteHelper(this);
 		//date and time format
@@ -209,6 +212,20 @@ public class ManageRecords extends Activity {
 				}
 			}
 		});
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch(item.getItemId()){
+		case android.R.id.home:
+            Intent intent = new Intent(this, DayActivities.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
 	private void manageSpinnerStatus(int pos){
