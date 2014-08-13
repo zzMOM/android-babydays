@@ -264,7 +264,7 @@
     <string name="pick_date">Pick Date</string>
     <string name="set_time">Set Time</string>
     <string name="manage_records">Edit Insert Delete Records</string>
-    <string name="records_id_">"Records ID: "</string>
+    <string name="records_id_">"ID:"</string>
     <string name="search_id">search ID</string>
     <string name="type">Type: </string>
     <string name="info">Info: </string>

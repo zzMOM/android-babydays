@@ -1,220 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lavender"
-    android:orientation="vertical" >
+    android:background="@color/lavender">
     
-    <Spinner 
-        android:id="@+id/manageSpinner"
+    <LinearLayout
+        android:id="@+id/linearLayout1" 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/navy"/>
+    	android:layout_height="wrap_content"
+    	android:orientation="horizontal">
+        
+        <Spinner 
+	        android:id="@+id/manageSpinner"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:background="@drawable/spinner_background"/>
+        
+        <LinearLayout
+	        android:layout_width="0dp"
+	    	android:layout_height="wrap_content"
+	    	android:layout_weight="1"
+	    	android:orientation="horizontal">
+        
+	        <TextView 
+		        android:id="@+id/recordsID"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="center_vertical"
+		        android:layout_marginLeft="10dp"
+		        android:textSize="22sp"
+		        android:textStyle="bold"
+		        android:textColor="@color/crimson"
+		        android:text="@string/records_id_"/>
+	        
+	        <EditText 
+	            android:id="@+id/recordsIDEdit"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="center_vertical"
+	            android:ems="6"
+	            android:inputType="number"
+	            android:textSize="20sp"
+	            android:imeOptions="actionDone"/>
+	        
+	        <ImageButton 
+	            android:id="@+id/searchID"
+	            android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="center_vertical"
+		        android:src="@android:drawable/ic_menu_search"
+		        android:contentDescription="@string/search_id"/>
+		</LinearLayout>
+    </LinearLayout>
+    
     
     <TextView 
         android:id="@+id/errorMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayout1"
         android:textColor="@color/red"
         android:textSize="15sp"
         android:textStyle="italic"/>
     
-    <LinearLayout 
-        android:layout_width="match_parent"
-    	android:layout_height="wrap_content"
-    	android:layout_weight="1"
-    	android:orientation="horizontal">
-        
-        <TextView 
-	        android:id="@+id/recordsID"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="center_vertical"
-	        android:textSize="22sp"
-	        android:textStyle="bold"
-	        android:textColor="@color/crimson"
-	        android:text="@string/records_id_"/>
-        
-        <EditText 
-            android:id="@+id/recordsIDEdit"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="center_vertical"
-            android:ems="6"
-            android:inputType="number"
-            android:textSize="20sp"
-            android:imeOptions="actionDone"/>
-        
-        <ImageButton 
-            android:id="@+id/searchID"
-            android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="center_vertical"
-	        android:src="@android:drawable/ic_menu_search"
-	        android:contentDescription="@string/search_id"/>
-    </LinearLayout>
-    
-    <ScrollView 
-        android:layout_width="match_parent"
-	    android:layout_height="wrap_content">
-        
-        <TableLayout 
-            android:layout_width="match_parent"
-        	android:layout_height="wrap_content"
-        	android:background="@drawable/border">
-        	
-            
-            <TableRow 
-                android:id="@+id/tableRowAttr"
-                android:layout_width="wrap_content"
-        		android:layout_height="wrap_content">
-                
-                <TextView 
-                    android:layout_width="wrap_content"
-        			android:layout_height="wrap_content"
-        			android:layout_column='1'
-        			android:layout_gravity="center"
-        			android:text="@string/current"/>
-                
-                <TextView 
-                    android:layout_width="wrap_content"
-        			android:layout_height="wrap_content"
-        			android:layout_column='2'
-        			android:layout_gravity="center"
-        			android:text="@string/newvalue"/>
-                
-            </TableRow>
-            
-            <TableRow 
-                android:id="@+id/tableRowDate"
-                android:layout_width="wrap_content"
-        		android:layout_height="wrap_content">
-        		
-                <TextView 
-			        android:id="@+id/idDate"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-		        	android:layout_gravity="center_vertical"
-		        	android:textSize="20sp"
-			        android:textStyle="bold"
-			        android:textColor="@color/crimson"
-			        android:text="@string/date"/>
-		        
-		        <TextView
-		            android:id="@+id/showIDDate"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:paddingLeft="10dp"
-			        android:ems="5"
-					android:textSize="20sp"/>
-		        
-		        <Button 
-		            android:id="@+id/changeDate"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:text="@string/pick_date"/>
-            </TableRow>
-            
-            <TableRow 
-                android:id="@+id/tableRowTime"
-                android:layout_width="wrap_content"
-        		android:layout_height="wrap_content">
-		        
-		        <TextView 
-			        android:id="@+id/idTime"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-		        	android:layout_gravity="center_vertical"
-		        	android:textSize="20sp"
-			        android:textStyle="bold"
-			        android:textColor="@color/crimson"
-			        android:text="@string/time"/>
-		        
-		        <TextView 
-		            android:id="@+id/showIDTime"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:paddingLeft="10dp"
-			        android:ems="5"
-			        android:textSize="20sp"/>
-		        
-		        <Button 
-		            android:id="@+id/changeTime"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:text="@string/pick_time"/>
-            </TableRow>
-            
-            <TableRow 
-                android:id="@+id/tableRowType"
-                android:layout_width="wrap_content"
-        		android:layout_height="wrap_content">
-		        
-                <TextView 
-			        android:id="@+id/idType"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-		        	android:layout_gravity="center_vertical"
-		        	android:textSize="20sp"
-			        android:textStyle="bold"
-			        android:textColor="@color/crimson"
-			        android:text="@string/type"/>
-		        
-		        <TextView 
-			        android:id="@+id/showIDType"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:ems="5"
-			        android:textSize="20sp"
-			        android:paddingLeft="10dp"/>
-		        
-		        <Spinner 
-		            android:id="@+id/typeSpinner"
-		            android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:entries="@array/typeSp"/>
-		        
-            </TableRow>
-            
-            <TableRow 
-                android:id="@+id/tableRowInfo"
-                android:layout_width="wrap_content"
-        		android:layout_height="wrap_content">
-		        
-                <TextView 
-			        android:id="@+id/idInfo"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-		        	android:layout_gravity="center_vertical"
-		        	android:textSize="20sp"
-			        android:textStyle="bold"
-			        android:textColor="@color/crimson"
-			        android:text="@string/info"/>
-		        
-		        <TextView 
-		            android:id="@+id/infoText"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:paddingLeft="10dp"
-		            android:textSize="20sp"
-		            android:ems="5"/>
-		        
-		        <TextView 
-			        android:id="@+id/infoTextNew"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:ems="5"
-			        android:textSize="20sp"
-			        android:paddingLeft="10dp"/>
-            </TableRow>  
-        </TableLayout>
-	</ScrollView>
-	    
-    <LinearLayout 
+    <LinearLayout
+        android:id="@+id/linearLayout2" 
         android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
 	    android:layout_marginTop="10dp"
-	    android:layout_weight="1"
 	    android:orientation="horizontal">
     
 	    <Button 
@@ -232,5 +87,177 @@
 	        android:text="@string/ok"/>
 	    
     </LinearLayout>
+    
+    <ScrollView 
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/errorMessage"
+	    android:layout_above="@id/linearLayout2">
+        
+        <TableLayout 
+            android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:background="@drawable/border">
+        	
+            
+            <TableRow 
+                android:id="@+id/tableRowAttr"
+                android:layout_width="wrap_content"
+        		android:layout_height="wrap_content">
+                
+                <TextView 
+                    android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:layout_weight="2"
+        			android:layout_column='1'
+        			android:layout_gravity="center"
+        			android:text="@string/current"/>
+                
+                <TextView 
+                    android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:layout_weight="2"
+        			android:layout_column='2'
+        			android:layout_gravity="center"
+        			android:text="@string/newvalue"/>
+                
+            </TableRow>
+            
+            <TableRow 
+                android:id="@+id/tableRowDate"
+                android:layout_width="wrap_content"
+        		android:layout_height="wrap_content">
+        		
+                <TextView 
+			        android:id="@+id/idDate"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="1"
+		        	android:layout_gravity="center_vertical"
+		        	android:textSize="20sp"
+			        android:textStyle="bold"
+			        android:textColor="@color/crimson"
+			        android:text="@string/date"/>
+		        
+		        <TextView
+		            android:id="@+id/showIDDate"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="2"
+			        android:paddingLeft="10dp"
+			        android:ems="5"
+					android:textSize="20sp"/>
+		        
+		        <Button 
+		            android:id="@+id/changeDate"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="2"
+			        android:text="@string/pick_date"/>
+            </TableRow>
+            
+            <TableRow 
+                android:id="@+id/tableRowTime"
+                android:layout_width="wrap_content"
+        		android:layout_height="wrap_content">
+		        
+		        <TextView 
+			        android:id="@+id/idTime"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="1"
+		        	android:layout_gravity="center_vertical"
+		        	android:textSize="20sp"
+			        android:textStyle="bold"
+			        android:textColor="@color/crimson"
+			        android:text="@string/time"/>
+		        
+		        <TextView 
+		            android:id="@+id/showIDTime"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="2"
+			        android:paddingLeft="10dp"
+			        android:ems="5"
+			        android:textSize="20sp"/>
+		        
+		        <Button 
+		            android:id="@+id/changeTime"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="2"
+			        android:text="@string/pick_time"/>
+            </TableRow>
+            
+            <TableRow 
+                android:id="@+id/tableRowType"
+                android:layout_width="wrap_content"
+        		android:layout_height="wrap_content">
+		        
+                <TextView 
+			        android:id="@+id/idType"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="1"
+		        	android:layout_gravity="center_vertical"
+		        	android:textSize="20sp"
+			        android:textStyle="bold"
+			        android:textColor="@color/crimson"
+			        android:text="@string/type"/>
+		        
+		        <TextView 
+			        android:id="@+id/showIDType"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="2"
+			        android:ems="5"
+			        android:textSize="20sp"
+			        android:paddingLeft="10dp"/>
+		        
+		        <Spinner 
+		            android:id="@+id/typeSpinner"
+		            android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="2"
+			        android:entries="@array/typeSp"/>
+		        
+            </TableRow>
+            
+            <TableRow 
+                android:id="@+id/tableRowInfo"
+                android:layout_width="wrap_content"
+        		android:layout_height="wrap_content">
+		        
+                <TextView 
+			        android:id="@+id/idInfo"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="1"
+		        	android:layout_gravity="center_vertical"
+		        	android:textSize="20sp"
+			        android:textStyle="bold"
+			        android:textColor="@color/crimson"
+			        android:text="@string/info"/>
+		        
+		        <TextView 
+		            android:id="@+id/infoText"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="2"
+			        android:paddingLeft="10dp"
+		            android:textSize="20sp"
+		            android:ems="5"/>
+		        
+		        <TextView 
+			        android:id="@+id/infoTextNew"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="2"
+			        android:ems="5"
+			        android:textSize="20sp"
+			        android:paddingLeft="10dp"/>
+            </TableRow>  
+        </TableLayout>
+	</ScrollView>
 
-</LinearLayout>
+</RelativeLayout>
