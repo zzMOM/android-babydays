@@ -14,15 +14,18 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.TextView;
+import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
+import android.widget.*;
+import android.widget.FrameLayout.LayoutParams;
 
 /**
  * Show the day activities by date
@@ -43,12 +46,13 @@ public class DayActivities extends Activity {
 	private Calendar c;
 
 	//private DatePicker datePicker;	//DatePicker
+	//private ScrollView scrollView;
 	private TextView dayActivity, dayActivitySummary;
 	private TextView showSetDate;	//show DatePicker or <> set date
 	private Button setDate;		//show DatePicker dialog
 	//private Button preMonth;	//decrease month button
-	//private Button preDay;		//decrease day button
-	//private Button nextDay;		//increase day button
+	private Button preDay;		//decrease day button
+	private Button nextDay;		//increase day button
 	//private Button nextMonth;	//increase month button
 	private Button recordFilter;//filter records button
 	
@@ -70,10 +74,38 @@ public class DayActivities extends Activity {
 		dayActivitySummary = (TextView)findViewById(R.id.dayActivitySummary);
 		dayActivity = (TextView)findViewById(R.id.dayActivity);
 		showSetDate = (TextView)findViewById(R.id.showSetDate);
+		//scrollView = (ScrollView)findViewById(R.id.scrollView);
 		//preMonth = (Button)findViewById(R.id.preMonth);
-		//preDay = (Button)findViewById(R.id.preDay);
-		//nextDay = (Button)findViewById(R.id.nextDay);
+		preDay = (Button)findViewById(R.id.preDay);
+		nextDay = (Button)findViewById(R.id.nextDay);
 		//nextMonth = (Button)findViewById(R.id.nextMonth);
+		dayActivity.setMovementMethod(new ScrollingMovementMethod());
+		/*dayActivity.setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				// TODO Auto-generated method stub
+				if(dayActivity.getLayoutParams().height == LayoutParams.MATCH_PARENT){
+					dayActivity.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
+				} else {
+					dayActivity.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT));
+				}
+				return false;
+			}
+		});*/
+		dayActivity.setOnTouchListener(new OnSwipeTouchListener(this){
+			@Override
+		    public void onSwipeLeft() {
+		        // Whatever
+				DecreaseDay(preDay);
+		    }
+			
+			@Override
+			public void onSwipeRight() {
+				// TODO Auto-generated method stub
+				IncreaseDay(nextDay);
+			}
+		});
 		
 		
 		setDate = (Button)findViewById(R.id.setDate);

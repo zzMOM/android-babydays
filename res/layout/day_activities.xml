@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,13 +7,12 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/backgroundblue"
-    android:orientation="vertical"
     tools:context=".DayActivities" >
    
-    <LinearLayout 
+    <LinearLayout
+        android:id="@+id/ll1" 
         android:layout_width="match_parent"
    		android:layout_height="wrap_content"
-   		android:layout_weight="1"
    		android:orientation="horizontal">
         
 	    <Button
@@ -49,10 +48,11 @@
     
     </LinearLayout>
     
-    <LinearLayout 
+    <LinearLayout
+        android:id="@+id/ll2"
+        android:layout_below="@id/ll1" 
         android:layout_width="match_parent"
    		android:layout_height="wrap_content"
-   		android:layout_weight="1"
    		android:orientation="horizontal">
     
 	    <Button 
@@ -111,6 +111,7 @@
 	    
 	 	<TextView 
 	        android:id="@+id/dayActivitySummary"
+	        android:layout_below="@id/ll2"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="2dp"
@@ -120,41 +121,50 @@
 	        android:background="@color/gainsboro"
 	        android:textSize="15sp"/>
 	    
-	    <ScrollView 
+	    <!--ScrollView
+	        android:id="@+id/scrollView" 
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_weight="10">
+	        android:layout_weight="10"-->
 	    
-		    <TextView 
-		        android:id="@+id/dayActivity"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:minLines="15"
-		        android:background="@color/gainsboro"
-		        android:textSize="20sp"/>
+	    <TextView 
+	        android:id="@+id/dayActivity"
+	        android:layout_below="@id/dayActivitySummary"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:minLines="15"
+	        android:background="@color/gainsboro"
+	        android:textSize="20sp"
+	        android:scrollbars="vertical"/>
 
-		</ScrollView>
+		<!--/ScrollView-->
 		
-	    <View 
-	        android:layout_width="fill_parent"
-	        android:layout_height="2dp"
-	        android:layout_marginTop="5dp"
-	        android:background="@drawable/line_separator"/>
-		
-	    <Button 
-	        android:id="@+id/manageRecords"
-	        android:layout_width="fill_parent"
+		<LinearLayout
+		    android:layout_alignParentBottom="true" 
+		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:background="@color/navy"
-		    android:text="@string/manage_records"
-		    android:textColor="@color/white"
-		    android:onClick="manageRecord"/>
-	    <View 
-	        android:layout_width="fill_parent"
-	        android:layout_height="2dp"
-	        android:layout_marginTop="5dp"
-	        android:background="@drawable/line_separator"/>
-</LinearLayout>
+		    android:orientation="vertical">
+	    
+		    <View 
+		        android:layout_width="fill_parent"
+		        android:layout_height="2dp"
+		        android:layout_marginTop="5dp"
+		        android:background="@drawable/line_separator"/>
+			
+		    <Button 
+		        android:id="@+id/manageRecords"
+		        android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:background="@color/navy"
+			    android:text="@string/manage_records"
+			    android:textColor="@color/white"
+			    android:onClick="manageRecord"/>
+		    <View 
+		        android:layout_width="fill_parent"
+		        android:layout_height="2dp"
+		        android:layout_marginTop="5dp"
+		        android:background="@drawable/line_separator"/>
+	    </LinearLayout>
+</RelativeLayout>
 
 
