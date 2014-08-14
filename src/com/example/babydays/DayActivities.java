@@ -97,13 +97,13 @@ public class DayActivities extends Activity {
 			@Override
 		    public void onSwipeLeft() {
 		        // Whatever
-				DecreaseDay(preDay);
+				IncreaseDay(nextDay);
 		    }
 			
 			@Override
 			public void onSwipeRight() {
 				// TODO Auto-generated method stub
-				IncreaseDay(nextDay);
+				DecreaseDay(preDay);
 			}
 		});
 		

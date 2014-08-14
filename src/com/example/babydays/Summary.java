@@ -15,14 +15,16 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.view.View.OnLongClickListener;
+import android.widget.FrameLayout.LayoutParams;
+import android.widget.*;
 
 public class Summary extends Activity {
 
@@ -32,6 +34,7 @@ public class Summary extends Activity {
 	private Button nextButton;
 	private Button lastButton;
 	private Button readSample;
+	private ImageView chartImageView;
 	
 	private int recordIndex;
 	private List<BabyActivity> routine;
@@ -48,6 +51,24 @@ public class Summary extends Activity {
 		
 		//actionbar
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		chartImageView = (ImageView)findViewById(R.id.chartImageView);
+		chartImageView.setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				// TODO Auto-generated method stub
+				if(chartImageView.getLayoutParams().width == LayoutParams.MATCH_PARENT){
+					chartImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+					chartImageView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT));
+				} else {
+					chartImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+					chartImageView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
+				}
+				return false;
+			}
+		});
+		
 		
 		//set recordIndex to be the last record
 		recordIndex = routine.size() - 1;
@@ -110,7 +131,7 @@ public class Summary extends Activity {
 		});
 		
 		//readSample button
-		readSample = (Button)findViewById(R.id.readSample);
+		/*readSample = (Button)findViewById(R.id.readSample);
 		readSample.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -135,7 +156,7 @@ public class Summary extends Activity {
 					lastButton.setClickable(true);
 				}
 			}
-		});
+		});*/
 		
 		//default show chart
 		createChartOfDayActivity(false);
@@ -164,23 +185,21 @@ public class Summary extends Activity {
 	}
 	
 	private void createChartOfDayActivity(boolean byDateAscOrDesc){
-		Display display = getWindowManager().getDefaultDisplay(); 
-		int windowwidth = display.getWidth();  // deprecated
-		int windowheight = display.getHeight();  // deprecated
+		int windowwidth = getResources().getDisplayMetrics().widthPixels;//phone window width in pixels
+		int windowheight = getResources().getDisplayMetrics().heightPixels;//phone window height in pixels
 		
 		// We'll be creating an image that is 100 pixels wide and 200 pixels tall.
 		//int width = 800;
 		//int height = 450;
 		int w = windowwidth;
-		if(windowwidth < 1500){
+		/*if(windowwidth < 1500){
 			w = windowwidth * 3 / 2;
-		}
+		}*/
 		int h = windowheight;
 		 
 		// Create a bitmap with the dimensions we defined above, and with a 16-bit pixel format. We'll
 		// get a little more in depth with pixel formats in a later post.
 		Bitmap bitmap = Bitmap.createBitmap(w, h, Config.RGB_565);
-		 
 		// Create a new canvas to draw on, and link it to the bitmap that we created above. Any drawing
 		// operations performed on the canvas will have an immediate effect on the pixel data of the
 		// bitmap.
@@ -194,26 +213,10 @@ public class Summary extends Activity {
 		paint.setColor(Color.YELLOW);
 		paint.setFakeBoldText(true);
 		paint.setTextSize(30);
+		paint.setStrokeWidth(1);
 		
 		//y axis start 100
 		int ystart = 100;
-		
-		/*//draw sign
-		Bitmap pee = BitmapFactory.decodeResource(getResources(), R.drawable.dropwater);
-		Bitmap poo = BitmapFactory.decodeResource(getResources(), R.drawable.poo);
-		Bitmap bottle = BitmapFactory.decodeResource(getResources(), R.drawable.bottle2);
-		canvas.drawBitmap(bottle, ystart + 50,  20, paint);
-		canvas.drawText("Feed Milk", ystart + 80, 40, paint);
-		canvas.drawBitmap(pee, (w - ystart) / 4 + 50,  20, paint);
-		canvas.drawText("Diaper wet", (w - ystart) / 4 + 80, 40, paint);
-		canvas.drawBitmap(poo, (w - ystart) / 4 * 2 + 50,  20, paint);
-		canvas.drawText("Diaper wet and poopy", (w - ystart) / 4 * 2 + 80, 40, paint);
-		//paint.setColor(Color.YELLOW);
-		paint.setStrokeWidth(10);
-		canvas.drawLine((w - ystart) / 4 * 3 + 50, 30, (w - ystart) / 4 * 3 + 80, 30, paint);
-		canvas.drawText("Nap/Sleep", (w - ystart) / 4 * 3 + 100, 40, paint);*/
-		paint.setStrokeWidth(1);
-		
 		/*-------------------------------------------draw x and y axis--------------------------------*/
 		paint.setColor(Color.WHITE);
 		paint.setFakeBoldText(false);
@@ -234,22 +237,22 @@ public class Summary extends Activity {
 		for(int i = 0; i <= 24; i++){
 			//canvas.drawLine(30 + 30 * i, 390, 30 + 30 * i, 400, paint);
 			canvas.drawLine(ystart + gapx * i, h - 70, ystart + gapx * i, h - 60, paint);
-			String x;
+			String x = "";
 			if(i == 0){
-				x = "12:00AM";
-			} else if(i < 12){
-				x = Integer.toString(i) + ":00AM";
+				x = "12:00a";
+			} else if(i < 12 && i % 2 == 0){
+				x = Integer.toString(i) + ":00a";
 			} else if(i == 12){
-				x = "12:00PM";
+				x = "12:00p";
 			} else if(i == 24){
-				x = "12:00AM";
-			} else {
-				x = Integer.toString(i - 12) + ":00PM";
+				x = "12:00a";
+			} else if(i > 12 && i % 2 == 0){
+				x = Integer.toString(i - 12) + ":00p";
 			}
 			canvas.save();
 			//canvas.rotate(-45, 30 * i, 440);
 			//canvas.drawText(x, 30 * i, 440, paint);
-			canvas.rotate(-45, ystart - 30 + gapx * i, h - 10);
+			//canvas.rotate(-45, ystart - 30 + gapx * i, h - 10);
 			canvas.drawText(x, ystart - 30 + gapx * i, h - 10, paint);
 			canvas.restore();
 			
@@ -273,12 +276,8 @@ public class Summary extends Activity {
 			drawChartByDateDesc(paint, canvas, w, h, gapx, gapy, ystart);
 		}
 		 
-		// In order to display this image in our activity, we need to create a new ImageView that we
-		// can display.
-		ImageView chartView = (ImageView)findViewById(R.id.chartImageView);
-		 
 		// Set this ImageView's bitmap to the one we have drawn to.
-		chartView.setImageBitmap(bitmap);
+		chartImageView.setImageBitmap(bitmap);
 		
 		
 	}
