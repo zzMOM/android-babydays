@@ -59,7 +59,7 @@ public class BabyDays extends Activity {
 			public void run() {
 		
 				//define a new Intent for MainMenu Activity
-				Intent intent = new Intent(BabyDays.this, MainMenu.class);
+				Intent intent = new Intent(BabyDays.this, MainMenuCard.class);
 				//start Activity
 				startActivity(intent);
 			}

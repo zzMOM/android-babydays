@@ -276,7 +276,7 @@
     <string name="newvalue">NewValue</string>
     <string name="memory_book">Memory</string>
     <string name="title_activity_memory_book">MemoryBook</string>
-    <string name="profile">Profile</string>
+    <string name="profile">profile</string>
     <string name="title_activity_profile">Profile</string>
     <string name="date_pick_calendar">date pick calendar</string>
     <string name="baby_birth_date_">"Birth Date"</string>
@@ -293,5 +293,6 @@
     <string name="title_activity_detail_fragment">DetailFragment</string>
     <string name="title_activity_detailport_fragment">DetailportFragment</string>
     <string name="title_activity_detail_port">DetailPort</string>
+    <string name="title_activity_main_menu_card">MainMenuCard</string>
 
 </resources>
