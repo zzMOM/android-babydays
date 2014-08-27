@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        
+        <TextView 
+	        android:id="@+id/curDate"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:textSize="20sp"
+	        android:text="@string/date"/>
+        
+        <EditText 
+	        android:id="@+id/showDate"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:enabled="false"
+	        android:clickable="true"
+	        android:ems="8"
+	        android:inputType="date"
+	        android:textSize="20sp"/>
+        
+        <ImageButton 
+            android:id="@+id/pickDate"
+            android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:src="@drawable/calendar2"
+	        android:background="@color/white"
+	        android:contentDescription="@string/pick_date"/>
+    </LinearLayout>
+        
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        
+        <TextView 
+	        android:id="@+id/curTime"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:textSize="20sp"
+	        android:text="@string/time"/>
+        
+        <EditText 
+	        android:id="@+id/showTime"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:enabled="false"
+	        android:clickable="true"
+	        android:ems="8"
+	        android:inputType="time"
+	        android:textSize="20sp"/>
+        
+        <ImageButton 
+            android:id="@+id/pickTime"
+            android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:src="@drawable/clock2"
+	        android:background="@color/white"
+	        android:contentDescription="@string/pick_time"/>
+        
+    </LinearLayout>
+
+</merge>

@@ -158,7 +158,7 @@
     <string name="title_activity_main_menu">MainMenu</string>
     <string name="feedmilk">Time to feed milk!</string>
     <string name="curtime">Current Time: </string>
-    <string name="feedamount">Feed Amount: </string>
+    <string name="feedamount">Feed Amount (OZ) : </string>
     <string name="oz">OZ</string>
     <string name="dialog_feedmilk">It\'s time to feed milk!</string>
     <string name="ok">OK</string>

@@ -3,7 +3,6 @@ package com.example.babydays;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.support.annotation.Nullable;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.res.Configuration;

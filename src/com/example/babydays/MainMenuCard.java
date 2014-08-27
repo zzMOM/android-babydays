@@ -2,6 +2,7 @@ package com.example.babydays;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
+import it.gmariotti.cardslib.library.internal.Card.OnLongCardClickListener;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.CardThumbnail;
@@ -17,7 +18,9 @@ import java.util.Date;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,9 +37,12 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class MainMenuCard extends Activity {
@@ -53,17 +59,21 @@ public class MainMenuCard extends Activity {
 	private static final String START_TIME = "starttime";
 	private SharedPreferences mPrefsTime;
 	
-	private CardListView cardListMenu;
+	private CardGridView cardGridMenu;
+	private ImageButton pickDate, pickTime;
+	private EditText showDate, showTime;
 	private Button viewAct, summaryButton, memoryButton;
-	private ListView lv;
-	private MediaPlayer littlestar;
-	private int backButtonCount = 0;
 	private SimpleDateFormat df;
 	private Calendar c;
 	private EditText textOZ;
 	private MySQLiteHelper dbHelper;
 	private ArrayList<Integer> mSelectedItems;
 	private boolean doubleBackToExitPressedOnce = false;
+	private int clicktype = 0;
+	
+	static final int DATE_DIALOG_ID = 100;
+	static final int TIME_DIALOG_ID = 999;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +136,7 @@ public class MainMenuCard extends Activity {
 		});
 		
 		
-		cardListMenu = (CardListView) findViewById(R.id.cardListMenu);
+		cardGridMenu = (CardGridView) findViewById(R.id.cardGridMenu);
 		//create Card list
 		ArrayList<Card> cards = new ArrayList<Card>();
 		for(int i = 0; i < items.length; i++){
@@ -145,6 +155,7 @@ public class MainMenuCard extends Activity {
 				@Override
 				public void onClick(Card card, View arg1) {
 					// TODO Auto-generated method stub
+					clicktype = 0;//onclick
 					if(card.getCardHeader().getTitle().toString().equals(items[0])){
 						createFeedDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[1])){
@@ -158,11 +169,34 @@ public class MainMenuCard extends Activity {
 					}
 				}
 			});
+			//set on long click listener
+			c.setOnLongClickListener(new OnLongCardClickListener() {
+				
+				@Override
+				public boolean onLongClick(Card card, View arg1) {
+					// TODO Auto-generated method stub
+					clicktype = 1;//onlongclick
+					if(card.getCardHeader().getTitle().toString().equals(items[0])){
+						createFeedDialog();
+					} else if(card.getCardHeader().getTitle().toString().equals(items[1])){
+						creatSleepDialog();
+					} else if(card.getCardHeader().getTitle().toString().equals(items[2])){
+						creatDiaperDialog();
+					} else if(card.getCardHeader().getTitle().toString().equals(items[3])){
+						creatMilestonesDialog();
+					} else if(card.getCardHeader().getTitle().toString().equals(items[4])){
+						openDiary();
+					}
+					return false;
+				}
+			});
 			
 			cards.add(c);
 		}
 		CardArrayAdapter cardAdapter = new CardArrayAdapter(this, cards);
-		cardListMenu.setAdapter(cardAdapter);
+		if(cardGridMenu != null){
+			cardGridMenu.setAdapter(cardAdapter);
+		}
 	}
 
 	@Override
@@ -184,6 +218,29 @@ public class MainMenuCard extends Activity {
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		if (doubleBackToExitPressedOnce) {
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+	        intent.addCategory(Intent.CATEGORY_HOME);
+	        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	        startActivity(intent);
+	        return;
+	    }
+
+	    this.doubleBackToExitPressedOnce = true;
+	    Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+	    new Handler().postDelayed(new Runnable() {
+
+	        @Override
+	        public void run() {
+	            doubleBackToExitPressedOnce = false;                       
+	        }
+	    }, 2000);
 	}
 	
 	/*
@@ -243,18 +300,34 @@ public class MainMenuCard extends Activity {
         // Include dialog.xml file
         dialog.setContentView(R.layout.dialog_feed);
         // Set dialog title
-        dialog.setTitle("It's time to feed!");
+        dialog.setTitle("Feed");
 
-        // set values for custom dialog components - text, edit text and button
-        TextView showTime = (TextView) dialog.findViewById(R.id.showTime);
-        c = Calendar.getInstance();
-        String formattedDate = df.format(c.getTime());
-        showTime.setText(formattedDate);
+        setDateTimeMergePart(dialog);
         
         textOZ = (EditText) dialog.findViewById(R.id.editTextOZ);
 
-        dialog.show();
-         
+        Button okButton = (Button) dialog.findViewById(R.id.ok);
+        // if decline button is clicked, close the custom dialog
+        okButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	//check and change nap status
+            	isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
+            	if(isStart && clicktype == 0){//onclick
+            		updateNapStatusAndDatabaseRecord();
+            	}
+            	
+                String type = "FeedMilk";
+                String info = "";
+                if(textOZ.getText().toString().length() > 0){
+                	info = textOZ.getText().toString() + "oz";
+                	insertCurrentActivity(type, info);
+                }
+            	
+                // Close dialog
+                dialog.dismiss();
+            }
+        });
         Button cancelButton = (Button) dialog.findViewById(R.id.cancel);
         // if decline button is clicked, close the custom dialog
         cancelButton.setOnClickListener(new OnClickListener() {
@@ -264,31 +337,9 @@ public class MainMenuCard extends Activity {
                 dialog.dismiss();
             }
         });
-        Button okButton = (Button) dialog.findViewById(R.id.ok);
-        // if decline button is clicked, close the custom dialog
-        okButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	//check and change nap status
-            	isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
-            	if(isStart){
-            		updateNapStatusAndDatabaseRecord();
-            	}
-            	
-            	//get date to insert into database-TABLE baby_activities
-                String formattedDate = df.format(c.getTime());
-                String[] s = formattedDate.split(" ");
-                String date = s[0];
-                String time = s[1];
-                String type = "FeedMilk";
-                String info = textOZ.getText().toString() + "oz";
-            	dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
-            	
-                // Close dialog
-                dialog.dismiss();
-            }
-        });
+        dialog.show();
     }
+	
 	
 	
 	public void creatSleepDialog(){
@@ -333,12 +384,6 @@ public class MainMenuCard extends Activity {
 		                	   
 			                   
 		                   }
-		                   
-		                   //debug
-		                   /*Log.e("current nap clock", info);
-		                   Log.e("NAP_CLOCK change", Boolean.toString(mPrefs.getBoolean(NAP_CLOCK, false)));*/
-		                   
-		            	   
 		               	   		               	
 		                   // Close dialog
 		                   dialog.dismiss();
@@ -387,12 +432,6 @@ public class MainMenuCard extends Activity {
 		               		updateNapStatusAndDatabaseRecord();
 		               }
 	               	
-	           	       //get date to insert into database-TABLE baby_activities
-		               c = Calendar.getInstance();
-	                   String formattedDate = df.format(c.getTime());
-	                   String[] s = formattedDate.split(" ");
-	                   String date = s[0];
-	                   String time = s[1];
 	                   String type = "Diaper";
 	                   
 	                   StringBuffer info = new StringBuffer("");
@@ -402,7 +441,7 @@ public class MainMenuCard extends Activity {
 	                	   info.append(diaperSelectedItems[(Integer) mSelectedItems.get(i)] + " ");
 	                   }
 	                   if(info.toString() != ""){
-	                	   dbHelper.addBabyActivity(new BabyActivity(date, time, type, info.toString()));
+	                	   insertCurrentActivity(type, info.toString());;
 	                   }
 	                   
 	                   dialog.dismiss();
@@ -443,12 +482,6 @@ public class MainMenuCard extends Activity {
 	           .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
-	            	 //get date to insert into database-TABLE baby_activities
-	            	   c = Calendar.getInstance();
-	                   String formattedDate = df.format(c.getTime());
-	                   String[] s = formattedDate.split(" ");
-	                   String date = s[0];
-	                   String time = s[1];
 	                   String type = "Milestone";
 	                   
 	                   StringBuffer info = new StringBuffer("");
@@ -458,7 +491,7 @@ public class MainMenuCard extends Activity {
 	                	   info.append(milestoneSelectedItems[(Integer) mSelectedItems.get(i)] + " ");
 	                   }
 	                   if(info.toString() != ""){
-	                	   dbHelper.addBabyActivity(new BabyActivity(date, time, type, info.toString()));
+	                	   insertCurrentActivity(type, info.toString());
 	                   }
 	                   
 	                   dialog.dismiss();
@@ -477,26 +510,145 @@ public class MainMenuCard extends Activity {
 		startActivity(intent);
 	}
 	
+	private void setDateTimeMergePart(Dialog dialog){
+		// set values for date_time_merge.xml components
+        showTime = (EditText) dialog.findViewById(R.id.showTime);
+        showDate = (EditText) dialog.findViewById(R.id.showDate);
+        c = Calendar.getInstance();
+        String formattedDate = df.format(c.getTime());
+        String[] s = formattedDate.split(" ");
+        showDate.setText(s[0]);
+        String[] st = s[1].split(":");
+		showTime.setText(timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
+        
+        pickDate = (ImageButton) dialog.findViewById(R.id.pickDate);
+        pickTime = (ImageButton) dialog.findViewById(R.id.pickTime);
+        if(clicktype == 0){
+        	pickDate.setVisibility(View.INVISIBLE);
+        	pickTime.setVisibility(View.INVISIBLE);
+        	showDate.setClickable(false);
+        	showTime.setClickable(false);
+        } else {
+        	pickDate.setVisibility(View.VISIBLE);
+        	pickTime.setVisibility(View.VISIBLE);
+        	pickDate.setClickable(true);
+        	pickTime.setClickable(true);
+        	showDate.setClickable(true);
+        	showTime.setClickable(true);
+        }
+        //pickDate button and pickTime button
+        pickDate.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showDialog(DATE_DIALOG_ID);
+			}
+		});
+        pickTime.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showDialog(TIME_DIALOG_ID);
+			}
+		});
+        
+        showDate.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showDialog(DATE_DIALOG_ID);
+			}
+		});
+        showTime.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showDialog(TIME_DIALOG_ID);
+			}
+		});
+	}
+	
+	private void insertCurrentActivity(String type, String info){
+		//get date to insert into database-TABLE baby_activities
+ 	    String date = showDate.getText().toString();
+ 	    String t = showTime.getText().toString();
+ 	    String time = timeFormat12To24(Integer.parseInt(t.substring(0, 2)), Integer.parseInt(t.substring(3, 5)), t.substring(5, 7));
+        dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
+	}
+	
 	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		if (doubleBackToExitPressedOnce) {
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-	        intent.addCategory(Intent.CATEGORY_HOME);
-	        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	        startActivity(intent);
-	        return;
-	    }
+	protected Dialog onCreateDialog(int id) {
+        c = Calendar.getInstance();
+		switch (id) {
+		case DATE_DIALOG_ID:
+			int year = c.get(Calendar.YEAR);
+	        int month = c.get(Calendar.MONTH);
+	        int day = c.get(Calendar.DAY_OF_MONTH);
+	        //Log.e("year month day", year + " " + month + " " + day);
+		    // set date picker as current date
+		    return new DatePickerDialog(this, datePickerListener, 
+                         year, month, day);
+		case TIME_DIALOG_ID:
+			//use current date as default date show in the DatePicker
+			int hour = c.get(Calendar.HOUR);
+			int min = c.get(Calendar.MINUTE);
+			return new TimePickerDialog(this, timePickerListener, hour, min, false);
+		}
+		return null;
+	}
+	
+	private DatePickerDialog.OnDateSetListener datePickerListener 
+		= new DatePickerDialog.OnDateSetListener() {
 
-	    this.doubleBackToExitPressedOnce = true;
-	    Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+		@Override
+		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+			// set selected date into textview
+			String m, d;
+			m = selectedMonth + 1 < 10? "0" + (selectedMonth + 1) : (selectedMonth + 1) + "";
+			d = selectedDay < 10? "0" + selectedDay : selectedDay + "";
+			showDate.setText(new StringBuilder().append(m)
+						   .append("-").append(d).append("-").append(selectedYear)
+						   .toString());
+		}
+	};
+	
+	
 
-	    new Handler().postDelayed(new Runnable() {
-
-	        @Override
-	        public void run() {
-	            doubleBackToExitPressedOnce = false;                       
-	        }
-	    }, 2000);
+	private TimePickerDialog.OnTimeSetListener timePickerListener
+		= new TimePickerDialog.OnTimeSetListener() {
+		
+		@Override
+		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			// set selected time to textview
+			showTime.setText(timeFormat24To12(hourOfDay, minute));
+		}
+	};
+	
+	private String timeFormat24To12(int hour, int minute){
+		String a_p = "";
+		if(hour > 12){
+			hour -= 12;
+			a_p = "PM";
+		} else {
+			a_p = "AM";
+		}
+		String h, m;
+		h = hour < 10? "0" + hour : hour + "";
+		m = minute < 10? "0" + minute : minute + "";
+		return new StringBuilder().append(h).append(":").append(m).append(a_p).toString();
+	}
+	
+	private String timeFormat12To24(int hour, int minute, String a_p){
+		if(a_p.equals("PM")){
+			hour += 12;
+		} 
+		String h, m;
+		h = hour < 10? "0" + hour : hour + "";
+		m = minute < 10? "0" + minute : minute + "";
+		return new StringBuilder().append(h).append(":").append(m).toString();
 	}
 }
