@@ -109,37 +109,8 @@
 	
 	    </LinearLayout>
 	    
-	 	<TextView 
-	        android:id="@+id/dayActivitySummary"
-	        android:layout_below="@id/ll2"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="2dp"
-	        android:layout_marginBottom="2dp"
-	        android:paddingTop="2dp"
-	        android:minLines="2"
-	        android:background="@color/gainsboro"
-	        android:textSize="15sp"/>
-	    
-	    <!--ScrollView
-	        android:id="@+id/scrollView" 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="10"-->
-	    
-	    <TextView 
-	        android:id="@+id/dayActivity"
-	        android:layout_below="@id/dayActivitySummary"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:minLines="15"
-	        android:background="@color/gainsboro"
-	        android:textSize="20sp"
-	        android:scrollbars="vertical"/>
-
-		<!--/ScrollView-->
-		
-		<LinearLayout
+    	<LinearLayout
+    	    android:id="@+id/ll3"
 		    android:layout_alignParentBottom="true" 
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
@@ -165,6 +136,33 @@
 		        android:layout_marginTop="5dp"
 		        android:background="@drawable/line_separator"/>
 	    </LinearLayout>
+	    
+	 	<TextView 
+	        android:id="@+id/dayActivitySummary"
+	        android:layout_below="@id/ll2"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="2dp"
+	        android:layout_marginBottom="2dp"
+	        android:paddingTop="2dp"
+	        android:minLines="2"
+	        android:background="@color/gainsboro"
+	        android:textSize="15sp"/>
+	    
+	    
+	    <TextView 
+	        android:id="@+id/dayActivity"
+	        android:layout_below="@id/dayActivitySummary"
+	        android:layout_above="@id/ll3"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:minLines="15"
+	        android:background="@color/gainsboro"
+	        android:textSize="20sp"
+	        android:scrollbars="vertical"/>
+
+		
+		
 </RelativeLayout>
 
 

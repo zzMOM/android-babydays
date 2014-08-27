@@ -8,20 +8,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.babydays.MainMenuCard"
     xmlns:card="http://schemas.android.com/apk/res-auto" >
-
-    <it.gmariotti.cardslib.library.view.CardGridView
-          android:id="@+id/cardGridMenu"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:columnWidth="150dp"
-          android:numColumns="auto_fit"
-          android:verticalSpacing="3dp"
-          android:horizontalSpacing="2dp"
-          android:stretchMode="columnWidth"
-          android:gravity="center"
-          card:card_layout_resourceID="@layout/card_thumbnail_layout"/>
     
-    <LinearLayout 
+    <LinearLayout
+        android:id="@+id/ll" 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -76,5 +65,18 @@
 	        android:layout_marginTop="5dp"
 	        android:background="@drawable/line_separator"/>
     </LinearLayout>
+    
+    <it.gmariotti.cardslib.library.view.CardListView
+          android:id="@+id/cardListMenu"
+          android:layout_above="@id/ll"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:columnWidth="150dp"
+          android:numColumns="auto_fit"
+          android:verticalSpacing="3dp"
+          android:horizontalSpacing="2dp"
+          android:stretchMode="columnWidth"
+          android:gravity="center"
+          card:list_card_layout_resourceID="@layout/list_card_thumbnail_layout"/>
 
 </RelativeLayout>

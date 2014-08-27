@@ -443,7 +443,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                 null); // h. limit
         
       //get Diaper change times -- count
-        String[] newColumns3 = {KEY_TYPE, "SUM(SUBSTR(info, 1, 2)) + ROUND(SUM(SUBSTR(info, 4, 2))/60-0.5) AS hour"
+        String[] newColumns3 = {KEY_TYPE, "SUM(SUBSTR(info, 1, 2)) + ROUND(SUM(SUBSTR(info, 4, 2))/60-0.4) AS hour"
         						, "SUM(SUBSTR(info, 4, 2))%60 AS min"};
         Cursor cursor3 = 
                 db.query(TABLE_BABY_ACTIVITIES, // a. table

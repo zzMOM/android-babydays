@@ -6,6 +6,7 @@ import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.CardThumbnail;
 import it.gmariotti.cardslib.library.view.CardGridView;
+import it.gmariotti.cardslib.library.view.CardListView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -52,7 +53,7 @@ public class MainMenuCard extends Activity {
 	private static final String START_TIME = "starttime";
 	private SharedPreferences mPrefsTime;
 	
-	private CardGridView cardGridMenu;
+	private CardListView cardListMenu;
 	private Button viewAct, summaryButton, memoryButton;
 	private ListView lv;
 	private MediaPlayer littlestar;
@@ -125,7 +126,7 @@ public class MainMenuCard extends Activity {
 		});
 		
 		
-		cardGridMenu = (CardGridView) findViewById(R.id.cardGridMenu);
+		cardListMenu = (CardListView) findViewById(R.id.cardListMenu);
 		//create Card list
 		ArrayList<Card> cards = new ArrayList<Card>();
 		for(int i = 0; i < items.length; i++){
@@ -161,7 +162,7 @@ public class MainMenuCard extends Activity {
 			cards.add(c);
 		}
 		CardArrayAdapter cardAdapter = new CardArrayAdapter(this, cards);
-		cardGridMenu.setAdapter(cardAdapter);
+		cardListMenu.setAdapter(cardAdapter);
 	}
 
 	@Override
