@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <ViewStub 
+        android:id="@+id/dateTimeStub"
+        android:inflatedId="@+id/dateTimeInflated"
+        android:layout="@layout/date_time_merge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    
+    <!--ScrollView 
+        android:id="@+id/scrollList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fadeScrollbars="true">
+        
+        <LinearLayout 
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:orientation="vertical" >
+    
+		    <CheckBox 
+		        android:id="@+id/smile"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/smile"/>
+		    
+		    <CheckBox 
+		        android:id="@+id/rollOver"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/rollover"/>
+		    
+		    <CheckBox 
+		        android:id="@+id/sit"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/sit"/>
+		    
+		    <CheckBox 
+		        android:id="@+id/crawingBack"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/crawingback"/>
+		
+		    <CheckBox 
+		        android:id="@+id/crawingForward"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/crawingforward"/>
+		    
+		    <CheckBox 
+		        android:id="@+id/standSupport"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/standsupport"/>
+		    
+		    <CheckBox 
+		        android:id="@+id/standSelf"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/standself"/>
+		    
+		    <CheckBox 
+		        android:id="@+id/walkHolding"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/walkholding"/>
+		    
+		    <CheckBox 
+		        android:id="@+id/walkSelf"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/walkself"/>
+		    
+		    <CheckBox 
+		        android:id="@+id/speakFirstWord"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/speakfirstword"/>
+	    
+	    </LinearLayout>
+    
+    </ScrollView>
+    
+    <EditText 
+        android:id="@+id/note"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:background="@drawable/textlines"
+        android:ems="100"
+        android:inputType="none"
+        android:textSize="20sp"
+        android:hint="@string/note"/-->
+    
+</LinearLayout>

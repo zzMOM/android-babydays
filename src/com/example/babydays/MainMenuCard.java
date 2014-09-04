@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -60,6 +61,7 @@ public class MainMenuCard extends Activity {
 	private boolean isStart = false;//isStart to record whether nap clock started
 	private static final String START_TIME = "starttime";
 	private SharedPreferences mPrefsTime;
+	private DateTimePickerClass dateTimePickerClass;
 	
 	private ViewStub dateTimeStub;
 	private CardGridView cardGridMenu;
@@ -76,6 +78,7 @@ public class MainMenuCard extends Activity {
 	
 	static final int DATE_DIALOG_ID = 100;
 	static final int TIME_DIALOG_ID = 999;
+	static final int FEED_DIALOG_ID = 1;
 
 
 	@Override
@@ -88,6 +91,9 @@ public class MainMenuCard extends Activity {
 		actionBar.show();
 		actionBar.setTitle("Baby Days");//change action bar title
 		//actionBar.setIcon(icon);
+		
+		//initialize DateTimePickerClass
+		dateTimePickerClass = new DateTimePickerClass();
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
@@ -311,8 +317,8 @@ public class MainMenuCard extends Activity {
         
         dateTimeStub = (ViewStub) dialog.findViewById(R.id.dateTimeStub);
         dateTimeStub.setLayoutResource(R.layout.date_time_merge);
-        dateTimeStub.inflate();
-        setDateTimeMergePart(dialog);
+        View inflatedView = dateTimeStub.inflate();
+        setDateTimeMergePart(inflatedView);
         
         textOZ = (EditText) dialog.findViewById(R.id.editTextOZ);
 
@@ -411,7 +417,6 @@ public class MainMenuCard extends Activity {
 	public void creatDiaperDialog(){
 		mSelectedItems = new ArrayList<Integer>();
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		AlertDialog dialog = builder.create();
 		
 		// Set dialog title
         if(clicktype == 0){
@@ -423,13 +428,8 @@ public class MainMenuCard extends Activity {
         LayoutInflater inflater = getLayoutInflater();
 	    // Inflate and set the layout for the dialog
 	    // Pass null as the parent view because its going in the dialog layout
-	    builder.setView(inflater.inflate(R.layout.dialog_diaper, null));
-        
-        dateTimeStub = (ViewStub) dialog.findViewById(R.id.dateTimeStub);
-        dateTimeStub.setLayoutResource(R.layout.date_time_merge);
-        dateTimeStub.inflate();
-        setDateTimeMergePart(dialog);
-	    
+        final View dateTimeView = inflater.inflate(R.layout.dialog_diaper, null);
+	    builder.setView(dateTimeView);
 	    		// Specify the list array, the items to be selected by default (null for none),
 	    		// and the listener through which to receive callbacks when items are selected
 	    builder.setMultiChoiceItems(R.array.diaper, null,
@@ -475,14 +475,32 @@ public class MainMenuCard extends Activity {
 	               public void onClick(DialogInterface dialog, int id) {
 	            	   dialog.dismiss();
 	               }
-	           });      
-	    builder.show();
+	           });  
+	    
+	    AlertDialog dialog = builder.create();
+	    dateTimeStub = (ViewStub) dateTimeView.findViewById(R.id.dateTimeStub);
+        dateTimeStub.setLayoutResource(R.layout.date_time_merge);
+        View inflatedView = dateTimeStub.inflate();
+        setDateTimeMergePart(inflatedView);
+	    dialog.show();
 	}
 	
 	public void creatMilestonesDialog(){
 		mSelectedItems = new ArrayList<Integer>();
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
+		
+		// Set dialog title
+        if(clicktype == 0){
+        	builder.setTitle("Milestone!");
+        } else {
+        	builder.setTitle("Insert a new milestone!");
+        }
+        
+        LayoutInflater inflater = getLayoutInflater();
+	    // Inflate and set the layout for the dialog
+	    // Pass null as the parent view because its going in the dialog layout
+        final View dateTimeView = inflater.inflate(R.layout.dialog_milstones, null);
+	    builder.setView(dateTimeView);
 	    // Inflate and set the layout for the dialog
 	    // Pass null as the parent view because its going in the dialog layout
 	    builder//.setView(inflater.inflate(R.layout.dialop_milstones, null))
@@ -526,27 +544,35 @@ public class MainMenuCard extends Activity {
 	                   
 	               }
 	           });      
-	    builder.show();
+	    AlertDialog dialog = builder.create();
+	    dateTimeStub = (ViewStub) dateTimeView.findViewById(R.id.dateTimeStub);
+        dateTimeStub.setLayoutResource(R.layout.date_time_merge);
+        View inflatedView = dateTimeStub.inflate();
+        setDateTimeMergePart(inflatedView);
+	    dialog.show();
 	}
+	
+	
 	
 	public void openDiary(){
 		Intent intent = new Intent(this, Diary.class);
 		startActivity(intent);
 	}
 	
-	private void setDateTimeMergePart(Dialog dialog){
+	private void setDateTimeMergePart(View inflatedView){
 		// set values for date_time_merge.xml components
-        showTime = (EditText) dialog.findViewById(R.id.showTime);
-        showDate = (EditText) dialog.findViewById(R.id.showDate);
+		//use inflatedView to get view from viewstub
+        showTime = (EditText) inflatedView.findViewById(R.id.showTime);
+        showDate = (EditText) inflatedView.findViewById(R.id.showDate);
         c = Calendar.getInstance();
         String formattedDate = df.format(c.getTime());
         String[] s = formattedDate.split(" ");
         showDate.setText(s[0]);
         String[] st = s[1].split(":");
-		showTime.setText(timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
+		showTime.setText(dateTimePickerClass.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
         
-        pickDate = (ImageButton) dialog.findViewById(R.id.pickDate);
-        pickTime = (ImageButton) dialog.findViewById(R.id.pickTime);
+        pickDate = (ImageButton) inflatedView.findViewById(R.id.pickDate);
+        pickTime = (ImageButton) inflatedView.findViewById(R.id.pickTime);
         if(clicktype == 0){//onclick, current activity
         	dateTimeStub.setVisibility(View.GONE);
         } else {//onlongclick, insert new activity
@@ -592,7 +618,7 @@ public class MainMenuCard extends Activity {
 		//get date to insert into database-TABLE baby_activities
  	    String date = showDate.getText().toString();
  	    String t = showTime.getText().toString();
- 	    String time = timeFormat12To24(Integer.parseInt(t.substring(0, 2)), Integer.parseInt(t.substring(3, 5)), t.substring(5, 7));
+ 	    String time = dateTimePickerClass.timeFormat12To24(Integer.parseInt(t.substring(0, 2)), Integer.parseInt(t.substring(3, 5)), t.substring(5, 7));
         dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
 	}
 	
@@ -604,67 +630,15 @@ public class MainMenuCard extends Activity {
 			int year = c.get(Calendar.YEAR);
 	        int month = c.get(Calendar.MONTH);
 	        int day = c.get(Calendar.DAY_OF_MONTH);
-	        //Log.e("year month day", year + " " + month + " " + day);
-		    // set date picker as current date
-		    return new DatePickerDialog(this, datePickerListener, 
+		    return new DatePickerDialog(this, dateTimePickerClass.datePickerListener, 
                          year, month, day);
 		case TIME_DIALOG_ID:
 			//use current date as default date show in the DatePicker
 			int hour = c.get(Calendar.HOUR);
 			int min = c.get(Calendar.MINUTE);
-			return new TimePickerDialog(this, timePickerListener, hour, min, false);
+			return new TimePickerDialog(this, dateTimePickerClass.timePickerListener, hour, min, false);
 		}
 		return null;
 	}
-	
-	private DatePickerDialog.OnDateSetListener datePickerListener 
-		= new DatePickerDialog.OnDateSetListener() {
 
-		@Override
-		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-			// set selected date into textview
-			String m, d;
-			m = selectedMonth + 1 < 10? "0" + (selectedMonth + 1) : (selectedMonth + 1) + "";
-			d = selectedDay < 10? "0" + selectedDay : selectedDay + "";
-			showDate.setText(new StringBuilder().append(m)
-						   .append("-").append(d).append("-").append(selectedYear)
-						   .toString());
-		}
-	};
-	
-	
-
-	private TimePickerDialog.OnTimeSetListener timePickerListener
-		= new TimePickerDialog.OnTimeSetListener() {
-		
-		@Override
-		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			// set selected time to textview
-			showTime.setText(timeFormat24To12(hourOfDay, minute));
-		}
-	};
-	
-	private String timeFormat24To12(int hour, int minute){
-		String a_p = "";
-		if(hour > 12){
-			hour -= 12;
-			a_p = "PM";
-		} else {
-			a_p = "AM";
-		}
-		String h, m;
-		h = hour < 10? "0" + hour : hour + "";
-		m = minute < 10? "0" + minute : minute + "";
-		return new StringBuilder().append(h).append(":").append(m).append(a_p).toString();
-	}
-	
-	private String timeFormat12To24(int hour, int minute, String a_p){
-		if(a_p.equals("PM")){
-			hour += 12;
-		} 
-		String h, m;
-		h = hour < 10? "0" + hour : hour + "";
-		m = minute < 10? "0" + minute : minute + "";
-		return new StringBuilder().append(h).append(":").append(m).toString();
-	}
 }
