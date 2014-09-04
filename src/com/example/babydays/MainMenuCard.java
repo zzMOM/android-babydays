@@ -30,10 +30,12 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -59,6 +61,7 @@ public class MainMenuCard extends Activity {
 	private static final String START_TIME = "starttime";
 	private SharedPreferences mPrefsTime;
 	
+	private ViewStub dateTimeStub;
 	private CardGridView cardGridMenu;
 	private ImageButton pickDate, pickTime;
 	private EditText showDate, showTime;
@@ -300,8 +303,15 @@ public class MainMenuCard extends Activity {
         // Include dialog.xml file
         dialog.setContentView(R.layout.dialog_feed);
         // Set dialog title
-        dialog.setTitle("Feed");
-
+        if(clicktype == 0){
+        	dialog.setTitle("Time to feed!");
+        } else {
+        	dialog.setTitle("Insert a feed activity");
+        }
+        
+        dateTimeStub = (ViewStub) dialog.findViewById(R.id.dateTimeStub);
+        dateTimeStub.setLayoutResource(R.layout.date_time_merge);
+        dateTimeStub.inflate();
         setDateTimeMergePart(dialog);
         
         textOZ = (EditText) dialog.findViewById(R.id.editTextOZ);
@@ -401,14 +411,28 @@ public class MainMenuCard extends Activity {
 	public void creatDiaperDialog(){
 		mSelectedItems = new ArrayList<Integer>();
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	    
+		AlertDialog dialog = builder.create();
+		
+		// Set dialog title
+        if(clicktype == 0){
+        	builder.setTitle("Time to change diaper!");
+        } else {
+        	builder.setTitle("Insert a new diaper activity!");
+        }
+        
+        LayoutInflater inflater = getLayoutInflater();
 	    // Inflate and set the layout for the dialog
 	    // Pass null as the parent view because its going in the dialog layout
-	    builder//.setView(inflater.inflate(R.layout.dialog_diaper, null))
-	    	   .setTitle("Time to change diaper!")
+	    builder.setView(inflater.inflate(R.layout.dialog_diaper, null));
+        
+        dateTimeStub = (ViewStub) dialog.findViewById(R.id.dateTimeStub);
+        dateTimeStub.setLayoutResource(R.layout.date_time_merge);
+        dateTimeStub.inflate();
+        setDateTimeMergePart(dialog);
+	    
 	    		// Specify the list array, the items to be selected by default (null for none),
 	    		// and the listener through which to receive callbacks when items are selected
-	           .setMultiChoiceItems(R.array.diaper, null,
+	    builder.setMultiChoiceItems(R.array.diaper, null,
 	                      new DialogInterface.OnMultiChoiceClickListener() {
 	               @Override
 	               public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -426,11 +450,11 @@ public class MainMenuCard extends Activity {
 	    		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
-	            	   //check and change nap status
-	            	   isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
-		               if(isStart){
-		               		updateNapStatusAndDatabaseRecord();
-		               }
+	            	 //check and change nap status
+	               	 isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
+	               	 if(isStart && clicktype == 0){//onclick
+	               		 updateNapStatusAndDatabaseRecord();
+	               	 }
 	               	
 	                   String type = "Diaper";
 	                   
@@ -449,7 +473,7 @@ public class MainMenuCard extends Activity {
 	           })
 	           .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 	               public void onClick(DialogInterface dialog, int id) {
-	                   
+	            	   dialog.dismiss();
 	               }
 	           });      
 	    builder.show();
@@ -523,18 +547,10 @@ public class MainMenuCard extends Activity {
         
         pickDate = (ImageButton) dialog.findViewById(R.id.pickDate);
         pickTime = (ImageButton) dialog.findViewById(R.id.pickTime);
-        if(clicktype == 0){
-        	pickDate.setVisibility(View.INVISIBLE);
-        	pickTime.setVisibility(View.INVISIBLE);
-        	showDate.setClickable(false);
-        	showTime.setClickable(false);
-        } else {
-        	pickDate.setVisibility(View.VISIBLE);
-        	pickTime.setVisibility(View.VISIBLE);
-        	pickDate.setClickable(true);
-        	pickTime.setClickable(true);
-        	showDate.setClickable(true);
-        	showTime.setClickable(true);
+        if(clicktype == 0){//onclick, current activity
+        	dateTimeStub.setVisibility(View.GONE);
+        } else {//onlongclick, insert new activity
+        	dateTimeStub.setVisibility(View.VISIBLE);
         }
         //pickDate button and pickTime button
         pickDate.setOnClickListener(new OnClickListener() {

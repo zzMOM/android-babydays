@@ -2,10 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/silver"
     android:orientation="vertical" >
     
-    <CheckBox 
+    <ViewStub 
+        android:id="@+id/dateTimeStub"
+        android:inflatedId="@+id/dateTimeInflated"
+        android:layout="@layout/date_time_merge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    
+    <!--CheckBox 
         android:id="@+id/wet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,6 +21,6 @@
         android:id="@+id/poopy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/poopy"/>
+        android:text="@string/poopy"/-->
 
 </LinearLayout>

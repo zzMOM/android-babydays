@@ -294,5 +294,6 @@
     <string name="title_activity_detailport_fragment">DetailportFragment</string>
     <string name="title_activity_detail_port">DetailPort</string>
     <string name="title_activity_main_menu_card">MainMenuCard</string>
+    <string name="title_activity_try_card_view">TryCardView</string>
 
 </resources>
