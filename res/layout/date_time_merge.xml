@@ -28,7 +28,8 @@
 	        android:clickable="true"
 	        android:ems="8"
 	        android:inputType="date"
-	        android:textSize="20sp"/>
+	        android:textSize="20sp"
+	        android:textColor="@color/black"/>
         
         <ImageButton 
             android:id="@+id/pickDate"
@@ -63,7 +64,8 @@
 	        android:clickable="true"
 	        android:ems="8"
 	        android:inputType="time"
-	        android:textSize="20sp"/>
+	        android:textSize="20sp"
+	        android:textColor="@color/black"/>
         
         <ImageButton 
             android:id="@+id/pickTime"

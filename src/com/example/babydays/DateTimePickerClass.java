@@ -6,8 +6,8 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 public class DateTimePickerClass {
-	String dateText = "";
-	String timeText = "";
+	private String dateText = "";
+	private String timeText = "";
 	
 	DateTimePickerClass(){}
 	

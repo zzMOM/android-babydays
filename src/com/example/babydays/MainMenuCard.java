@@ -61,12 +61,12 @@ public class MainMenuCard extends Activity {
 	private boolean isStart = false;//isStart to record whether nap clock started
 	private static final String START_TIME = "starttime";
 	private SharedPreferences mPrefsTime;
-	private DateTimePickerClass dateTimePickerClass;
+	//private DateTimePickerClass dateTimePickerClass;
 	
 	private ViewStub dateTimeStub;
 	private CardGridView cardGridMenu;
 	private ImageButton pickDate, pickTime;
-	private EditText showDate, showTime;
+	private EditText showDate, showTime, hourEdit, minuteEdit;
 	private Button viewAct, summaryButton, memoryButton;
 	private SimpleDateFormat df;
 	private Calendar c;
@@ -93,7 +93,7 @@ public class MainMenuCard extends Activity {
 		//actionBar.setIcon(icon);
 		
 		//initialize DateTimePickerClass
-		dateTimePickerClass = new DateTimePickerClass();
+		//dateTimePickerClass = new DateTimePickerClass();
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
@@ -188,7 +188,7 @@ public class MainMenuCard extends Activity {
 					if(card.getCardHeader().getTitle().toString().equals(items[0])){
 						createFeedDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[1])){
-						creatSleepDialog();
+						insertSleepDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[2])){
 						creatDiaperDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[3])){
@@ -263,7 +263,7 @@ public class MainMenuCard extends Activity {
 		//stop the clock, set NAP_CLOCK false
   	   	editorStart.putBoolean(NAP_CLOCK, false);
   	   	editorStart.commit();//SharedPreferences modified
-  	   	Log.e("put napclock to be", Boolean.toString(mPrefsStart.getBoolean(NAP_CLOCK, false)));
+  	   	//Log.e("put napclock to be", Boolean.toString(mPrefsStart.getBoolean(NAP_CLOCK, false)));
   	   
   	   	//get date and insert into database-TABLE baby_activities
          String formatedDate = mPrefsTime.getString(START_TIME, "0");
@@ -312,7 +312,7 @@ public class MainMenuCard extends Activity {
         if(clicktype == 0){
         	dialog.setTitle("Time to feed!");
         } else {
-        	dialog.setTitle("Insert a feed activity");
+        	dialog.setTitle("Insert a new feed activity");
         }
         
         dateTimeStub = (ViewStub) dialog.findViewById(R.id.dateTimeStub);
@@ -412,6 +412,58 @@ public class MainMenuCard extends Activity {
 		               }
 		           });      
 	    builder.show();
+	}
+	
+	public void insertSleepDialog(){
+		// Create custom dialog object
+        final Dialog dialog = new Dialog(this);
+        // Include dialog.xml file
+        dialog.setContentView(R.layout.dialog_sleep);
+        // Set dialog title
+        dialog.setTitle("Insert a new sleep activity");
+        
+        dateTimeStub = (ViewStub) dialog.findViewById(R.id.dateTimeStub);
+        dateTimeStub.setLayoutResource(R.layout.date_time_merge);
+        View inflatedView = dateTimeStub.inflate();
+        setDateTimeMergePart(inflatedView);
+        
+        hourEdit = (EditText) dialog.findViewById(R.id.hourEdit);
+        minuteEdit = (EditText) dialog.findViewById(R.id.minuteEdit);
+        
+        Button okButton = (Button) dialog.findViewById(R.id.ok);
+        // if decline button is clicked, close the custom dialog
+        okButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String hh = hourEdit.getText().toString();
+         	    String mm = minuteEdit.getText().toString();
+         	    if(hh.length() == 1){
+         		   hh = "0" + hh;
+         	    } else if(hh.length() == 0){
+         		   hh = "00";
+         	    }
+         	    if(mm.length() == 1){
+         		   mm = "0" + mm;
+         	    } else if(mm.length() == 0){
+         		   mm = "00";
+         	    }
+                String info = hh + "h" + mm + "min";
+                String type = "Sleep";
+                insertCurrentActivity(type, info);
+                // Close dialog
+                dialog.dismiss();
+            }
+        });
+        Button cancelButton = (Button) dialog.findViewById(R.id.cancel);
+        // if decline button is clicked, close the custom dialog
+        cancelButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Close dialog
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
 	}
 	
 	public void creatDiaperDialog(){
@@ -569,7 +621,7 @@ public class MainMenuCard extends Activity {
         String[] s = formattedDate.split(" ");
         showDate.setText(s[0]);
         String[] st = s[1].split(":");
-		showTime.setText(dateTimePickerClass.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
+		showTime.setText(timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
         
         pickDate = (ImageButton) inflatedView.findViewById(R.id.pickDate);
         pickTime = (ImageButton) inflatedView.findViewById(R.id.pickTime);
@@ -618,7 +670,7 @@ public class MainMenuCard extends Activity {
 		//get date to insert into database-TABLE baby_activities
  	    String date = showDate.getText().toString();
  	    String t = showTime.getText().toString();
- 	    String time = dateTimePickerClass.timeFormat12To24(Integer.parseInt(t.substring(0, 2)), Integer.parseInt(t.substring(3, 5)), t.substring(5, 7));
+ 	    String time = timeFormat12To24(Integer.parseInt(t.substring(0, 2)), Integer.parseInt(t.substring(3, 5)), t.substring(5, 7));
         dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
 	}
 	
@@ -630,15 +682,67 @@ public class MainMenuCard extends Activity {
 			int year = c.get(Calendar.YEAR);
 	        int month = c.get(Calendar.MONTH);
 	        int day = c.get(Calendar.DAY_OF_MONTH);
-		    return new DatePickerDialog(this, dateTimePickerClass.datePickerListener, 
+		    return new DatePickerDialog(this, datePickerListener, 
                          year, month, day);
 		case TIME_DIALOG_ID:
 			//use current date as default date show in the DatePicker
 			int hour = c.get(Calendar.HOUR);
 			int min = c.get(Calendar.MINUTE);
-			return new TimePickerDialog(this, dateTimePickerClass.timePickerListener, hour, min, false);
+			return new TimePickerDialog(this, timePickerListener, hour, min, false);
 		}
 		return null;
+	}
+	
+	public DatePickerDialog.OnDateSetListener datePickerListener 
+		= new DatePickerDialog.OnDateSetListener() {
+	
+		@Override
+		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+			// set selected date into textview
+			String m, d;
+			m = selectedMonth + 1 < 10? "0" + (selectedMonth + 1) : (selectedMonth + 1) + "";
+			d = selectedDay < 10? "0" + selectedDay : selectedDay + "";
+			showDate.setText(new StringBuilder().append(m)
+						   .append("-").append(d).append("-").append(selectedYear)
+						   .toString());
+		}
+	};
+	
+	
+	
+	public TimePickerDialog.OnTimeSetListener timePickerListener
+		= new TimePickerDialog.OnTimeSetListener() {
+		
+		@Override
+		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			// set selected time to textview
+			String s = timeFormat24To12(hourOfDay, minute);
+			showTime.setText(s);
+		}
+	};
+	
+	public String timeFormat24To12(int hour, int minute){
+		String a_p = "";
+		if(hour > 12){
+			hour -= 12;
+			a_p = "PM";
+		} else {
+			a_p = "AM";
+		}
+		String h, m;
+		h = hour < 10? "0" + hour : hour + "";
+		m = minute < 10? "0" + minute : minute + "";
+		return new StringBuilder().append(h).append(":").append(m).append(a_p).toString();
+	}
+	
+	public String timeFormat12To24(int hour, int minute, String a_p){
+		if(a_p.equals("PM")){
+			hour += 12;
+		} 
+		String h, m;
+		h = hour < 10? "0" + hour : hour + "";
+		m = minute < 10? "0" + minute : minute + "";
+		return new StringBuilder().append(h).append(":").append(m).toString();
 	}
 
 }
