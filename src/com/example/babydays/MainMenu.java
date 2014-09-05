@@ -91,7 +91,7 @@ public class MainMenu extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MainMenu.this, DayActivities.class);
+				Intent intent = new Intent(MainMenu.this, DayActivities_old.class);
 				startActivity(intent);
 				//Toast.makeText(getApplicationContext(), ((TextView) v).getText(), Toast.LENGTH_SHORT).show();
 			}

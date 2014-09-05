@@ -1,69 +1,54 @@
 package com.example.babydays;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
-import android.os.Bundle;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Paint;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.*;
-import android.widget.FrameLayout.LayoutParams;
+import android.widget.AdapterView.OnItemLongClickListener;
 
-/**
- * Show the day activities by date
- * choose date by DatePicker; choose date by increase or decrease day or month
- * filter day activites by type
- * @author weiwu
- *
- */
 public class DayActivities extends Activity {
-	private MySQLiteHelper dbHelper;
-
+	private MySQLiteHelper dbHelper;//database
+	//calendar
+	private Calendar c;
 	private int year;
 	private int month;
 	private int day;
- 
+	//datepicker dialog
 	static final int DATE_DIALOG_ID = 999;
-
-	private Calendar c;
-
-	//private DatePicker datePicker;	//DatePicker
-	//private ScrollView scrollView;
-	private TextView dayActivity, dayActivitySummary;
-	private TextView showSetDate;	//show DatePicker or <> set date
-	private Button setDate;		//show DatePicker dialog
-	//private Button preMonth;	//decrease month button
-	private Button preDay;		//decrease day button
-	private Button nextDay;		//increase day button
-	//private Button nextMonth;	//increase month button
-	private Button recordFilter;//filter records button
+	private ArrayList<String> activityList;
+	private HashMap<Integer, Integer> map;
+	private int curPosition = 0;
 	
-	private int width;//text length
+	private EditText showSetDate;
+	private ImageButton setDate, recordFilter, reset;
+	private TextView dayActivitySummary;
+	private ListView dayActivityLV;
+	private ArrayAdapter<String> adapter;
 	
 	
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.day_activities);
+		setContentView(R.layout.activity_day_activities);
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
@@ -72,43 +57,43 @@ public class DayActivities extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		dayActivitySummary = (TextView)findViewById(R.id.dayActivitySummary);
-		dayActivity = (TextView)findViewById(R.id.dayActivity);
-		showSetDate = (TextView)findViewById(R.id.showSetDate);
-		//scrollView = (ScrollView)findViewById(R.id.scrollView);
-		//preMonth = (Button)findViewById(R.id.preMonth);
-		preDay = (Button)findViewById(R.id.preDay);
-		nextDay = (Button)findViewById(R.id.nextDay);
-		//nextMonth = (Button)findViewById(R.id.nextMonth);
-		dayActivity.setMovementMethod(new ScrollingMovementMethod());
-		/*dayActivity.setOnLongClickListener(new OnLongClickListener() {
-			
+		showSetDate = (EditText)findViewById(R.id.showSetDate);
+		setDate = (ImageButton)findViewById(R.id.setDate);
+		recordFilter = (ImageButton)findViewById(R.id.recordFilter);
+		reset = (ImageButton)findViewById(R.id.reset);
+		dayActivityLV = (ListView)findViewById(R.id.dayActivityList);
+		
+		//initialize listview null
+		activityList = new ArrayList<String>();
+		activityList.add("");
+		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, activityList);
+		dayActivityLV.setAdapter(adapter);
+		dayActivityLV.setOnItemLongClickListener(new OnItemLongClickListener() {
+
 			@Override
-			public boolean onLongClick(View v) {
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
 				// TODO Auto-generated method stub
-				if(dayActivity.getLayoutParams().height == LayoutParams.MATCH_PARENT){
-					dayActivity.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
-				} else {
-					dayActivity.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT));
-				}
+				curPosition = position;
+				manageRecordDialog();
 				return false;
 			}
-		});*/
-		dayActivity.setOnTouchListener(new OnSwipeTouchListener(this){
+		});
+		dayActivityLV.setOnTouchListener(new OnSwipeTouchListener(this) {
+			
 			@Override
 		    public void onSwipeLeft() {
 		        // Whatever
-				IncreaseDay(nextDay);
+				//increaseDay();
 		    }
 			
 			@Override
 			public void onSwipeRight() {
 				// TODO Auto-generated method stub
-				DecreaseDay(preDay);
+				//decreaseDay();
 			}
 		});
 		
-		
-		setDate = (Button)findViewById(R.id.setDate);
 		setDate.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -122,7 +107,6 @@ public class DayActivities extends Activity {
 		//set default day activities according to current date
 		setCurrentDateAndActivities();
 		
-		recordFilter = (Button)findViewById(R.id.recordFilter);
 		recordFilter.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
@@ -131,26 +115,61 @@ public class DayActivities extends Activity {
 			}
 		});
 		
-		/*//this is used to change all records' the 12 hour format to 24 hour formate
-		//use once
-		for(int i = 1; i <= 170; i++){
-			try {
-				dbHelper.editBabyActivity(i);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		reset.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				setCurrentDateAndActivities();
 			}
-		}*/
+		});
+		
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.day_activities, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		/// TODO Auto-generated method stub
+		switch(item.getItemId()){
+		case android.R.id.home:
+			// app icon in action bar clicked; go home
+            Intent intent = new Intent(this, MainMenuCard.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
 	@Override
-	@Deprecated
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		//super.onBackPressed();
+		Intent intent = new Intent(this, MainMenuCard.class);
+		startActivity(intent);
+	}
+
+	
+	@Override
 	protected Dialog onCreateDialog(int id) {
 		// TODO Auto-generated method stub
 		switch (id) {
 		case DATE_DIALOG_ID:
-		   // set date picker as current date
-		   return new DatePickerDialog(this, datePickerListener, 
+			// set date picker as current date
+			//datepickerdialog default value
+			String date = showSetDate.getText().toString();
+			String[] d = date.split("-");
+			month = Integer.parseInt(d[0]) - 1;
+			day = Integer.parseInt(d[1]);
+			year = Integer.parseInt(d[2]);
+			return new DatePickerDialog(this, datePickerListener, 
                          year, month, day);
 		}
 		return null;
@@ -160,27 +179,103 @@ public class DayActivities extends Activity {
 		
 		// when dialog box is closed, below method will be called.
 		@Override
-		public void onDateSet(DatePicker view, int selectedYear, int monthOfYear, int dayOfMonth) {
-			// TODO Auto-generated method stub
-			year = selectedYear;
-			month = monthOfYear;
-			day = dayOfMonth;
- 
-			showDateChanged();
- 
+		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+			// set selected date into textview
+			String m, d;
+			m = selectedMonth + 1 < 10? "0" + (selectedMonth + 1) : (selectedMonth + 1) + "";
+			d = selectedDay < 10? "0" + selectedDay : selectedDay + "";
+			String date = new StringBuilder().append(m)
+					   .append("-").append(d).append("-").append(selectedYear).toString();
+			showSetDate.setText(date);
+			showActivityByDate(date);
 		}
 	};
-
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.day_activities, menu);
-		return true;
+	
+	public void creatFilterDialog(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(DayActivities.this);
+	    
+	    // Inflate and set the layout for the dialog
+	    // Pass null as the parent view because its going in the dialog layout
+	    builder.setTitle("Pick one filter item!")
+	           .setItems(R.array.recordFilter, new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialog, int which) {
+	                   // The 'which' argument contains the index position
+	                   // of the selected item
+	            
+	            	   //get string-array items using getResources().getStringArray
+	            	   String[] recordItems = getResources().getStringArray(R.array.recordFilter);
+	            	   String attr = recordItems[which];
+	           		
+	            	   //search recodes in sqlite db march date and type or date
+	            	   String date = showSetDate.getText().toString();
+	           		   List<BabyActivity> activitiesByDate;
+	           		   if(which == 0){
+	           			   	showActivityByDate(date);
+	           		   } else {
+	           			   	showActivityByDateAndAttr(date, attr);
+	           		   }
+	           		   
+		           	   
+	               }
+	           });
+	       
+	    builder.show();
 	}
 	
+	public void manageRecordDialog(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(DayActivities.this);
+	           
+		builder.setItems(R.array.manageRecordDialogArray, new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialog, int which) {
+	                   // The 'which' argument contains the index position
+	                   // of the selected item
+	            
+	           		   if(which == 0){
+	           			   	editRecordDialog();
+	           		   } else {
+	           			   	deleteRecord();
+	           		   }
+	           		   
+		           	   
+	               }
+	           });
+	       
+	    builder.show();
+	}
+	
+	private void editRecordDialog(){
+		
+	}
+	
+	private void deleteRecord(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		
+		builder.setTitle("Delete activity!")
+				.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						int id = map.get(curPosition);
+						dbHelper.deleteBabyActivityByID(Integer.toString(id));
+						showActivityByDate(showSetDate.getText().toString());
+					}
+				})
+				.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+					}
+				}); 
+				
+		builder.show();
+	}
+	
+	
 	// display current date
-	//set default day activities according to current date
+	//set default day activities list by current date
 	public void setCurrentDateAndActivities() {
 		c = Calendar.getInstance();
 		year = c.get(Calendar.YEAR);
@@ -194,11 +289,81 @@ public class DayActivities extends Activity {
 		//showDate.setText(formattedDate);
 		getActionBar().setTitle("Today: " + formattedDate);
 		
-		//show search by date
-		showSearchByDateResult(formattedDate);
+		showActivityByDate(formattedDate);
 	}
 	
-	public void DecreaseMonth(View v){
+	private void showActivityByDate(String date){
+		//show summary
+		showActivitySummary(date);
+		
+		//show detail activities list by date
+		//search recodes in sqlite db march date
+		List<BabyActivity> activitiesByDate = dbHelper.getBabyActivityByDate(date);
+		//show detail in listview
+		showActivityDetail(activitiesByDate);
+	}
+	
+	private void showActivityByDateAndAttr(String date, String attr){
+		//show summary
+		showActivitySummary(date);
+		
+		//show detail activities list by date
+		//search recodes in sqlite db march date
+		List<BabyActivity> activitiesByDateAttr = dbHelper.getBabyActivityByDateAttr(date, attr);
+		//show detail in listview
+		showActivityDetail(activitiesByDateAttr);
+	}
+	
+	private void showActivitySummary(String date){
+		//show total of FeedMilk and Diaper times
+		List<String> totalMilkDiaper = dbHelper.getTotalByDate(date);
+		//Log.d("search total", date);
+		dayActivitySummary.setText("");
+		for(int i = 0; i < totalMilkDiaper.size(); i++){
+			dayActivitySummary.append(totalMilkDiaper.get(i).toString() + "\n");
+		}
+	}
+	
+	
+	private void showActivityDetail(List<BabyActivity> activitiesByDate){
+		//hashmap for activities' id in database and in activitiesList
+		//key-activitiesList ID, value- dateabase ID
+		map = new HashMap<Integer, Integer>();
+		
+		activityList.clear();
+		for(int i = 0; i < activitiesByDate.size(); i++){
+			//not show activities in type 
+			String type = activitiesByDate.get(i).getType().toString();
+			if(type.equals("milestones") || type.equals("diary")){
+				continue;
+			}
+			//get date from datebase
+			String time24 = activitiesByDate.get(i).getTime().toString();
+			String time12 = hour24to12(time24);
+			activityList.add(new StringBuffer(time12 + "\t\t\t" + type + "\t\t\t\t"
+					+ activitiesByDate.get(i).getInfo().toString()).toString());
+			map.put(i, activitiesByDate.get(i).getId());
+		}
+		//array adpater changed
+		adapter.notifyDataSetChanged();
+	}
+	
+	//time is 24hour format, show with 12hour format
+	//date transfer 24hours to 12hours
+	private String hour24to12(String time24){
+		String time12 = "";
+		SimpleDateFormat h_mm_a = new SimpleDateFormat("h:mma");
+		SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
+		try {
+		    Date t = hh_mm.parse(time24);
+		    time12 = h_mm_a.format(t).toString();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		return time12;
+	}
+	
+	/*public void decreaseMonth(){
 		//month is 0 base, if 0, change to 12, and year decrease 1
 		if(month == 0){
 			year--;
@@ -207,7 +372,6 @@ public class DayActivities extends Activity {
 			month--;
 		}
 		c.set(year, month, day);
-		/*in case: month show 2, and day show 30---error*/
 		if(day > c.getActualMaximum(Calendar.DAY_OF_MONTH)){
 			day = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 		}
@@ -216,10 +380,10 @@ public class DayActivities extends Activity {
 		showDateChanged();
 	}
 	
-	public void DecreaseDay(View v){
+	public void decreaseDay(){
 		//if day is 1, month decrease and day to the last day of month
 		if(day == 1){
-			DecreaseMonth(v);
+			decreaseMonth();
 			c.set(year, month, day);
 			day = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 		} else {
@@ -230,7 +394,7 @@ public class DayActivities extends Activity {
 		showDateChanged();
 	}
 	
-	public void IncreaseMonth(View v){
+	public void increaseMonth(){
 		if(month == 11){
 			year++;
 			month = 0;
@@ -239,7 +403,6 @@ public class DayActivities extends Activity {
 		}
 		c.set(year, month, day);
 		
-		/*in case: month show 2, and day show 30*/
 		if(day > c.getActualMaximum(Calendar.DAY_OF_MONTH)){
 			day = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 		}
@@ -248,9 +411,9 @@ public class DayActivities extends Activity {
 		showDateChanged();
 	}
 	
-	public void IncreaseDay(View v){
+	public void increaseDay(){
 		if(day == c.getActualMaximum(Calendar.DAY_OF_MONTH)){
-			IncreaseMonth(v);
+			increaseMonth();
 			day = 1;
 		} else {
 			day++;
@@ -279,150 +442,8 @@ public class DayActivities extends Activity {
 		buffer.append(m).append("-").append(d).append("-").append(year);
 		showSetDate.setText(buffer.toString());
 		
-		showSearchByDateResult(buffer.toString());
+		showActivityByDate(buffer.toString());
 		
-	}
+	}*/
 	
-	private void showSearchByDateResult(String date){
-		dayActivity.setText("");
-		
-		//show total of FeedMilk and Diaper times
-		List<String> totalMilkDiaper = dbHelper.getTotalByDate(date);
-		//Log.d("search total", date);
-		dayActivitySummary.setText("");
-		for(int i = 0; i < totalMilkDiaper.size(); i++){
-			dayActivitySummary.append(totalMilkDiaper.get(i).toString() + "\n");
-		}
-		
-		dayActivity.setText("");
-		dayActivity.append("ID"  + "\t\t");
-		dayActivity.append("Time" + "\t\t\t\t\t\t\t");
-		dayActivity.append("Type" + "\t\t\t\t\t\t\t");
-		dayActivity.append("Info");
-		dayActivity.append("\n\n");
-		
-		
-		//search recodes in sqlite db march date
-		List<BabyActivity> activitiesByDate = dbHelper.getBabyActivityByDate(date);
-		//Log.d("search date", date);
-		
-		//time is 24hour format, show with 12hour format
-		//date transfer 24hours to 12hours
-		String time12 = "";
-		SimpleDateFormat h_mm_a = new SimpleDateFormat("h:mma");
-		SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
-		
-		for(int i = 0; i < activitiesByDate.size(); i++){
-			//get date from datebase
-			String time24 = activitiesByDate.get(i).getTime().toString();
-			try {
-			    Date t = hh_mm.parse(time24);
-			    time12 = h_mm_a.format(t).toString();
-			} catch (Exception e) {
-			    e.printStackTrace();
-			}
-			dayActivity.append(activitiesByDate.get(i).getId()  + "\t\t");
-			dayActivity.append(time12 + "\t\t");
-			StringBuffer b = new StringBuffer(activitiesByDate.get(i).getType().toString());
-			b.append("          ");
-			b.setLength(10);
-			dayActivity.append(b.toString() + "\t\t\t");
-			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
-			dayActivity.append("\n\n");
-		}
-	}
-
-	
-	public void creatFilterDialog(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(DayActivities.this);
-	    
-	    // Inflate and set the layout for the dialog
-	    // Pass null as the parent view because its going in the dialog layout
-	    builder.setTitle("Pick one filter item!")
-	           .setItems(R.array.recordFilter, new DialogInterface.OnClickListener() {
-	               public void onClick(DialogInterface dialog, int which) {
-	                   // The 'which' argument contains the index position
-	                   // of the selected item
-	            
-	            	   //get string-array items using getResources().getStringArray
-	            	   String[] recordItems = getResources().getStringArray(R.array.recordFilter);
-	            	   String attr = recordItems[which];
-	            	   
-	            	   //set the button text to selected item 
-	            	   recordFilter.setText(attr);
-	            	   
-	            	   //get current time in sqlite record format
-	           		   SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy");
-	           		   String formattedDate = df.format(c.getTime());
-	           		   
-	           		   dayActivity.setText("");
-	           		
-	            	   //search recodes in sqlite db march date and type or date
-	           		   List<BabyActivity> activitiesByDate;
-	           		   if(which == 0){
-	           			   	activitiesByDate = dbHelper.getBabyActivityByDate(formattedDate);
-	           		   } else {
-	           			   	activitiesByDate = dbHelper.getBabyActivityByDateAttr(formattedDate, attr);
-	           		   }
-	           		   
-		           		//time is 24hour format, show with 12hour format
-		           		//date transfer 24hours to 12hours
-		           		String time12 = "";
-		           		SimpleDateFormat h_mm_a   = new SimpleDateFormat("h:mma");
-		           		SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
-	           		
-		           	   for(int i = 0; i < activitiesByDate.size(); i++){
-			           		//get date from datebase
-			       			String time24 = activitiesByDate.get(i).getTime().toString();
-			       			try {
-			       			    Date t = hh_mm.parse(time24);
-			       			    time12 = h_mm_a.format(t).toString();
-			       			} catch (Exception e) {
-			       			    e.printStackTrace();
-			       			}
-			       			dayActivity.append(activitiesByDate.get(i).getId()  + "\t\t");
-			    			dayActivity.append(time12 + "\t\t\t\t\t");
-			    			dayActivity.append(activitiesByDate.get(i).getType().toString() + "\t\t\t\t\t\t");
-			    			dayActivity.append(activitiesByDate.get(i).getInfo().toString());
-			    			dayActivity.append("\n\n");
-		           	   }
-	               }
-	           });
-	       
-	    builder.show();
-	}
-	
-	//reset the result to current date without filter
-	public void resetResults(View v){
-		setCurrentDateAndActivities();
-		recordFilter.setText("Record Filter");
-	}
-	
-	public void manageRecord(View v){
-		Intent intent = new Intent(DayActivities.this, ManageRecords.class);
-		startActivity(intent);
-	}
-	
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		//super.onBackPressed();
-		Intent intent = new Intent(this, MainMenuCard.class);
-		startActivity(intent);
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		switch(item.getItemId()){
-		case android.R.id.home:
-			// app icon in action bar clicked; go home
-            Intent intent = new Intent(this, MainMenuCard.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
 }

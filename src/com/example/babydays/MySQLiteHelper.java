@@ -364,6 +364,24 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
  
     }
     
+    // Deleting single babyActivity by ID
+    public void deleteBabyActivityByID(String id) {
+ 
+        // 1. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+ 
+        // 2. delete
+        db.delete(TABLE_BABY_ACTIVITIES,
+                KEY_ID+" = ?",
+                new String[] { id });
+ 
+        // 3. close
+        db.close();
+ 
+        //Log.d("deleteBabyActivity", babyActivity.toString());
+ 
+    }
+    
     //select record by date
     public List<BabyActivity> getBabyActivityByDate(String date){
     	List<BabyActivity> babyActivityList = new LinkedList<BabyActivity>();

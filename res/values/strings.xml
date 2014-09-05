@@ -198,7 +198,7 @@
     <string name="pre_day">&lt;</string>
     <string name="next_day">></string>
     <string name="next_month">>></string>
-    <string name="record_filter">Record Filter</string>
+    <string name="record_filter">Filter</string>
 
     <string-array name="diaper">
         <item>wet</item>
@@ -221,7 +221,6 @@
         <item>FeedMilk</item>
         <item>Nap</item>
         <item>Diaper</item>
-        <item>Diary</item>
     </string-array>
     <string-array name="nap">
         <item>Start</item>
@@ -250,6 +249,10 @@
         <item>Insert</item>
         <item>Delete</item>
     </string-array>
+    <string-array name="manageRecordDialogArray">
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
 
     <string name="reset">Reset</string>
     <string name="summary">Chart</string>
@@ -263,7 +266,7 @@
     <string name="read_sample">Read Sample</string>
     <string name="pick_date">Pick Date</string>
     <string name="set_time">Set Time</string>
-    <string name="manage_records">Edit Insert Delete Records</string>
+    <string name="manage_records">Manage Records</string>
     <string name="records_id_">"ID:"</string>
     <string name="search_id">search ID</string>
     <string name="type">Type: </string>

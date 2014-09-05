@@ -109,7 +109,7 @@ public class Diary extends Activity {
 		// TODO Auto-generated method stub
 		switch(item.getItemId()){
 		case android.R.id.home:
-            Intent intent = new Intent(this, DayActivities.class);
+            Intent intent = new Intent(this, DayActivities_old.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             return true;
