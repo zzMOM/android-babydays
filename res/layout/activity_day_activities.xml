@@ -59,26 +59,41 @@
     
     </LinearLayout>
     
-	    
- 	<TextView 
-        android:id="@+id/dayActivitySummary"
+	<LinearLayout
+        android:id="@+id/ll2" 
         android:layout_below="@id/ll1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
-        android:paddingTop="2dp"
-        android:minLines="2"
-        android:background="@color/gainsboro"
-        android:textSize="15sp"/>
-    
-    
-    <ListView 
-        android:id="@+id/dayActivityList"
-        android:layout_below="@id/dayActivitySummary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/gainsboro"
-        android:textSize="20sp"/>
+   		android:layout_height="match_parent"
+   		android:orientation="vertical"> 
+   		
+	    <View 
+	        android:layout_width="fill_parent"
+	        android:layout_height="2dp"
+	        android:layout_marginTop="5dp"
+	        android:background="@drawable/line_separator"/>
+   		  
+	 	<TextView 
+	        android:id="@+id/dayActivitySummary"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="2dp"
+	        android:layout_marginBottom="2dp"
+	        android:paddingTop="2dp"
+	        android:minLines="2"
+	        android:textSize="15sp"/>
+	 	
+	 	<View 
+	        android:layout_width="fill_parent"
+	        android:layout_height="2dp"
+	        android:layout_marginTop="5dp"
+	        android:background="@drawable/line_separator"/>
+	    
+	    
+	    <ListView 
+	        android:id="@+id/dayActivityList"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp"/>
+	</LinearLayout>
 
 </RelativeLayout>

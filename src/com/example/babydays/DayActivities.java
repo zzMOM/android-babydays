@@ -41,6 +41,7 @@ public class DayActivities extends Activity {
 	private ImageButton setDate, recordFilter, reset;
 	private TextView dayActivitySummary;
 	private ListView dayActivityLV;
+	private LinearLayout ll2;
 	private ArrayAdapter<String> adapter;
 	
 	
@@ -79,18 +80,20 @@ public class DayActivities extends Activity {
 				return false;
 			}
 		});
-		dayActivityLV.setOnTouchListener(new OnSwipeTouchListener(this) {
+		
+		ll2 = (LinearLayout)findViewById(R.id.ll2);
+		ll2.setOnTouchListener(new OnSwipeTouchListener(this) {
 			
 			@Override
 		    public void onSwipeLeft() {
 		        // Whatever
-				//increaseDay();
+				increaseDay();
 		    }
 			
 			@Override
 			public void onSwipeRight() {
 				// TODO Auto-generated method stub
-				//decreaseDay();
+				decreaseDay();
 			}
 		});
 		
@@ -363,7 +366,7 @@ public class DayActivities extends Activity {
 		return time12;
 	}
 	
-	/*public void decreaseMonth(){
+	public void decreaseMonth(){
 		//month is 0 base, if 0, change to 12, and year decrease 1
 		if(month == 0){
 			year--;
@@ -444,6 +447,6 @@ public class DayActivities extends Activity {
 		
 		showActivityByDate(buffer.toString());
 		
-	}*/
+	}
 	
 }
