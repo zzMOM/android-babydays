@@ -16,7 +16,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.example.babydays.DatePickerFragment.DatePickerDialogListener;
+import com.example.babydays.DiaperDialogFragment.DiaperDialogListener;
 import com.example.babydays.FeedDialogFragment.FeedDialogListener;
+import com.example.babydays.MilestoneDialogFragment.MilestoneDialogListener;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -53,7 +55,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-public class MainMenuCard extends FragmentActivity implements FeedDialogListener{
+public class MainMenuCard extends FragmentActivity implements FeedDialogListener
+															, DiaperDialogListener
+															, MilestoneDialogListener{
 	static final String[] items = new String[]{"Feed", "Nap", "Diaper", "Milestone", "Diary"};
 	static final Integer[] imageId = {	R.drawable.bottle,
         								R.drawable.sleep,
@@ -174,14 +178,13 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 					// TODO Auto-generated method stub
 					clicktype = 0;//onclick
 					if(card.getCardHeader().getTitle().toString().equals(items[0])){
-						//createFeedDialog();
 						showFeedDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[1])){
 						creatSleepDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[2])){
-						creatDiaperDialog();
+						showDiaperDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[3])){
-						creatMilestonesDialog();
+						showMilestonesDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[4])){
 						openDiary();
 					}
@@ -195,14 +198,13 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 					// TODO Auto-generated method stub
 					clicktype = 1;//onlongclick
 					if(card.getCardHeader().getTitle().toString().equals(items[0])){
-						//createFeedDialog();
 						showFeedDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[1])){
 						insertSleepDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[2])){
-						creatDiaperDialog();
+						showDiaperDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[3])){
-						creatMilestonesDialog();
+						showMilestonesDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[4])){
 						openDiary();
 					}
@@ -313,58 +315,6 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
      	   dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
 	}
 	
-	/*public void createFeedDialog() {
-		// Create custom dialog object
-        final Dialog dialog = new Dialog(this);
-        // Include dialog.xml file
-        dialog.setContentView(R.layout.dialog_feed);
-        // Set dialog title
-        if(clicktype == 0){
-        	dialog.setTitle("Time to feed!");
-        } else {
-        	dialog.setTitle("Insert a new feed activity");
-        }
-        
-        dateTimeStub = (ViewStub) dialog.findViewById(R.id.dateTimeStub);
-        dateTimeStub.setLayoutResource(R.layout.date_time_merge);
-        View inflatedView = dateTimeStub.inflate();
-        setDateTimeMergePart(inflatedView);
-        
-        textOZ = (EditText) dialog.findViewById(R.id.editTextOZ);
-
-        Button okButton = (Button) dialog.findViewById(R.id.ok);
-        // if decline button is clicked, close the custom dialog
-        okButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	//check and change nap status
-            	isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
-            	if(isStart && clicktype == 0){//onclick
-            		updateNapStatusAndDatabaseRecord();
-            	}
-            	
-                String type = "FeedMilk";
-                String info = "";
-                if(textOZ.getText().toString().length() > 0){
-                	info = textOZ.getText().toString() + "oz";
-                	insertCurrentActivity(type, info);
-                }
-            	
-                // Close dialog
-                dialog.dismiss();
-            }
-        });
-        Button cancelButton = (Button) dialog.findViewById(R.id.cancel);
-        // if decline button is clicked, close the custom dialog
-        cancelButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Close dialog
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }*/
 	
 	
 	
@@ -476,143 +426,6 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
         dialog.show();
 	}
 	
-	public void creatDiaperDialog(){
-		mSelectedItems = new ArrayList<Integer>();
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		
-		// Set dialog title
-        if(clicktype == 0){
-        	builder.setTitle("Time to change diaper!");
-        } else {
-        	builder.setTitle("Insert a new diaper activity!");
-        }
-        
-        LayoutInflater inflater = getLayoutInflater();
-	    // Inflate and set the layout for the dialog
-	    // Pass null as the parent view because its going in the dialog layout
-        final View dateTimeView = inflater.inflate(R.layout.dialog_diaper, null);
-	    builder.setView(dateTimeView);
-	    		// Specify the list array, the items to be selected by default (null for none),
-	    		// and the listener through which to receive callbacks when items are selected
-	    builder.setMultiChoiceItems(R.array.diaper, null,
-	                      new DialogInterface.OnMultiChoiceClickListener() {
-	               @Override
-	               public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-	                   if (isChecked) {
-	                       // If the user checked the item, add it to the selected items
-	                       mSelectedItems.add(which);
-	                   } else if (mSelectedItems.contains(which)) {
-	                       // Else, if the item is already in the array, remove it 
-	                       mSelectedItems.remove(Integer.valueOf(which));
-	                   }
-	               }
-	           })
-	       
-	    		// Add action buttons
-	    		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-	               @Override
-	               public void onClick(DialogInterface dialog, int id) {
-	            	 //check and change nap status
-	               	 isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
-	               	 if(isStart && clicktype == 0){//onclick
-	               		 updateNapStatusAndDatabaseRecord();
-	               	 }
-	               	
-	                   String type = "Diaper";
-	                   
-	                   StringBuffer info = new StringBuffer("");
-	                   Resources res = getResources();
-	                   String[] diaperSelectedItems = res.getStringArray(R.array.diaper);
-	                   for(int i = 0; i < mSelectedItems.size(); i++){
-	                	   info.append(diaperSelectedItems[(Integer) mSelectedItems.get(i)] + " ");
-	                   }
-	                   if(info.toString() != ""){
-	                	   insertCurrentActivity(type, info.toString());;
-	                   }
-	                   
-	                   dialog.dismiss();
-	               }
-	           })
-	           .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-	               public void onClick(DialogInterface dialog, int id) {
-	            	   dialog.dismiss();
-	               }
-	           });  
-	    
-	    AlertDialog dialog = builder.create();
-	    dateTimeStub = (ViewStub) dateTimeView.findViewById(R.id.dateTimeStub);
-        dateTimeStub.setLayoutResource(R.layout.date_time_merge);
-        View inflatedView = dateTimeStub.inflate();
-        setDateTimeMergePart(inflatedView);
-	    dialog.show();
-	}
-	
-	public void creatMilestonesDialog(){
-		mSelectedItems = new ArrayList<Integer>();
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		
-		// Set dialog title
-        if(clicktype == 0){
-        	builder.setTitle("Milestone!");
-        } else {
-        	builder.setTitle("Insert a new milestone!");
-        }
-        
-        LayoutInflater inflater = getLayoutInflater();
-	    // Inflate and set the layout for the dialog
-	    // Pass null as the parent view because its going in the dialog layout
-        final View dateTimeView = inflater.inflate(R.layout.dialog_milstones, null);
-	    builder.setView(dateTimeView);
-	    // Inflate and set the layout for the dialog
-	    // Pass null as the parent view because its going in the dialog layout
-	    builder//.setView(inflater.inflate(R.layout.dialop_milstones, null))
-	    	   .setTitle("MileStones")
-	    	   // Specify the list array, the items to be selected by default (null for none),
-	    		// and the listener through which to receive callbacks when items are selected
-	           .setMultiChoiceItems(R.array.mileStone, null,
-	                      new DialogInterface.OnMultiChoiceClickListener() {
-	               @Override
-	               public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-	                   if (isChecked) {
-	                       // If the user checked the item, add it to the selected items
-	                       mSelectedItems.add(which);
-	                   } else if (mSelectedItems.contains(which)) {
-	                       // Else, if the item is already in the array, remove it 
-	                       mSelectedItems.remove(Integer.valueOf(which));
-	                   }
-	               }
-	           })
-	           // Add action buttons
-	           .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-	               @Override
-	               public void onClick(DialogInterface dialog, int id) {
-	                   String type = "Milestone";
-	                   
-	                   StringBuffer info = new StringBuffer("");
-	                   Resources res = getResources();
-	                   String[] milestoneSelectedItems = res.getStringArray(R.array.mileStone);
-	                   for(int i = 0; i < mSelectedItems.size(); i++){
-	                	   info.append(milestoneSelectedItems[(Integer) mSelectedItems.get(i)] + " ");
-	                   }
-	                   if(info.toString() != ""){
-	                	   insertCurrentActivity(type, info.toString());
-	                   }
-	                   
-	                   dialog.dismiss();
-	               }
-	           })
-	           .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-	               public void onClick(DialogInterface dialog, int id) {
-	                   
-	               }
-	           });      
-	    AlertDialog dialog = builder.create();
-	    dateTimeStub = (ViewStub) dateTimeView.findViewById(R.id.dateTimeStub);
-        dateTimeStub.setLayoutResource(R.layout.date_time_merge);
-        View inflatedView = dateTimeStub.inflate();
-        setDateTimeMergePart(inflatedView);
-	    dialog.show();
-	}
 	
 	
 	
@@ -676,7 +489,13 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 		String t = tf.hour12to24(time);
         dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
 	}
-
+	
+	//Feed Dialog
+	private void showFeedDialog(){
+		DialogFragment frag = FeedDialogFragment.newInstance(clicktype);
+		frag.show(getSupportFragmentManager(), "FeedDialog");
+	}
+	
 	//FeedDialogListener, insert record into database after feed dialog click OK
 	@Override
 	public void onFinishSetFeed(String date, String time, String type,
@@ -685,9 +504,33 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 		insertCurrentActivity(date, time, type, info);
 	}
 	
-	private void showFeedDialog(){
-		DialogFragment frag = FeedDialogFragment.newInstance(clicktype);
-		frag.show(getSupportFragmentManager(), "FeedDialog");
+
+	//Diaper Dialog
+	private void showDiaperDialog(){
+		DialogFragment frag = DiaperDialogFragment.newInstance(clicktype);
+		frag.show(getSupportFragmentManager(), "DiaperDialog");
+	}
+	
+	//DiaperDialogListener, insert record into database after diaper dialog click OK
+	@Override
+	public void onFinishSetDiaper(String date, String time, String type,
+			String info) {
+		// TODO Auto-generated method stub
+		insertCurrentActivity(date, time, type, info);
+	}
+	
+	//Milestone Dialog
+	private void showMilestonesDialog(){
+		DialogFragment frag = MilestoneDialogFragment.newInstance(clicktype);
+		frag.show(getSupportFragmentManager(), "MilestoneDialog");
+	}
+	
+	//MilestoneDialogListener, insert record into database after milestone dialog click OK
+	@Override
+	public void onFinishSetMilestone(String date, String time, String type,
+			String info) {
+		// TODO Auto-generated method stub
+		insertCurrentActivity(date, time, type, info);
 	}
 
 }

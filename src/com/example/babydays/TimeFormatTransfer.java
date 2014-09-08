@@ -26,11 +26,11 @@ public class TimeFormatTransfer {
 		String time24 = "";
 
 		SimpleDateFormat h_mm_a   = new SimpleDateFormat("h:mma");
-		SimpleDateFormat hh_mm_ss = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
 
 		try {
 		    Date t = h_mm_a.parse(time12);
-		    time24 = hh_mm_ss.format(t);
+		    time24 = hh_mm.format(t);
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
