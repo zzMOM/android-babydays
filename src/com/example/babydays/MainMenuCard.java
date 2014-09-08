@@ -15,12 +15,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.example.babydays.DatePickerFragment.DatePickerDialogListener;
+import com.example.babydays.FeedDialogFragment.FeedDialogListener;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,6 +32,9 @@ import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,7 +53,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-public class MainMenuCard extends Activity {
+public class MainMenuCard extends FragmentActivity implements FeedDialogListener{
 	static final String[] items = new String[]{"Feed", "Nap", "Diaper", "Milestone", "Diary"};
 	static final Integer[] imageId = {	R.drawable.bottle,
         								R.drawable.sleep,
@@ -62,6 +67,7 @@ public class MainMenuCard extends Activity {
 	private static final String START_TIME = "starttime";
 	private SharedPreferences mPrefsTime;
 	//private DateTimePickerClass dateTimePickerClass;
+	private TimeFormatTransfer tf;
 	
 	private ViewStub dateTimeStub;
 	private CardGridView cardGridMenu;
@@ -97,6 +103,8 @@ public class MainMenuCard extends Activity {
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
+		//time format
+		tf = new TimeFormatTransfer();
 		
 		//date and time format
 		c = Calendar.getInstance();
@@ -166,7 +174,8 @@ public class MainMenuCard extends Activity {
 					// TODO Auto-generated method stub
 					clicktype = 0;//onclick
 					if(card.getCardHeader().getTitle().toString().equals(items[0])){
-						createFeedDialog();
+						//createFeedDialog();
+						showFeedDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[1])){
 						creatSleepDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[2])){
@@ -186,7 +195,8 @@ public class MainMenuCard extends Activity {
 					// TODO Auto-generated method stub
 					clicktype = 1;//onlongclick
 					if(card.getCardHeader().getTitle().toString().equals(items[0])){
-						createFeedDialog();
+						//createFeedDialog();
+						showFeedDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[1])){
 						insertSleepDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[2])){
@@ -303,7 +313,7 @@ public class MainMenuCard extends Activity {
      	   dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
 	}
 	
-	public void createFeedDialog() {
+	/*public void createFeedDialog() {
 		// Create custom dialog object
         final Dialog dialog = new Dialog(this);
         // Include dialog.xml file
@@ -354,7 +364,7 @@ public class MainMenuCard extends Activity {
             }
         });
         dialog.show();
-    }
+    }*/
 	
 	
 	
@@ -621,7 +631,7 @@ public class MainMenuCard extends Activity {
         String[] s = formattedDate.split(" ");
         showDate.setText(s[0]);
         String[] st = s[1].split(":");
-		showTime.setText(timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
+		showTime.setText(tf.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
         
         pickDate = (ImageButton) inflatedView.findViewById(R.id.pickDate);
         pickTime = (ImageButton) inflatedView.findViewById(R.id.pickTime);
@@ -636,27 +646,15 @@ public class MainMenuCard extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				showDialog(DATE_DIALOG_ID);
+				c = Calendar.getInstance();
+				int year = c.get(Calendar.YEAR);
+		        int month = c.get(Calendar.MONTH);
+		        int day = c.get(Calendar.DAY_OF_MONTH);
+		        DatePickerFragment frag = DatePickerFragment.newInstance(year, month, day);
+				//frag.show(getFragmentManager(), "DatePicker");
 			}
 		});
         pickTime.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				showDialog(TIME_DIALOG_ID);
-			}
-		});
-        
-        showDate.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				showDialog(DATE_DIALOG_ID);
-			}
-		});
-        showTime.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -670,79 +668,26 @@ public class MainMenuCard extends Activity {
 		//get date to insert into database-TABLE baby_activities
  	    String date = showDate.getText().toString();
  	    String t = showTime.getText().toString();
- 	    String time = timeFormat12To24(Integer.parseInt(t.substring(0, 2)), Integer.parseInt(t.substring(3, 5)), t.substring(5, 7));
+ 	    String time = tf.timeFormat12To24(Integer.parseInt(t.substring(0, 2)), Integer.parseInt(t.substring(3, 5)), t.substring(5, 7));
         dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
 	}
-	
+	private void insertCurrentActivity(String date, String time, String type, String info){
+		//get date to insert into database-TABLE baby_activities
+		String t = tf.hour12to24(time);
+        dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
+	}
+
+	//FeedDialogListener, insert record into database after feed dialog click OK
 	@Override
-	protected Dialog onCreateDialog(int id) {
-        c = Calendar.getInstance();
-		switch (id) {
-		case DATE_DIALOG_ID:
-			int year = c.get(Calendar.YEAR);
-	        int month = c.get(Calendar.MONTH);
-	        int day = c.get(Calendar.DAY_OF_MONTH);
-		    return new DatePickerDialog(this, datePickerListener, 
-                         year, month, day);
-		case TIME_DIALOG_ID:
-			//use current date as default date show in the DatePicker
-			int hour = c.get(Calendar.HOUR);
-			int min = c.get(Calendar.MINUTE);
-			return new TimePickerDialog(this, timePickerListener, hour, min, false);
-		}
-		return null;
+	public void onFinishSetFeed(String date, String time, String type,
+			String info) {
+		// TODO Auto-generated method stub
+		insertCurrentActivity(date, time, type, info);
 	}
 	
-	public DatePickerDialog.OnDateSetListener datePickerListener 
-		= new DatePickerDialog.OnDateSetListener() {
-	
-		@Override
-		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-			// set selected date into textview
-			String m, d;
-			m = selectedMonth + 1 < 10? "0" + (selectedMonth + 1) : (selectedMonth + 1) + "";
-			d = selectedDay < 10? "0" + selectedDay : selectedDay + "";
-			showDate.setText(new StringBuilder().append(m)
-						   .append("-").append(d).append("-").append(selectedYear)
-						   .toString());
-		}
-	};
-	
-	
-	
-	public TimePickerDialog.OnTimeSetListener timePickerListener
-		= new TimePickerDialog.OnTimeSetListener() {
-		
-		@Override
-		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			// set selected time to textview
-			String s = timeFormat24To12(hourOfDay, minute);
-			showTime.setText(s);
-		}
-	};
-	
-	public String timeFormat24To12(int hour, int minute){
-		String a_p = "";
-		if(hour > 12){
-			hour -= 12;
-			a_p = "PM";
-		} else {
-			a_p = "AM";
-		}
-		String h, m;
-		h = hour < 10? "0" + hour : hour + "";
-		m = minute < 10? "0" + minute : minute + "";
-		return new StringBuilder().append(h).append(":").append(m).append(a_p).toString();
-	}
-	
-	public String timeFormat12To24(int hour, int minute, String a_p){
-		if(a_p.equals("PM")){
-			hour += 12;
-		} 
-		String h, m;
-		h = hour < 10? "0" + hour : hour + "";
-		m = minute < 10? "0" + minute : minute + "";
-		return new StringBuilder().append(h).append(":").append(m).toString();
+	private void showFeedDialog(){
+		DialogFragment frag = FeedDialogFragment.newInstance(clicktype);
+		frag.show(getSupportFragmentManager(), "FeedDialog");
 	}
 
 }

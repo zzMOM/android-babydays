@@ -301,5 +301,6 @@
     <string name="sleep_duration">Sleep Duration</string>
     <string name="hour">h</string>
     <string name="min">min</string>
+    <string name="title_activity_feed_dialog_fragment">FeedDialogFragment</string>
 
 </resources>

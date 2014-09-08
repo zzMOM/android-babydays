@@ -36,6 +36,7 @@ public class DayActivities extends Activity {
 	private ArrayList<String> activityList;
 	private HashMap<Integer, Integer> map;
 	private int curPosition = 0;
+	private TimeFormatTransfer tf;
 	
 	private EditText showSetDate;
 	private ImageButton setDate, recordFilter, reset;
@@ -53,6 +54,9 @@ public class DayActivities extends Activity {
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
+		//time format
+		tf = new TimeFormatTransfer();
+		
 		
 		//action bar
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -342,7 +346,7 @@ public class DayActivities extends Activity {
 			}
 			//get date from datebase
 			String time24 = activitiesByDate.get(i).getTime().toString();
-			String time12 = hour24to12(time24);
+			String time12 = tf.hour24to12(time24);
 			activityList.add(new StringBuffer(time12 + "\t\t\t" + type + "\t\t\t\t"
 					+ activitiesByDate.get(i).getInfo().toString()).toString());
 			map.put(i, activitiesByDate.get(i).getId());
@@ -350,21 +354,7 @@ public class DayActivities extends Activity {
 		//array adpater changed
 		adapter.notifyDataSetChanged();
 	}
-	
-	//time is 24hour format, show with 12hour format
-	//date transfer 24hours to 12hours
-	private String hour24to12(String time24){
-		String time12 = "";
-		SimpleDateFormat h_mm_a = new SimpleDateFormat("h:mma");
-		SimpleDateFormat hh_mm = new SimpleDateFormat("HH:mm");
-		try {
-		    Date t = hh_mm.parse(time24);
-		    time12 = h_mm_a.format(t).toString();
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-		return time12;
-	}
+
 	
 	public void decreaseMonth(){
 		//month is 0 base, if 0, change to 12, and year decrease 1
