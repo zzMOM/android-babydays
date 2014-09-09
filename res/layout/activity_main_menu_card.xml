@@ -66,7 +66,20 @@
 	        android:background="@drawable/line_separator"/>
     </LinearLayout>
     
-    <it.gmariotti.cardslib.library.view.CardGridView
+    <GridView 
+        android:id="@+id/gridView"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnWidth="100dp"
+        android:numColumns="auto_fit"
+		android:verticalSpacing="15dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"/>
+    
+    <!--it.gmariotti.cardslib.library.view.CardGridView
           android:id="@+id/cardGridMenu"
           android:layout_above="@id/ll"
           android:layout_width="match_parent"
@@ -77,6 +90,6 @@
           android:horizontalSpacing="2dp"
           android:stretchMode="columnWidth"
           android:gravity="center"
-          card:list_card_layout_resourceID="@layout/list_card_thumbnail_layout"/>
+          card:list_card_layout_resourceID="@layout/list_card_thumbnail_layout"/-->
 
 </RelativeLayout>

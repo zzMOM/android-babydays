@@ -33,7 +33,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.Toast;
 
 public class MainMenuCard extends FragmentActivity implements FeedDialogListener
@@ -55,6 +59,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 	//private DateTimePickerClass dateTimePickerClass;
 	private TimeFormatTransfer tf;
 	
+	private GridView gridView;
 	private CardGridView cardGridMenu;
 	private Button viewAct, summaryButton, memoryButton;
 	private SimpleDateFormat df;
@@ -127,68 +132,60 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 			}
 		});
 		
-		
-		cardGridMenu = (CardGridView) findViewById(R.id.cardGridMenu);
-		//create Card list
-		ArrayList<Card> cards = new ArrayList<Card>();
-		for(int i = 0; i < items.length; i++){
-			Card c = new Card(this);
-			//add header
-			CardHeader cheader = new CardHeader(this);
-			cheader.setTitle(items[i]);
-			c.addCardHeader(cheader);
-			//add card thumb nail
-			CardThumbnail thumb = new CardThumbnail(this);
-			thumb.setDrawableResource(imageId[i]);
-			c.addCardThumbnail(thumb);
-			//set on click listener
-			c.setOnClickListener(new OnCardClickListener() {
-				
-				@Override
-				public void onClick(Card card, View arg1) {
-					// TODO Auto-generated method stub
-					clicktype = 0;//onclick
-					if(card.getCardHeader().getTitle().toString().equals(items[0])){
-						showFeedDialog();
-					} else if(card.getCardHeader().getTitle().toString().equals(items[1])){
-						showSleepDialog();
-					} else if(card.getCardHeader().getTitle().toString().equals(items[2])){
-						showDiaperDialog();
-					} else if(card.getCardHeader().getTitle().toString().equals(items[3])){
-						showMilestonesDialog();
-					} else if(card.getCardHeader().getTitle().toString().equals(items[4])){
-						openDiary();
-					}
+		gridView = (GridView) findViewById(R.id.gridView);
+		gridView.setAdapter(new ImageAdapter(this));
+		gridView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				clicktype = 0;//onclick
+				switch(position){
+				case 0://feed
+					showFeedDialog();
+					break;
+				case 1: //sleep
+					showSleepDialog();
+					break;
+				case 2: //Diaper
+					showDiaperDialog();
+					break;
+				case 3: //milestone
+					showMilestonesDialog();
+					break;
+				case 4:
+					openDiary();
+					break;
 				}
-			});
-			//set on long click listener
-			c.setOnLongClickListener(new OnLongCardClickListener() {
 				
-				@Override
-				public boolean onLongClick(Card card, View arg1) {
-					// TODO Auto-generated method stub
-					clicktype = 1;//onlongclick
-					if(card.getCardHeader().getTitle().toString().equals(items[0])){
-						showFeedDialog();
-					} else if(card.getCardHeader().getTitle().toString().equals(items[1])){
-						showSleepDialog();
-					} else if(card.getCardHeader().getTitle().toString().equals(items[2])){
-						showDiaperDialog();
-					} else if(card.getCardHeader().getTitle().toString().equals(items[3])){
-						showMilestonesDialog();
-					} else if(card.getCardHeader().getTitle().toString().equals(items[4])){
-						openDiary();
-					}
-					return false;
+			}
+		});
+		gridView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				clicktype = 1;//onclick
+				switch(position){
+				case 0://feed
+					showFeedDialog();
+					break;
+				case 1: //sleep
+					showSleepDialog();
+					break;
+				case 2: //Diaper
+					showDiaperDialog();
+					break;
+				case 3: //milestone
+					showMilestonesDialog();
+					break;
+				case 4:
+					openDiary();
+					break;
 				}
-			});
-			
-			cards.add(c);
-		}
-		CardArrayAdapter cardAdapter = new CardArrayAdapter(this, cards);
-		if(cardGridMenu != null){
-			cardGridMenu.setAdapter(cardAdapter);
-		}
+				return false;
+			}
+		});
 	}
 
 	@Override

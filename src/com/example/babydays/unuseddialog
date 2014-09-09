@@ -356,3 +356,66 @@
  	    String time = tf.timeFormat12To24(Integer.parseInt(t.substring(0, 2)), Integer.parseInt(t.substring(3, 5)), t.substring(5, 7));
         dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
 	}
+	
+	
+	/*cardGridMenu = (CardGridView) findViewById(R.id.cardGridMenu);
+		//create Card list
+		ArrayList<Card> cards = new ArrayList<Card>();
+		for(int i = 0; i < items.length; i++){
+			Card c = new Card(this);
+			//add header
+			CardHeader cheader = new CardHeader(this);
+			cheader.setTitle(items[i]);
+			c.addCardHeader(cheader);
+			//add card thumb nail
+			CardThumbnail thumb = new CardThumbnail(this);
+			thumb.setDrawableResource(imageId[i]);
+			c.addCardThumbnail(thumb);
+			//set on click listener
+			c.setOnClickListener(new OnCardClickListener() {
+				
+				@Override
+				public void onClick(Card card, View arg1) {
+					// TODO Auto-generated method stub
+					clicktype = 0;//onclick
+					if(card.getCardHeader().getTitle().toString().equals(items[0])){
+						showFeedDialog();
+					} else if(card.getCardHeader().getTitle().toString().equals(items[1])){
+						showSleepDialog();
+					} else if(card.getCardHeader().getTitle().toString().equals(items[2])){
+						showDiaperDialog();
+					} else if(card.getCardHeader().getTitle().toString().equals(items[3])){
+						showMilestonesDialog();
+					} else if(card.getCardHeader().getTitle().toString().equals(items[4])){
+						openDiary();
+					}
+				}
+			});
+			//set on long click listener
+			c.setOnLongClickListener(new OnLongCardClickListener() {
+				
+				@Override
+				public boolean onLongClick(Card card, View arg1) {
+					// TODO Auto-generated method stub
+					clicktype = 1;//onlongclick
+					if(card.getCardHeader().getTitle().toString().equals(items[0])){
+						showFeedDialog();
+					} else if(card.getCardHeader().getTitle().toString().equals(items[1])){
+						showSleepDialog();
+					} else if(card.getCardHeader().getTitle().toString().equals(items[2])){
+						showDiaperDialog();
+					} else if(card.getCardHeader().getTitle().toString().equals(items[3])){
+						showMilestonesDialog();
+					} else if(card.getCardHeader().getTitle().toString().equals(items[4])){
+						openDiary();
+					}
+					return false;
+				}
+			});
+			
+			cards.add(c);
+		}
+		CardArrayAdapter cardAdapter = new CardArrayAdapter(this, cards);
+		if(cardGridMenu != null){
+			cardGridMenu.setAdapter(cardAdapter);
+		}*/
