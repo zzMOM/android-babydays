@@ -38,10 +38,13 @@ public class DiaperDialogFragment extends DialogFragment implements DatePickerDi
 	    void onFinishSetDiaper(String date, String time, String type, String info);
 	}
 	
-	public static DiaperDialogFragment newInstance(int clicktype) {
+	public static DiaperDialogFragment newInstance(int clicktype, String date, String time, String info) {
 		DiaperDialogFragment frag = new DiaperDialogFragment();
         Bundle args = new Bundle();
         args.putInt("clicktype", clicktype);
+        args.putString("date", date);
+        args.putString("time", time);
+        args.putString("info", info);
         frag.setArguments(args);
         return frag;
 	}
@@ -51,6 +54,15 @@ public class DiaperDialogFragment extends DialogFragment implements DatePickerDi
 		mSelectedItems = new ArrayList<Integer>();
 		//get clicktype from bundle
 		clicktype = getArguments().getInt("clicktype");
+		String info = getArguments().getString("info");
+		boolean isWet = info.contains("wet");
+		if(isWet){
+			mSelectedItems.add(0);
+		}
+		boolean isPoopy = info.contains("poopy");
+		if(isPoopy){
+			mSelectedItems.add(1);
+		}
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		
@@ -68,7 +80,7 @@ public class DiaperDialogFragment extends DialogFragment implements DatePickerDi
 	    builder.setView(dateTimeView);
 	    		// Specify the list array, the items to be selected by default (null for none),
 	    		// and the listener through which to receive callbacks when items are selected
-	    builder.setMultiChoiceItems(R.array.diaper, null,
+	    builder.setMultiChoiceItems(R.array.diaper, new boolean[]{isWet, isPoopy},
 	                      new DialogInterface.OnMultiChoiceClickListener() {
 	               @Override
 	               public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -125,12 +137,25 @@ public class DiaperDialogFragment extends DialogFragment implements DatePickerDi
         showDate = (EditText) inflatedView.findViewById(R.id.showDate);
         c = Calendar.getInstance();
         df = new SimpleDateFormat("MM-dd-yyyy HH:mm");
+        
+        String date = getArguments().getString("date");
+		String time = getArguments().getString("time");
+		
+		//set initial value for dialog
         String formattedDate = df.format(c.getTime());
         String[] s = formattedDate.split(" ");
-        showDate.setText(s[0]);
-        String[] st = s[1].split(":");
-        tf = new TimeFormatTransfer();
-		showTime.setText(tf.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
+        if(date.length() == 0){//set showDate current date
+        	showDate.setText(s[0]);
+        } else {//set showDate specific value
+        	showDate.setText(date);
+        }
+        if(time.length() == 0){//set showTime current time
+	        String[] st = s[1].split(":");
+	        tf = new TimeFormatTransfer();
+			showTime.setText(tf.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
+        } else {//set showTime specific value
+        	showTime.setText(time);
+        }
         
         pickDate = (ImageButton) inflatedView.findViewById(R.id.pickDate);
         pickTime = (ImageButton) inflatedView.findViewById(R.id.pickTime);
@@ -186,7 +211,7 @@ public class DiaperDialogFragment extends DialogFragment implements DatePickerDi
         }
         ft.addToBackStack(null);
         
-        DatePickerFragment frag = DatePickerFragment.newInstance(year, month, day);
+        DatePickerFragment frag = DatePickerFragment.newInstance(year, month, day, true);
         frag.setTargetFragment(this, 0);
 		frag.show(fm, "DatePicker");
 	}

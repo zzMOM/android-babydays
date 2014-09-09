@@ -13,12 +13,13 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 	    void onFinishSetDate(String s);
 	}
 	
-	public static DatePickerFragment newInstance(int year, int month, int day) {
+	public static DatePickerFragment newInstance(int year, int month, int day, boolean isFrag) {
 		DatePickerFragment frag = new DatePickerFragment();
         Bundle args = new Bundle();
         args.putInt("year", year);
         args.putInt("month", month);
         args.putInt("day", day);
+        args.putBoolean("isFrag", isFrag);
         frag.setArguments(args);
         return frag;
 	}
@@ -46,7 +47,14 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 		String s = new StringBuilder().append(m)
 					   .append("-").append(d).append("-").append(selectedYear)
 					   .toString();
-		DatePickerDialogListener listener = (DatePickerDialogListener) getTargetFragment();
-		listener.onFinishSetDate(s);
+		
+		boolean isFrag = getArguments().getBoolean("isFrag");
+		if(isFrag){
+			DatePickerDialogListener listener = (DatePickerDialogListener) getTargetFragment();
+			listener.onFinishSetDate(s);
+		} else {
+			DatePickerDialogListener listener = (DatePickerDialogListener) getActivity();
+			listener.onFinishSetDate(s);
+		}
 	}
 }

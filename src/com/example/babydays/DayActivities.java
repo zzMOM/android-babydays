@@ -7,24 +7,34 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.example.babydays.DatePickerFragment.DatePickerDialogListener;
+import com.example.babydays.DiaperDialogFragment.DiaperDialogListener;
+import com.example.babydays.FeedDialogFragment.FeedDialogListener;
+import com.example.babydays.MilestoneDialogFragment.MilestoneDialogListener;
+import com.example.babydays.SleepDialogFragment.SleepDialogListener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-public class DayActivities extends Activity {
+public class DayActivities extends FragmentActivity implements DatePickerDialogListener
+															 , FeedDialogListener
+															 , SleepDialogListener
+															 , DiaperDialogListener
+															 , MilestoneDialogListener{
 	private MySQLiteHelper dbHelper;//database
 	//calendar
 	private Calendar c;
@@ -34,7 +44,7 @@ public class DayActivities extends Activity {
 	//datepicker dialog
 	static final int DATE_DIALOG_ID = 999;
 	private ArrayList<String> activityList;
-	private HashMap<Integer, Integer> map;
+	private HashMap<Integer, BabyActivity> map;
 	private int curPosition = 0;
 	private TimeFormatTransfer tf;
 	
@@ -85,19 +95,20 @@ public class DayActivities extends Activity {
 			}
 		});
 		
+		
 		ll2 = (LinearLayout)findViewById(R.id.ll2);
 		ll2.setOnTouchListener(new OnSwipeTouchListener(this) {
 			
 			@Override
 		    public void onSwipeLeft() {
 		        // Whatever
-				increaseDay();
+				addSubtractDay(1);
 		    }
 			
 			@Override
 			public void onSwipeRight() {
 				// TODO Auto-generated method stub
-				decreaseDay();
+				addSubtractDay(-1);
 			}
 		});
 		
@@ -106,7 +117,12 @@ public class DayActivities extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				showDialog(DATE_DIALOG_ID);
+				String date = showSetDate.getText().toString();
+				String[] d = date.split("-");
+				DatePickerFragment frag = DatePickerFragment.newInstance(Integer.parseInt(d[2])
+						 												, Integer.parseInt(d[0]) - 1
+						 												, Integer.parseInt(d[1]), false);
+				frag.show(getSupportFragmentManager(), "DatePicker");
 			}
 		});
 		
@@ -164,39 +180,7 @@ public class DayActivities extends Activity {
 	}
 
 	
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		// TODO Auto-generated method stub
-		switch (id) {
-		case DATE_DIALOG_ID:
-			// set date picker as current date
-			//datepickerdialog default value
-			String date = showSetDate.getText().toString();
-			String[] d = date.split("-");
-			month = Integer.parseInt(d[0]) - 1;
-			day = Integer.parseInt(d[1]);
-			year = Integer.parseInt(d[2]);
-			return new DatePickerDialog(this, datePickerListener, 
-                         year, month, day);
-		}
-		return null;
-	}
 	
-	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
-		
-		// when dialog box is closed, below method will be called.
-		@Override
-		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-			// set selected date into textview
-			String m, d;
-			m = selectedMonth + 1 < 10? "0" + (selectedMonth + 1) : (selectedMonth + 1) + "";
-			d = selectedDay < 10? "0" + selectedDay : selectedDay + "";
-			String date = new StringBuilder().append(m)
-					   .append("-").append(d).append("-").append(selectedYear).toString();
-			showSetDate.setText(date);
-			showActivityByDate(date);
-		}
-	};
 	
 	public void creatFilterDialog(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(DayActivities.this);
@@ -214,15 +198,12 @@ public class DayActivities extends Activity {
 	            	   String attr = recordItems[which];
 	           		
 	            	   //search recodes in sqlite db march date and type or date
-	            	   String date = showSetDate.getText().toString();
 	           		   List<BabyActivity> activitiesByDate;
 	           		   if(which == 0){
-	           			   	showActivityByDate(date);
+	           			   	showActivityByDate();
 	           		   } else {
-	           			   	showActivityByDateAndAttr(date, attr);
+	           			   	showActivityByDateAndAttr(attr);
 	           		   }
-	           		   
-		           	   
 	               }
 	           });
 	       
@@ -251,7 +232,16 @@ public class DayActivities extends Activity {
 	}
 	
 	private void editRecordDialog(){
-		
+		String type = map.get(curPosition).getType();
+		if(type.equals("FeedMilk")){
+			showFeedDialog();
+		} else if(type.equals("Nap")){
+			showSleepDialog();
+		} else if(type.equals("Diaper")){
+			showDiaperDialog();
+		} else if(type.equals("Milestone")){
+			showMilestonesDialog();
+		}
 	}
 	
 	private void deleteRecord(){
@@ -263,9 +253,9 @@ public class DayActivities extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// TODO Auto-generated method stub
-						int id = map.get(curPosition);
+						int id = map.get(curPosition).getId();
 						dbHelper.deleteBabyActivityByID(Integer.toString(id));
-						showActivityByDate(showSetDate.getText().toString());
+						showActivityByDate();
 					}
 				})
 				.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -296,12 +286,13 @@ public class DayActivities extends Activity {
 		//showDate.setText(formattedDate);
 		getActionBar().setTitle("Today: " + formattedDate);
 		
-		showActivityByDate(formattedDate);
+		showActivityByDate();
 	}
 	
-	private void showActivityByDate(String date){
+	private void showActivityByDate(){
+		String date = showSetDate.getText().toString();
 		//show summary
-		showActivitySummary(date);
+		showActivitySummary();
 		
 		//show detail activities list by date
 		//search recodes in sqlite db march date
@@ -310,9 +301,10 @@ public class DayActivities extends Activity {
 		showActivityDetail(activitiesByDate);
 	}
 	
-	private void showActivityByDateAndAttr(String date, String attr){
+	private void showActivityByDateAndAttr(String attr){
+		String date = showSetDate.getText().toString();
 		//show summary
-		showActivitySummary(date);
+		showActivitySummary();
 		
 		//show detail activities list by date
 		//search recodes in sqlite db march date
@@ -321,7 +313,8 @@ public class DayActivities extends Activity {
 		showActivityDetail(activitiesByDateAttr);
 	}
 	
-	private void showActivitySummary(String date){
+	private void showActivitySummary(){
+		String date = showSetDate.getText().toString();
 		//show total of FeedMilk and Diaper times
 		List<String> totalMilkDiaper = dbHelper.getTotalByDate(date);
 		//Log.d("search total", date);
@@ -335,7 +328,7 @@ public class DayActivities extends Activity {
 	private void showActivityDetail(List<BabyActivity> activitiesByDate){
 		//hashmap for activities' id in database and in activitiesList
 		//key-activitiesList ID, value- dateabase ID
-		map = new HashMap<Integer, Integer>();
+		map = new HashMap<Integer, BabyActivity>();
 		
 		activityList.clear();
 		for(int i = 0; i < activitiesByDate.size(); i++){
@@ -349,94 +342,105 @@ public class DayActivities extends Activity {
 			String time12 = tf.hour24to12(time24);
 			activityList.add(new StringBuffer(time12 + "\t\t\t" + type + "\t\t\t\t"
 					+ activitiesByDate.get(i).getInfo().toString()).toString());
-			map.put(i, activitiesByDate.get(i).getId());
+			map.put(i, activitiesByDate.get(i));
 		}
 		//array adpater changed
 		adapter.notifyDataSetChanged();
 	}
 
 	
-	public void decreaseMonth(){
-		//month is 0 base, if 0, change to 12, and year decrease 1
-		if(month == 0){
-			year--;
-			month = 11;
-		} else {
-			month--;
-		}
-		c.set(year, month, day);
-		if(day > c.getActualMaximum(Calendar.DAY_OF_MONTH)){
-			day = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-		}
-		c.set(year, month, day);
+	private void addSubtractDay(int daysToAdd){
+		String date = showSetDate.getText().toString();
+		String[] d = date.split("-");
+		c.set(Calendar.YEAR, Integer.parseInt(d[2]));
+		c.set(Calendar.MONTH, Integer.parseInt(d[0]) - 1);
+		c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(d[1]));
+		c.add(Calendar.DAY_OF_MONTH, daysToAdd);
 		
-		showDateChanged();
+		SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy");
+		showSetDate.setText(df.format(c.getTime()));
+		showActivityByDate();
 	}
-	
-	public void decreaseDay(){
-		//if day is 1, month decrease and day to the last day of month
-		if(day == 1){
-			decreaseMonth();
-			c.set(year, month, day);
-			day = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-		} else {
-			day--;
-		}
-		c.set(year, month, day);
-		
-		showDateChanged();
+
+	@Override
+	public void onFinishSetDate(String s) {
+		// TODO Auto-generated method stub
+		showSetDate.setText(s);
+		showActivityByDate();
 	}
-	
-	public void increaseMonth(){
-		if(month == 11){
-			year++;
-			month = 0;
-		} else {
-			month++;
+
+	//Feed Dialog
+		private void showFeedDialog(){
+			BabyActivity act = map.get(curPosition);
+			DialogFragment frag = FeedDialogFragment.newInstance(1, act.getDate(), act.getTime(), act.getInfo());
+			frag.show(getSupportFragmentManager(), "FeedDialog");
 		}
-		c.set(year, month, day);
 		
-		if(day > c.getActualMaximum(Calendar.DAY_OF_MONTH)){
-			day = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+		//FeedDialogListener, insert record into database after feed dialog click OK
+		@Override
+		public void onFinishSetFeed(String date, String time, String type,
+				String info) {
+			// TODO Auto-generated method stub
+			updateCurrentActivity(date, time, type, info);
+			showActivityByDate();
 		}
-		c.set(year, month, day);
 		
-		showDateChanged();
-	}
-	
-	public void increaseDay(){
-		if(day == c.getActualMaximum(Calendar.DAY_OF_MONTH)){
-			increaseMonth();
-			day = 1;
-		} else {
-			day++;
-		} 
-		c.set(year, month, day);
-		
-		showDateChanged();
-	}
-	
-	private void showDateChanged(){
-		// set selected date into textview
-		// Month is 0 based, just add 1
-		StringBuffer buffer = new StringBuffer();
-		String m = null, d = null;
-		int monthOfYear = month + 1;
-		if(monthOfYear < 10){
-			m = "0" + monthOfYear;
-		} else {
-			m = "" + monthOfYear;
+
+		//Diaper Dialog
+		private void showDiaperDialog(){
+			BabyActivity act = map.get(curPosition);
+			DialogFragment frag = DiaperDialogFragment.newInstance(1, act.getDate(), act.getTime(), act.getInfo());
+			frag.show(getSupportFragmentManager(), "DiaperDialog");
 		}
-		if(day < 10){
-			d = "0" + day;
-		} else {
-			d = "" + day;
+		
+		//DiaperDialogListener, insert record into database after diaper dialog click OK
+		@Override
+		public void onFinishSetDiaper(String date, String time, String type,
+				String info) {
+			// TODO Auto-generated method stub
+			updateCurrentActivity(date, time, type, info);
+			showActivityByDate();
 		}
-		buffer.append(m).append("-").append(d).append("-").append(year);
-		showSetDate.setText(buffer.toString());
 		
-		showActivityByDate(buffer.toString());
+		//Milestone Dialog
+		private void showMilestonesDialog(){
+			BabyActivity act = map.get(curPosition);
+			DialogFragment frag = MilestoneDialogFragment.newInstance(1, act.getDate(), act.getTime(), act.getInfo());
+			frag.show(getSupportFragmentManager(), "MilestoneDialog");
+		}
 		
-	}
+		//MilestoneDialogListener, insert record into database after milestone dialog click OK
+		@Override
+		public void onFinishSetMilestone(String date, String time, String type,
+				String info) {
+			// TODO Auto-generated method stub
+			updateCurrentActivity(date, time, type, info);
+			showActivityByDate();
+		}
+		
+		//sleep dialog
+		private void showSleepDialog(){
+			BabyActivity act = map.get(curPosition);
+			DialogFragment frag = SleepDialogFragment.newInstance(1, act.getDate(), act.getTime(), act.getInfo(), true, "");
+			frag.show(getSupportFragmentManager(), "SleepDialog");
+		}
+
+		@Override
+		public void onFinishSetSleep(String date, String time, String type,
+				String info, boolean isStart, String start) {
+			updateCurrentActivity(date, time, type, info);
+			showActivityByDate();
+		}
+
+		
+		private void  updateCurrentActivity(String date, String time, String type, String info){
+			BabyActivity act = map.get(curPosition);
+			act.setDate(date);
+			act.setType(type);
+			act.setTime(time);
+			act.setInfo(info);
+			dbHelper.updateBabyActivity(act);
+		}
+		
 	
 }

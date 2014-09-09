@@ -251,7 +251,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 	
 	//Feed Dialog
 	private void showFeedDialog(){
-		DialogFragment frag = FeedDialogFragment.newInstance(clicktype);
+		DialogFragment frag = FeedDialogFragment.newInstance(clicktype, "", "", "");
 		frag.show(getSupportFragmentManager(), "FeedDialog");
 	}
 	
@@ -270,7 +270,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 
 	//Diaper Dialog
 	private void showDiaperDialog(){
-		DialogFragment frag = DiaperDialogFragment.newInstance(clicktype);
+		DialogFragment frag = DiaperDialogFragment.newInstance(clicktype, "", "", "");
 		frag.show(getSupportFragmentManager(), "DiaperDialog");
 	}
 	
@@ -287,7 +287,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 	
 	//Milestone Dialog
 	private void showMilestonesDialog(){
-		DialogFragment frag = MilestoneDialogFragment.newInstance(clicktype);
+		DialogFragment frag = MilestoneDialogFragment.newInstance(clicktype, "", "", "");
 		frag.show(getSupportFragmentManager(), "MilestoneDialog");
 	}
 	
@@ -303,7 +303,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 	private void showSleepDialog(){
 		String start = mPrefsTime.getString(START_TIME, "0");
 		isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
-		DialogFragment frag = SleepDialogFragment.newInstance(clicktype, isStart, start);
+		DialogFragment frag = SleepDialogFragment.newInstance(clicktype, "", "", "", isStart, start);
 		frag.show(getSupportFragmentManager(), "SleepDialog");
 	}
 

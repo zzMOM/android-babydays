@@ -43,12 +43,16 @@ public class SleepDialogFragment extends DialogFragment implements DatePickerDia
 	    					, boolean isStart, String start);
 	}
 	
-	public static SleepDialogFragment newInstance(int clicktype, boolean isStart, String start) {
+	public static SleepDialogFragment newInstance(int clicktype, String date, String time, String info
+												, boolean isStart, String start) {
 		SleepDialogFragment frag = new SleepDialogFragment();
         Bundle args = new Bundle();
         args.putInt("clicktype", clicktype);
         args.putBoolean("isStart", isStart);
         args.putString("start", start);
+        args.putString("date", date);
+        args.putString("time", time);
+        args.putString("info", info);
         frag.setArguments(args);
         return frag;
 	}
@@ -75,13 +79,12 @@ public class SleepDialogFragment extends DialogFragment implements DatePickerDia
         // Set dialog title
         dialog.setTitle("Insert a new sleep activity");
         
+        hourEdit = (EditText) dialog.findViewById(R.id.hourEdit);
+        minuteEdit = (EditText) dialog.findViewById(R.id.minuteEdit);
         dateTimeStub = (ViewStub) dialog.findViewById(R.id.dateTimeStub);
         dateTimeStub.setLayoutResource(R.layout.date_time_merge);
         View inflatedView = dateTimeStub.inflate();
         setDateTimeMergePart(inflatedView);
-        
-        hourEdit = (EditText) dialog.findViewById(R.id.hourEdit);
-        minuteEdit = (EditText) dialog.findViewById(R.id.minuteEdit);
         
         Button okButton = (Button) dialog.findViewById(R.id.ok);
         // if decline button is clicked, close the custom dialog
@@ -101,7 +104,7 @@ public class SleepDialogFragment extends DialogFragment implements DatePickerDia
          		   mm = "00";
          	    }
                 String info = hh + "h" + mm + "min";
-                String type = "Sleep";
+                String type = "Nap";
                 SleepDialogListener listener = (SleepDialogListener) getActivity();
             	 listener.onFinishSetSleep(showDate.getText().toString()
 										 , showTime.getText().toString()
@@ -222,12 +225,30 @@ public class SleepDialogFragment extends DialogFragment implements DatePickerDia
         showDate = (EditText) inflatedView.findViewById(R.id.showDate);
         c = Calendar.getInstance();
         df = new SimpleDateFormat("MM-dd-yyyy HH:mm");
+        
+        String date = getArguments().getString("date");
+		String time = getArguments().getString("time");
+		String info = getArguments().getString("info");
+		
+		//set initial value for dialog
         String formattedDate = df.format(c.getTime());
         String[] s = formattedDate.split(" ");
-        showDate.setText(s[0]);
-        String[] st = s[1].split(":");
-        tf = new TimeFormatTransfer();
-		showTime.setText(tf.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
+        if(date.length() == 0){//set showDate current date
+        	showDate.setText(s[0]);
+        } else {//set showDate specific value
+        	showDate.setText(date);
+        }
+        if(time.length() == 0){//set showTime current time
+	        String[] st = s[1].split(":");
+	        tf = new TimeFormatTransfer();
+			showTime.setText(tf.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
+        } else {//set showTime specific value
+        	showTime.setText(time);
+        }
+        if(info.length() > 0){//set info sepcific value
+        	hourEdit.setText(info.substring(0, 2));
+        	minuteEdit.setText(info.substring(3, 5));
+        }
         
         pickDate = (ImageButton) inflatedView.findViewById(R.id.pickDate);
         pickTime = (ImageButton) inflatedView.findViewById(R.id.pickTime);
@@ -283,7 +304,7 @@ public class SleepDialogFragment extends DialogFragment implements DatePickerDia
         }
         ft.addToBackStack(null);
         
-        DatePickerFragment frag = DatePickerFragment.newInstance(year, month, day);
+        DatePickerFragment frag = DatePickerFragment.newInstance(year, month, day, true);
         frag.setTargetFragment(this, 0);
 		frag.show(fm, "DatePicker");
 	}

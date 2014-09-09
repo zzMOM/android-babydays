@@ -36,10 +36,13 @@ public class FeedDialogFragment extends DialogFragment implements DatePickerDial
 	    void onFinishSetFeed(String date, String time, String type, String info);
 	}
 	
-	public static FeedDialogFragment newInstance(int clicktype) {
+	public static FeedDialogFragment newInstance(int clicktype, String date, String time, String info) {
 		FeedDialogFragment frag = new FeedDialogFragment();
         Bundle args = new Bundle();
         args.putInt("clicktype", clicktype);
+        args.putString("date", date);
+        args.putString("time", time);
+        args.putString("info", info);
         frag.setArguments(args);
         return frag;
 	}
@@ -47,6 +50,7 @@ public class FeedDialogFragment extends DialogFragment implements DatePickerDial
 	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 		clicktype = getArguments().getInt("clicktype");
+		
 		// Create custom dialog object
         final Dialog dialog = new Dialog(getActivity());
         // Include dialog.xml file
@@ -102,14 +106,32 @@ public class FeedDialogFragment extends DialogFragment implements DatePickerDial
 		//use inflatedView to get view from viewstub
         showTime = (EditText) inflatedView.findViewById(R.id.showTime);
         showDate = (EditText) inflatedView.findViewById(R.id.showDate);
+        
         c = Calendar.getInstance();
         df = new SimpleDateFormat("MM-dd-yyyy HH:mm");
+        
+        String date = getArguments().getString("date");
+		String time = getArguments().getString("time");
+		String info = getArguments().getString("info");
+		
+		//set initial value for dialog
         String formattedDate = df.format(c.getTime());
         String[] s = formattedDate.split(" ");
-        showDate.setText(s[0]);
-        String[] st = s[1].split(":");
-        tf = new TimeFormatTransfer();
-		showTime.setText(tf.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
+        if(date.length() == 0){//set showDate current date
+        	showDate.setText(s[0]);
+        } else {//set showDate specific value
+        	showDate.setText(date);
+        }
+        if(time.length() == 0){//set showTime current time
+	        String[] st = s[1].split(":");
+	        tf = new TimeFormatTransfer();
+			showTime.setText(tf.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
+        } else {//set showTime specific value
+        	showTime.setText(time);
+        }
+        if(info.length() > 0){//set info sepcific value
+        	textOZ.setText(info.substring(0, info.length() - 2));
+        }
         
         pickDate = (ImageButton) inflatedView.findViewById(R.id.pickDate);
         pickTime = (ImageButton) inflatedView.findViewById(R.id.pickTime);
@@ -165,7 +187,7 @@ public class FeedDialogFragment extends DialogFragment implements DatePickerDial
         }
         ft.addToBackStack(null);
         
-        DatePickerFragment frag = DatePickerFragment.newInstance(year, month, day);
+        DatePickerFragment frag = DatePickerFragment.newInstance(year, month, day, true);
         frag.setTargetFragment(this, 0);
 		frag.show(fm, "DatePicker");
 	}
