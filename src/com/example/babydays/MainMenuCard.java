@@ -15,49 +15,31 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.example.babydays.DatePickerFragment.DatePickerDialogListener;
 import com.example.babydays.DiaperDialogFragment.DiaperDialogListener;
 import com.example.babydays.FeedDialogFragment.FeedDialogListener;
 import com.example.babydays.MilestoneDialogFragment.MilestoneDialogListener;
+import com.example.babydays.SleepDialogFragment.SleepDialogListener;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.res.Resources;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewStub;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 															, DiaperDialogListener
-															, MilestoneDialogListener{
+															, MilestoneDialogListener
+															, SleepDialogListener{
 	static final String[] items = new String[]{"Feed", "Nap", "Diaper", "Milestone", "Diary"};
 	static final Integer[] imageId = {	R.drawable.bottle,
         								R.drawable.sleep,
@@ -73,22 +55,14 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 	//private DateTimePickerClass dateTimePickerClass;
 	private TimeFormatTransfer tf;
 	
-	private ViewStub dateTimeStub;
 	private CardGridView cardGridMenu;
-	private ImageButton pickDate, pickTime;
-	private EditText showDate, showTime, hourEdit, minuteEdit;
 	private Button viewAct, summaryButton, memoryButton;
 	private SimpleDateFormat df;
 	private Calendar c;
-	private EditText textOZ;
 	private MySQLiteHelper dbHelper;
-	private ArrayList<Integer> mSelectedItems;
 	private boolean doubleBackToExitPressedOnce = false;
 	private int clicktype = 0;
 	
-	static final int DATE_DIALOG_ID = 100;
-	static final int TIME_DIALOG_ID = 999;
-	static final int FEED_DIALOG_ID = 1;
 
 
 	@Override
@@ -101,9 +75,6 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 		actionBar.show();
 		actionBar.setTitle("Baby Days");//change action bar title
 		//actionBar.setIcon(icon);
-		
-		//initialize DateTimePickerClass
-		//dateTimePickerClass = new DateTimePickerClass();
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(this);
@@ -180,7 +151,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 					if(card.getCardHeader().getTitle().toString().equals(items[0])){
 						showFeedDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[1])){
-						creatSleepDialog();
+						showSleepDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[2])){
 						showDiaperDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[3])){
@@ -200,7 +171,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 					if(card.getCardHeader().getTitle().toString().equals(items[0])){
 						showFeedDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[1])){
-						insertSleepDialog();
+						showSleepDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[2])){
 						showDiaperDialog();
 					} else if(card.getCardHeader().getTitle().toString().equals(items[3])){
@@ -264,169 +235,6 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 	    }, 2000);
 	}
 	
-	/*
-	 * if nap stated and then diaper or eat happened, 
-	 * stop nap clock and record nap status
-	 */
-	private void updateNapStatusAndDatabaseRecord(){
-		String info;
-		//record current status info and change SharedPreferences status
- 	    Editor editorStart = mPrefsStart.edit();
-		//stop the clock, set NAP_CLOCK false
-  	   	editorStart.putBoolean(NAP_CLOCK, false);
-  	   	editorStart.commit();//SharedPreferences modified
-  	   	//Log.e("put napclock to be", Boolean.toString(mPrefsStart.getBoolean(NAP_CLOCK, false)));
-  	   
-  	   	//get date and insert into database-TABLE baby_activities
-         String formatedDate = mPrefsTime.getString(START_TIME, "0");
-         String[] s = formatedDate.split(" ");
-         String date = s[0];
-         String time = s[1];
-         String type = "Nap";
-         
-         //calculate the difference between start and stop
-         Date startTime = null;
-			try {
-				startTime = df.parse(formatedDate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-         Date currentTime = null;
-			try {
-				currentTime = df.parse(df.format(c.getTime()));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-         long diff = currentTime.getTime() - startTime.getTime();
-         Log.e("current time and start time", currentTime + " " + startTime);
-         
-         long timeInSeconds = diff / 1000;
-         int hours, min;
-         hours = (int) (timeInSeconds / 3600);
-         timeInSeconds = timeInSeconds - (hours * 3600);
-         min = (int) (timeInSeconds / 60);
-         String h, m;
-         h = hours < 10 ? "0" + hours : hours + "";
-         m = min < 10 ? "0" + min : min + "";
-         info = h + "h" + m + "min";
-         
-     	   dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
-	}
-	
-	
-	
-	
-	public void creatSleepDialog(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	    
-	    //check SharedPreferences and edit if nap status change
-	    //if isStart is true, means nap is started
-	    //only choice is nap stop
-	    String message;
-	    isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
-	    if(isStart){
-	    	message = "Nap Stop!";
-	    } else {
-	    	message = "Nap Start!";
-	    }
-	    
-	    builder.setTitle("Time to sleep!")
-	    	   .setMessage(message)
-	    		// Add action buttons
-	           .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-		               @Override
-		               public void onClick(DialogInterface dialog, int id) {
-		            	   isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
-		            	   Log.e("nap clock isStart is ", Boolean.toString(isStart));
-		                   if(isStart){		//isStart true, then stop clock
-		                	   updateNapStatusAndDatabaseRecord();
-		                   } else {
-		                	   //record current status info and change SharedPreferences status
-			            	   Editor editorStart = mPrefsStart.edit();
-		                	   //start nap, set NAP_CLOCK true;
-		                	   editorStart.putBoolean(NAP_CLOCK, true);
-		                	   editorStart.commit();//SharedPreferences modified
-		                	   Log.e("put napclock to be", Boolean.toString(mPrefsStart.getBoolean(NAP_CLOCK, false)));
-		                	   
-		                	   //start clock, set START_TIME current clock time
-		                	   Editor editorTime = mPrefsTime.edit();
-		                	   c = Calendar.getInstance();
-		                	   String currentTime = df.format(c.getTime());
-		                	   editorTime.putString(START_TIME, currentTime);
-		                	   editorTime.commit();
-			                   Log.e("start time current", mPrefsTime.getString(START_TIME, "0"));
-		                	   
-			                   
-		                   }
-		               	   		               	
-		                   // Close dialog
-		                   dialog.dismiss();
-		               }
-		           })
-	           .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-		               public void onClick(DialogInterface dialog, int id) {
-		            	// Close dialog
-		                   dialog.dismiss();
-		               }
-		           });      
-	    builder.show();
-	}
-	
-	public void insertSleepDialog(){
-		// Create custom dialog object
-        final Dialog dialog = new Dialog(this);
-        // Include dialog.xml file
-        dialog.setContentView(R.layout.dialog_sleep);
-        // Set dialog title
-        dialog.setTitle("Insert a new sleep activity");
-        
-        dateTimeStub = (ViewStub) dialog.findViewById(R.id.dateTimeStub);
-        dateTimeStub.setLayoutResource(R.layout.date_time_merge);
-        View inflatedView = dateTimeStub.inflate();
-        setDateTimeMergePart(inflatedView);
-        
-        hourEdit = (EditText) dialog.findViewById(R.id.hourEdit);
-        minuteEdit = (EditText) dialog.findViewById(R.id.minuteEdit);
-        
-        Button okButton = (Button) dialog.findViewById(R.id.ok);
-        // if decline button is clicked, close the custom dialog
-        okButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String hh = hourEdit.getText().toString();
-         	    String mm = minuteEdit.getText().toString();
-         	    if(hh.length() == 1){
-         		   hh = "0" + hh;
-         	    } else if(hh.length() == 0){
-         		   hh = "00";
-         	    }
-         	    if(mm.length() == 1){
-         		   mm = "0" + mm;
-         	    } else if(mm.length() == 0){
-         		   mm = "00";
-         	    }
-                String info = hh + "h" + mm + "min";
-                String type = "Sleep";
-                insertCurrentActivity(type, info);
-                // Close dialog
-                dialog.dismiss();
-            }
-        });
-        Button cancelButton = (Button) dialog.findViewById(R.id.cancel);
-        // if decline button is clicked, close the custom dialog
-        cancelButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Close dialog
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-	}
-	
-	
 	
 	
 	public void openDiary(){
@@ -434,56 +242,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 		startActivity(intent);
 	}
 	
-	private void setDateTimeMergePart(View inflatedView){
-		// set values for date_time_merge.xml components
-		//use inflatedView to get view from viewstub
-        showTime = (EditText) inflatedView.findViewById(R.id.showTime);
-        showDate = (EditText) inflatedView.findViewById(R.id.showDate);
-        c = Calendar.getInstance();
-        String formattedDate = df.format(c.getTime());
-        String[] s = formattedDate.split(" ");
-        showDate.setText(s[0]);
-        String[] st = s[1].split(":");
-		showTime.setText(tf.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
-        
-        pickDate = (ImageButton) inflatedView.findViewById(R.id.pickDate);
-        pickTime = (ImageButton) inflatedView.findViewById(R.id.pickTime);
-        if(clicktype == 0){//onclick, current activity
-        	dateTimeStub.setVisibility(View.GONE);
-        } else {//onlongclick, insert new activity
-        	dateTimeStub.setVisibility(View.VISIBLE);
-        }
-        //pickDate button and pickTime button
-        pickDate.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				c = Calendar.getInstance();
-				int year = c.get(Calendar.YEAR);
-		        int month = c.get(Calendar.MONTH);
-		        int day = c.get(Calendar.DAY_OF_MONTH);
-		        DatePickerFragment frag = DatePickerFragment.newInstance(year, month, day);
-				//frag.show(getFragmentManager(), "DatePicker");
-			}
-		});
-        pickTime.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				showDialog(TIME_DIALOG_ID);
-			}
-		});
-	}
-	
-	private void insertCurrentActivity(String type, String info){
-		//get date to insert into database-TABLE baby_activities
- 	    String date = showDate.getText().toString();
- 	    String t = showTime.getText().toString();
- 	    String time = tf.timeFormat12To24(Integer.parseInt(t.substring(0, 2)), Integer.parseInt(t.substring(3, 5)), t.substring(5, 7));
-        dbHelper.addBabyActivity(new BabyActivity(date, time, type, info));
-	}
+
 	private void insertCurrentActivity(String date, String time, String type, String info){
 		//get date to insert into database-TABLE baby_activities
 		String t = tf.hour12to24(time);
@@ -502,6 +261,10 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 			String info) {
 		// TODO Auto-generated method stub
 		insertCurrentActivity(date, time, type, info);
+		isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
+		if(isStart && clicktype == 0){
+			updateNapStatusAndDatabaseRecord();
+		}
 	}
 	
 
@@ -517,6 +280,9 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 			String info) {
 		// TODO Auto-generated method stub
 		insertCurrentActivity(date, time, type, info);
+		if(isStart && clicktype == 0){
+			updateNapStatusAndDatabaseRecord();
+		}
 	}
 	
 	//Milestone Dialog
@@ -531,6 +297,91 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 			String info) {
 		// TODO Auto-generated method stub
 		insertCurrentActivity(date, time, type, info);
+	}
+	
+	//sleep dialog
+	private void showSleepDialog(){
+		String start = mPrefsTime.getString(START_TIME, "0");
+		isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
+		DialogFragment frag = SleepDialogFragment.newInstance(clicktype, isStart, start);
+		frag.show(getSupportFragmentManager(), "SleepDialog");
+	}
+
+	@Override
+	public void onFinishSetSleep(String date, String time, String type,
+			String info, boolean isStart, String start) {
+		if(info.length() == 0){//case1: sleep clock start, isStart reset to true, start reset
+			//record current status info and change SharedPreferences status
+	 	    Editor editorStart = mPrefsStart.edit();
+			//stop the clock, set NAP_CLOCK false
+	  	   	editorStart.putBoolean(NAP_CLOCK, isStart);
+	  	   	editorStart.commit();//SharedPreferences modified
+	  	   	
+	  	   	//start clock, set START_TIME start
+     	   Editor editorTime = mPrefsTime.edit();
+     	   editorTime.putString(START_TIME, start);
+     	   editorTime.commit();
+		} else {
+			if(start.length() == 0){//case 2: current sleep activity stop, isStart reset, insert current activity to db
+				Editor editorStart = mPrefsStart.edit();
+				//stop the clock, set NAP_CLOCK false
+		  	   	editorStart.putBoolean(NAP_CLOCK, isStart);
+		  	   	editorStart.commit();//SharedPreferences modified
+			}
+			//case 3: insert new activity, not current activity, 
+			//no change to start and isStart, insert activity to db
+			insertCurrentActivity(date, time, type, info);
+		}
+		
+	}
+	
+	/*
+	 * if nap stated and then diaper or eat happened, 
+	 * stop nap clock and record nap status
+	 */
+	private void updateNapStatusAndDatabaseRecord(){
+		 String info;
+		 Editor editorStart = mPrefsStart.edit();
+		//stop the clock, set NAP_CLOCK false
+  	   	editorStart.putBoolean(NAP_CLOCK, false);
+  	   	editorStart.commit();//SharedPreferences modified
+	  	   	
+		 String start = mPrefsTime.getString(START_TIME, "0");
+		 String[] s = start.split(" ");
+		 String date = s[0];
+		 String time = s[1];
+		 String type = "Nap";
+		 
+		 //calculate the difference between start and stop
+		 Date startTime = null;
+			try {
+				startTime = df.parse(start);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 Date currentTime = null;
+		 c = Calendar.getInstance();
+			try {
+				currentTime = df.parse(df.format(c.getTime()));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 long diff = currentTime.getTime() - startTime.getTime();
+		 //Log.e("current time and start time", currentTime + " " + startTime);
+		 
+		 long timeInSeconds = diff / 1000;
+		 int hours, min;
+		 hours = (int) (timeInSeconds / 3600);
+		 timeInSeconds = timeInSeconds - (hours * 3600);
+		 min = (int) (timeInSeconds / 60);
+		 String h, m;
+		 h = hours < 10 ? "0" + hours : hours + "";
+		 m = min < 10 ? "0" + min : min + "";
+		 info = h + "h" + m + "min";
+		 
+		 insertCurrentActivity(date, time, type, info);
 	}
 
 }
