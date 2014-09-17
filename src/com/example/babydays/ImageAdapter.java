@@ -1,6 +1,9 @@
 package com.example.babydays;
 
+import com.example.babydays.R.color;
+
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,7 @@ public class ImageAdapter extends BaseAdapter{
         								R.drawable.diaper,
         								R.drawable.milestones,
         								R.drawable.diary};
+	static final Integer[] colorValue = { Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, color.gray};
 	
 	public ImageAdapter(Context c){
 		mContext = c;
@@ -25,7 +29,6 @@ public class ImageAdapter extends BaseAdapter{
 	
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
 		return imageId.length;
 	}
 
@@ -54,6 +57,7 @@ public class ImageAdapter extends BaseAdapter{
 			ImageView itemImage = (ImageView)grid.findViewById(R.id.gridItemImage);
 			itemLabel.setText(items[position]);
 			itemImage.setImageResource(imageId[position]);
+			grid.setBackgroundColor(colorValue[position]);
 		} else {
 			grid = (View) convertView;
 		}

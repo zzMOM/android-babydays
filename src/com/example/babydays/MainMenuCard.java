@@ -1,13 +1,5 @@
 package com.example.babydays;
 
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
-import it.gmariotti.cardslib.library.internal.Card.OnLongCardClickListener;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.internal.CardThumbnail;
-import it.gmariotti.cardslib.library.view.CardGridView;
-import it.gmariotti.cardslib.library.view.CardListView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,12 +36,6 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 															, DiaperDialogListener
 															, MilestoneDialogListener
 															, SleepDialogListener{
-	static final String[] items = new String[]{"Feed", "Nap", "Diaper", "Milestone", "Diary"};
-	static final Integer[] imageId = {	R.drawable.bottle,
-        								R.drawable.sleep,
-        								R.drawable.diaper,
-        								R.drawable.milestones,
-        								R.drawable.diary};
 	//SharedPreferences to record nap start or not
 	private static final String NAP_CLOCK = "napclock";
 	private SharedPreferences mPrefsStart;
@@ -60,7 +46,6 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 	private TimeFormatTransfer tf;
 	
 	private GridView gridView;
-	private CardGridView cardGridMenu;
 	private Button viewAct, summaryButton, memoryButton;
 	private SimpleDateFormat df;
 	private Calendar c;
@@ -116,7 +101,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(MainMenuCard.this, Summary.class);
+				Intent intent = new Intent(MainMenuCard.this, Charts.class);
 				startActivity(intent);
 			}
 		});

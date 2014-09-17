@@ -19,10 +19,18 @@ public class OnSwipeTouchListener implements OnTouchListener{
 
     public void onSwipeRight() {
     }
+    
+    public void onSwipeBottom(){
+    	
+    }
+    
+    public void onSwipeTop(){
+    	
+    }
 
     private final class GestureListener extends SimpleOnGestureListener {
 
-        private static final int SWIPE_DISTANCE_THRESHOLD = 100;
+    	private static final int SWIPE_THRESHOLD = 100;
         private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
         @Override
@@ -32,17 +40,31 @@ public class OnSwipeTouchListener implements OnTouchListener{
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            float distanceX = e2.getX() - e1.getX();
-            float distanceY = e2.getY() - e1.getY();
-            if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                if (distanceX > 0)
-                    onSwipeRight();
-                else
-                    onSwipeLeft();
-                return true;
-            }
+        	try {
+	            float diffX = e2.getX() - e1.getX();
+	            float diffY = e2.getY() - e1.getY();
+	            if (Math.abs(diffX) > Math.abs(diffY)) {
+	                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+	                    if (diffX > 0) {
+	                        onSwipeRight();
+	                    } else {
+	                        onSwipeLeft();
+	                    }
+	                }
+	                return true;
+	            } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+	                    if (diffY > 0) {
+	                        onSwipeBottom();
+	                    } else {
+	                        onSwipeTop();
+	                    }
+	                return true;
+	            }
+	        } catch (Exception exception) {
+	            exception.printStackTrace();
+	        }
             return false;
-        }
+    	}
     }
 
 	@Override

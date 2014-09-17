@@ -28,7 +28,7 @@ public class TryCardView extends Activity {
 	      //Add Header to card
 	      card.addCardHeader(header);
 	      CardThumbnail thumbnail = new CardThumbnail(this);
-	      thumbnail.setDrawableResource(R.drawable.green_star);
+	      thumbnail.setDrawableResource(R.drawable.sleep);
 	      card.addCardThumbnail(thumbnail);
 	      //Set card in the cardView
 	      CardView cardView = (CardView) findViewById(R.id.carddemo_thumb_url);

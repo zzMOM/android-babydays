@@ -159,7 +159,7 @@
     <string name="feedmilk">Time to feed milk!</string>
     <string name="curtime">Current Time: </string>
     <string name="feedamount">Feed Amount (OZ) : </string>
-    <string name="oz">OZ</string>
+    <string name="oz">oz</string>
     <string name="dialog_feedmilk">It\'s time to feed milk!</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -302,5 +302,11 @@
     <string name="hour">h</string>
     <string name="min">min</string>
     <string name="title_activity_feed_dialog_fragment">FeedDialogFragment</string>
+    <string name="height">Height: </string>
+    <string name="ft">ft</string>
+    <string name="in">in</string>
+    <string name="weight">"Weight: "</string>
+    <string name="lb">lb</string>
+    <string name="title_activity_charts">Charts</string>
 
 </resources>

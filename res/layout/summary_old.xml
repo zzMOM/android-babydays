@@ -1,0 +1,79 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/backgroundblue"
+    tools:context=".Summary_old" >
+    
+    <LinearLayout
+        android:id="@+id/conditions" 
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+    	android:layout_height="match_parent"
+    	android:orientation="vertical">
+        
+        <!--Spinner
+            android:id="@+id/attrSpinner" 
+            android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:entries="@array/attrSp"/-->
+        
+        <Button 
+            android:id="@+id/firstButton"
+            android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:text="@string/first"/>
+        
+        <Button 
+            android:id="@+id/prevButton"
+            android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:text="@string/prev"/>
+        
+        <Button 
+            android:id="@+id/nextButton"
+            android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:text="@string/next"/>
+        
+        <Button 
+            android:id="@+id/lastButton"
+            android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:text="@string/last"/>
+        
+        <!--Button 
+            android:id="@+id/readSample"
+            android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:text="@string/read_sample"/-->
+        
+    </LinearLayout>
+            
+	<!--ScrollView
+	    android:id="@+id/sv1" 
+		android:layout_width="0dip"
+    	android:layout_height="match_parent"
+    	android:layout_weight="7">
+  	
+      		<HorizontalScrollView 
+      		    android:id="@+id/sv2" 
+          		android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"-->
+  	
+    <ImageView
+        android:id="@+id/chartImageView" 
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:contentDescription="@string/chart_image"/>
+       
+		<!--/HorizontalScrollView>
+      
+	</ScrollView-->
+
+</RelativeLayout>

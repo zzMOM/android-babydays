@@ -103,7 +103,7 @@ public class MainMenu extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(MainMenu.this, Summary.class);
+				Intent intent = new Intent(MainMenu.this, Summary_old.class);
 				startActivity(intent);
 			}
 		});
