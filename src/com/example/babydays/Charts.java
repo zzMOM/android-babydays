@@ -81,14 +81,8 @@ public class Charts extends Activity {
 	private void createChartOfDayActivity(boolean byDateAscOrDesc){
 		int windowwidth = getResources().getDisplayMetrics().widthPixels;//phone window width in pixels
 		int windowheight = getResources().getDisplayMetrics().heightPixels;//phone window height in pixels
-		
-		// We'll be creating an image that is 100 pixels wide and 200 pixels tall.
-		//int width = 800;
-		//int height = 450;
+		//Log.e("width height", windowwidth+" " + windowheight);
 		int w = windowwidth;
-		/*if(windowwidth < 1500){
-			w = windowwidth * 3 / 2;
-		}*/
 		int h = windowheight;
 		 
 		// Create a bitmap with the dimensions we defined above, and with a 16-bit pixel format. We'll
