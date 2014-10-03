@@ -41,7 +41,8 @@
 	        android:contentDescription="@string/pick_date"/>
     </LinearLayout>
         
-    <LinearLayout 
+    <LinearLayout
+        android:id="@+id/timell" 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"

@@ -15,13 +15,16 @@ import android.widget.TextView;
 public class ImageAdapter extends BaseAdapter{
 
 	private Context mContext;
-	static final String[] items = new String[]{"Feed", "Nap", "Diaper", "Milestone", "Diary"};
+	static final String[] items = new String[]{"Feed", "Nap", "Diaper", "Milestone", "Diary", "Height", "Weight"};
 	static final Integer[] imageId = {	R.drawable.bottle,
         								R.drawable.sleep,
         								R.drawable.diaper,
         								R.drawable.milestones,
-        								R.drawable.diary};
-	static final Integer[] colorValue = { Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, color.gray};
+        								R.drawable.diary,
+        								R.drawable.height,
+        								R.drawable.weight};
+	static final Integer[] colorValue = { Color.RED, Color.BLUE, Color.YELLOW, 
+										  Color.GREEN, Color.CYAN, Color.MAGENTA, Color.LTGRAY};
 	
 	public ImageAdapter(Context c){
 		mContext = c;

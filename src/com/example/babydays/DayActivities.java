@@ -7,11 +7,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import com.example.babydays.DatePickerFragment.DatePickerDialogListener;
-import com.example.babydays.DiaperDialogFragment.DiaperDialogListener;
-import com.example.babydays.FeedDialogFragment.FeedDialogListener;
-import com.example.babydays.MilestoneDialogFragment.MilestoneDialogListener;
-import com.example.babydays.SleepDialogFragment.SleepDialogListener;
+import com.example.babydays.FragmentDatePicker.DatePickerDialogListener;
+import com.example.babydays.FragmentDiaperDialog.DiaperDialogListener;
+import com.example.babydays.FragmentFeedDialog.FeedDialogListener;
+import com.example.babydays.FragmentMilestoneDialog.MilestoneDialogListener;
+import com.example.babydays.FragmentSleepDialog.SleepDialogListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -119,7 +119,7 @@ public class DayActivities extends FragmentActivity implements DatePickerDialogL
 				// TODO Auto-generated method stub
 				String date = showSetDate.getText().toString();
 				String[] d = date.split("-");
-				DatePickerFragment frag = DatePickerFragment.newInstance(Integer.parseInt(d[2])
+				FragmentDatePicker frag = FragmentDatePicker.newInstance(Integer.parseInt(d[2])
 						 												, Integer.parseInt(d[0]) - 1
 						 												, Integer.parseInt(d[1]), false);
 				frag.show(getSupportFragmentManager(), "DatePicker");
@@ -372,7 +372,7 @@ public class DayActivities extends FragmentActivity implements DatePickerDialogL
 	//Feed Dialog
 		private void showFeedDialog(){
 			BabyActivity act = map.get(curPosition);
-			DialogFragment frag = FeedDialogFragment.newInstance(1, act.getDate(), act.getTime(), act.getInfo());
+			DialogFragment frag = FragmentFeedDialog.newInstance(1, act.getDate(), act.getTime(), act.getInfo());
 			frag.show(getSupportFragmentManager(), "FeedDialog");
 		}
 		
@@ -389,7 +389,7 @@ public class DayActivities extends FragmentActivity implements DatePickerDialogL
 		//Diaper Dialog
 		private void showDiaperDialog(){
 			BabyActivity act = map.get(curPosition);
-			DialogFragment frag = DiaperDialogFragment.newInstance(1, act.getDate(), act.getTime(), act.getInfo());
+			DialogFragment frag = FragmentDiaperDialog.newInstance(1, act.getDate(), act.getTime(), act.getInfo());
 			frag.show(getSupportFragmentManager(), "DiaperDialog");
 		}
 		
@@ -405,7 +405,7 @@ public class DayActivities extends FragmentActivity implements DatePickerDialogL
 		//Milestone Dialog
 		private void showMilestonesDialog(){
 			BabyActivity act = map.get(curPosition);
-			DialogFragment frag = MilestoneDialogFragment.newInstance(1, act.getDate(), act.getTime(), act.getInfo());
+			DialogFragment frag = FragmentMilestoneDialog.newInstance(1, act.getDate(), act.getTime(), act.getInfo());
 			frag.show(getSupportFragmentManager(), "MilestoneDialog");
 		}
 		
@@ -421,7 +421,7 @@ public class DayActivities extends FragmentActivity implements DatePickerDialogL
 		//sleep dialog
 		private void showSleepDialog(){
 			BabyActivity act = map.get(curPosition);
-			DialogFragment frag = SleepDialogFragment.newInstance(1, act.getDate(), act.getTime(), act.getInfo(), true, "");
+			DialogFragment frag = FragmentSleepDialog.newInstance(1, act.getDate(), act.getTime(), act.getInfo(), true, "");
 			frag.show(getSupportFragmentManager(), "SleepDialog");
 		}
 

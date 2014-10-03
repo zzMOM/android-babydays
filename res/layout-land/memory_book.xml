@@ -12,7 +12,7 @@
     
     <fragment 
         android:id="@+id/dateListFrag"
-        class="com.example.babydays.DateListFragment"
+        class="com.example.babydays.FragmentDateList"
         android:layout_width="0dp"
     	android:layout_height="match_parent"
     	android:layout_weight="1"

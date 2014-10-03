@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.example.babydays.DiaperDialogFragment.DiaperDialogListener;
-import com.example.babydays.FeedDialogFragment.FeedDialogListener;
-import com.example.babydays.MilestoneDialogFragment.MilestoneDialogListener;
-import com.example.babydays.SleepDialogFragment.SleepDialogListener;
+import com.example.babydays.FragmentDiaperDialog.DiaperDialogListener;
+import com.example.babydays.FragmentFeedDialog.FeedDialogListener;
+import com.example.babydays.FragmentHeightDialog.HeightDialogListener;
+import com.example.babydays.FragmentMilestoneDialog.MilestoneDialogListener;
+import com.example.babydays.FragmentSleepDialog.SleepDialogListener;
+import com.example.babydays.FragmentWeightDialog.WeightDialogListener;
 
 import android.app.ActionBar;
 import android.content.Intent;
@@ -35,7 +37,9 @@ import android.widget.Toast;
 public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 															, DiaperDialogListener
 															, MilestoneDialogListener
-															, SleepDialogListener{
+															, SleepDialogListener
+															, HeightDialogListener
+															, WeightDialogListener{
 	//SharedPreferences to record nap start or not
 	private static final String NAP_CLOCK = "napclock";
 	private SharedPreferences mPrefsStart;
@@ -141,6 +145,12 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 				case 4:
 					openDiary();
 					break;
+				case 5:
+					showHeightDialog();
+					break;
+				case 6:
+					showWeightDialog();
+					break;
 				}
 				
 			}
@@ -166,6 +176,12 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 					break;
 				case 4:
 					openDiary();
+					break;
+				case 5:
+					showHeightDialog();
+					break;
+				case 6:
+					showWeightDialog();
 					break;
 				}
 				return false;
@@ -233,7 +249,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 	
 	//Feed Dialog
 	private void showFeedDialog(){
-		DialogFragment frag = FeedDialogFragment.newInstance(clicktype, "", "", "");
+		DialogFragment frag = FragmentFeedDialog.newInstance(clicktype, "", "", "");
 		frag.show(getSupportFragmentManager(), "FeedDialog");
 	}
 	
@@ -252,7 +268,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 
 	//Diaper Dialog
 	private void showDiaperDialog(){
-		DialogFragment frag = DiaperDialogFragment.newInstance(clicktype, "", "", "");
+		DialogFragment frag = FragmentDiaperDialog.newInstance(clicktype, "", "", "");
 		frag.show(getSupportFragmentManager(), "DiaperDialog");
 	}
 	
@@ -269,7 +285,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 	
 	//Milestone Dialog
 	private void showMilestonesDialog(){
-		DialogFragment frag = MilestoneDialogFragment.newInstance(clicktype, "", "", "");
+		DialogFragment frag = FragmentMilestoneDialog.newInstance(clicktype, "", "", "");
 		frag.show(getSupportFragmentManager(), "MilestoneDialog");
 	}
 	
@@ -285,7 +301,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 	private void showSleepDialog(){
 		String start = mPrefsTime.getString(START_TIME, "0");
 		isStart = mPrefsStart.getBoolean(NAP_CLOCK, false);
-		DialogFragment frag = SleepDialogFragment.newInstance(clicktype, "", "", "", isStart, start);
+		DialogFragment frag = FragmentSleepDialog.newInstance(clicktype, "", "", "", isStart, start);
 		frag.show(getSupportFragmentManager(), "SleepDialog");
 	}
 
@@ -315,6 +331,28 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 			insertCurrentActivity(date, time, type, info);
 		}
 		
+	}
+	
+	//Height Dialog
+	private void showHeightDialog(){
+		DialogFragment frag = FragmentHeightDialog.newInstance("", "");
+		frag.show(getSupportFragmentManager(), "HeightDialog");
+	}
+	
+	@Override
+	public void onFinishSetHeight(String date, String time, String type, String info) {
+		insertCurrentActivity(date, time, type, info);
+	}
+	
+	//Weight Dialog
+	private void showWeightDialog(){
+		DialogFragment frag = FragmentWeightDialog.newInstance("", "");
+		frag.show(getSupportFragmentManager(), "WeightDialog");
+	}
+	
+	@Override
+	public void onFinishSetWeight(String date, String time, String type, String info) {
+		insertCurrentActivity(date, time, type, info);
 	}
 	
 	/*

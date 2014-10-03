@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <ViewStub 
+        android:id="@+id/dateTimeStub"
+        android:inflatedId="@+id/dateTimeInflated"
+        android:layout="@layout/date_time_merge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:orientation="horizontal" >
+	    
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/weight"
+            android:textSize="20sp" />
+        
+        <EditText
+            android:id="@+id/lb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_vertical|top"
+            android:layout_marginTop="20dp"
+            android:ems="2"
+            android:inputType="number"
+            android:textSize="20sp" />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/lb"
+            android:textSize="20sp" />
+        
+        <EditText
+            android:id="@+id/oz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_vertical|top"
+            android:layout_marginTop="20dp"
+            android:ems="2"
+            android:inputType="number"
+            android:textSize="20sp" />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/oz"
+            android:textSize="20sp" />
+    
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="horizontal">
+    
+	    <Button
+	        android:id="@+id/cancel"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:text="@string/cancel"/>
+	    
+	    <Button
+	        android:id="@+id/ok"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:text="@string/ok"/>
+	    
+    </LinearLayout>
+    
+
+</LinearLayout>
