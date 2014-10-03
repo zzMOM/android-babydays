@@ -1,13 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pager"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.babydays.Charts" >
-
-    <ImageView
-        android:id="@+id/chartImageView" 
-        android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:contentDescription="@string/chart_image"/>
-
-</RelativeLayout>
+    android:layout_height="match_parent" />
