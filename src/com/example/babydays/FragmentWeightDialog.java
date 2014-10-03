@@ -67,8 +67,8 @@ public class FragmentWeightDialog  extends DialogFragment implements DatePickerD
                 int f = lbText.getText().toString().length();
                 int i = ozText.getText().length();
                 if(f > 0 || i > 0){
-                	info = (f == 0 ? 0 + "" : lbText.getText().toString()) + "feet"
-                			+ (i == 0 ? 0 + "" : ozText.getText().toString()) + "inch";
+                	info = (f == 0 ? 0 + "" : lbText.getText().toString()) + "lb"
+                			+ (i == 0 ? 0 + "" : ozText.getText().toString()) + "oz";
                 	//insertCurrentActivity(type, info);
                 	WeightDialogListener listener = (WeightDialogListener) getActivity();
                 	listener.onFinishSetWeight(showDate.getText().toString()
@@ -116,8 +116,8 @@ public class FragmentWeightDialog  extends DialogFragment implements DatePickerD
         }
         
         if(info.length() > 0){//set info sepcific value
-        	lbText.setText(info.split("feet")[0]);
-        	ozText.setText(info.split("feet")[1].split("inch")[0]);
+        	lbText.setText(info.split("lb")[0]);
+        	ozText.setText(info.split("lb")[1].split("oz")[0]);
         }
         
         

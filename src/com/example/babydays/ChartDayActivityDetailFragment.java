@@ -39,6 +39,7 @@ public class ChartDayActivityDetailFragment extends Fragment{
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(getActivity());
+		String[] type = new String[]{"FeedMilk", "Diaper", "Sleep"};
 		routine = dbHelper.getAllBabyActivity();
 		
 		
