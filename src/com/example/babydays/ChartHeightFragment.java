@@ -87,7 +87,7 @@ public class ChartHeightFragment extends Fragment{
 		maxValueX = (int)Math.round(maxValueX + 0.5);
 		GraphViewSeries series = new GraphViewSeries(data);
 			 
-		GraphView graphView = new LineGraphView(
+		MyBarGraphView graphView = new MyBarGraphView(
 		    getActivity() // context
 		    , "HeightChart" // heading
 		);
@@ -101,7 +101,7 @@ public class ChartHeightFragment extends Fragment{
 		graphView.setManualYAxisBounds(maxValueY, 0);//set Y axis max and min
 		graphView.getGraphViewStyle().setNumVerticalLabels(intervals);//set Y axis scale
 		//set X axis
-		intervals = 0;
+		/*intervals = 0;
 		while(intervals < maxValueX){
 			intervals++;
 		}
@@ -109,8 +109,15 @@ public class ChartHeightFragment extends Fragment{
 		for(int i = 0; i <= intervals; i++){
 			horizontalLabel[i] = i + " year";
 		}
-		graphView.setHorizontalLabels(horizontalLabel);
-			 
+		graphView.setHorizontalLabels(horizontalLabel);*/
+		//graphView.setDrawDataPoints(true);
+		//graphView.setDataPointsRadius(15f);
+		graphView.setYValue(yvalue);
+		graphView.setDrawValuesOnTop(true);
+		graphView.setXValue(xvalue);
+		graphView.setDrawXValues(true);
+		graphView.setShowHorizontalLabels(false);
+		graphView.setShowHorizontalLabels(false);
 		LinearLayout layout = (LinearLayout) view.findViewById(R.id.graph);
 		layout.addView(graphView);
 	}
