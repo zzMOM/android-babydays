@@ -554,7 +554,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     }
     
     /*select record by tpye*/
-    public List<BabyActivity> getBabyActivityByType(String type){
+    public List<BabyActivity> getBabyActivityByType(String[] type){
     	List<BabyActivity> babyActivityList = new LinkedList<BabyActivity>();
     	 
         // 1. build the query
@@ -564,11 +564,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         // 2. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
         
-        String whereClause = "type = ?";
-        String[] whereArgs = new String[] {
-        	    type
-        	};
-        
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < type.length; i++){
+        	if(i == 0){
+        		builder.append("type=?");
+        	} else {
+        		builder.append(" or type=?");
+        	}
+        }
+        String whereClause = builder.toString();
+        String[] whereArgs = type;
         
         Cursor cursor = 
                 db.query(TABLE_BABY_ACTIVITIES, // a. table
@@ -577,7 +582,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                 whereArgs, // d. selections args
                 null, // e. group by
                 null, // f. having
-                KEY_DATE, // g. order by
+                "strftime('%Y-%m-%d', date)", // g. order by
                 null); // h. limit
  
         // 3. go over each row, build babyActivity and add it to list
@@ -631,7 +636,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                 whereArgs, // d. selections args
                 null, // e. group by
                 null, // f. having
-                KEY_DATE, // g. order by
+                "strftime('%Y-%m-%d', date)", // g. order by
                 null); // h. limit
  
         // 3. go over each row, and add it to list

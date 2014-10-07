@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
@@ -41,56 +42,74 @@ public class ChartHeightFragment extends Fragment{
 	}
 	
 	private void populateGraphView(View view){
-		/*SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy");
-		
-		routine = dbHelper.getBabyActivityByType("Height");
+		SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy");
+		String[] type = new String[]{"Height"};
+		routine = dbHelper.getBabyActivityByType(type);
 		int n = routine.size();
-		String birthday = dbHelper.getBabyInfo(0).getDate().toString();
-		if(birthday.length() == 0 && n == 0){
+		BabyInfo bi = dbHelper.getBabyInfo(0);
+		String birthday = null;
+		if(bi == null && n == 0){
 			return;
-		} else if(birthday.length() == 0){
+		} else if(bi == null && n!= 0){
 			birthday = routine.get(0).getDate().toString();
+		} else {
+			birthday = bi.getDate().toString();
 		}
 		
 		GraphViewData[] data = new GraphViewData[n];
-		String[] horizontalLabel = new String[n];
-		String[] verticalLabel = new String[n];
+		String[] xvalue = new String[n];
+		String[] yvalue = new String[n];
 		
+		double maxValueY = 0;
+		double maxValueX = 0;
 		for(int i = 0; i < n; i++){
-			horizontalLabel[i] = routine.get(i).getDate().toString();
-			verticalLabel[i] = routine.get(i).getInfo().toString();
+			xvalue[i] = routine.get(i).getDate().toString();
+			yvalue[i] = routine.get(i).getInfo().toString();
 			double diff = 0.0;
 			double value = 0.0;
 			try{
 				Date date1 = df.parse(birthday);
-				Date date2 = df.parse(horizontalLabel[i]);
-				diff = date2.getDate() - date1.getDate();
+				Date date2 = df.parse(xvalue[i]);
+				diff = date2.getTime() - date1.getTime();
+				diff = diff / (1000 * 60 * 60 * 24);
+				diff = diff / 365;
 			} catch (java.text.ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			String feet = verticalLabel[i].split("feed")[0];
-			String inch = verticalLabel[i].split("feed")[1].split("inch")[0];
-			value = Integer.parseInt(feet) + Integer.parseInt(inch) / 12;
+			String feet = yvalue[i].split("feet")[0];
+			String inch = yvalue[i].split("feet")[1].split("inch")[0];
+			value = Integer.parseInt(feet) + Double.parseDouble(inch) / 12;
 			data[i] = new GraphViewData(diff, value);
+			maxValueY = Math.max(maxValueY, value);
+			maxValueX = Math.max(maxValueX, diff);
 		}
-		GraphViewSeries series = new GraphViewSeries(data);*/
-		GraphViewSeries series = new GraphViewSeries(new GraphViewData[] {
-			    new GraphViewData(1, 2.0d)
-			    , new GraphViewData(2, 1.5d)
-			    , new GraphViewData(3, 2.5d)
-			    , new GraphViewData(4, 1.0d)
-			});
+		maxValueY = (int)Math.round(maxValueY + 0.5);
+		maxValueX = (int)Math.round(maxValueX + 0.5);
+		GraphViewSeries series = new GraphViewSeries(data);
 			 
 		GraphView graphView = new LineGraphView(
 		    getActivity() // context
-		    , "GraphViewDemo" // heading
+		    , "HeightChart" // heading
 		);
 		
 		graphView.addSeries(series); // data
-		
-		//graphView.setHorizontalLabels(horizontalLabel);
-		//graphView.setVerticalLabels(verticalLabel);
+		//set Y axis
+		int intervals = 0;
+		while(intervals < maxValueY){
+			intervals++;
+		}
+		graphView.setManualYAxisBounds(maxValueY, 0);//set Y axis max and min
+		graphView.getGraphViewStyle().setNumVerticalLabels(intervals);//set Y axis scale
+		//set X axis
+		intervals = 0;
+		while(intervals < maxValueX){
+			intervals++;
+		}
+		String[] horizontalLabel = new String[intervals + 1];
+		for(int i = 0; i <= intervals; i++){
+			horizontalLabel[i] = i + " year";
+		}
+		graphView.setHorizontalLabels(horizontalLabel);
 			 
 		LinearLayout layout = (LinearLayout) view.findViewById(R.id.graph);
 		layout.addView(graphView);

@@ -96,7 +96,7 @@ public class DetailPort extends Activity{
 	  			public void onItemSelected(AdapterView<?> parent, View view, 
 	  		            int pos, long id) {
 	  				// TODO Auto-generated method stub
-	  				String type = spinnerlist.get(pos);
+	  				String[] type = new String[]{spinnerlist.get(pos)};
 	  				resultActivities = dbHelper.getBabyActivityByType(type);
 	  				printResult(resultActivities);
 	  				

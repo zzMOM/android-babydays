@@ -49,7 +49,7 @@
             android:layout_gravity="fill_vertical|top"
             android:layout_marginTop="20dp"
             android:ems="2"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:textSize="20sp" />
         
         <TextView
