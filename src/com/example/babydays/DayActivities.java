@@ -10,8 +10,10 @@ import java.util.List;
 import com.example.babydays.FragmentDatePicker.DatePickerDialogListener;
 import com.example.babydays.FragmentDiaperDialog.DiaperDialogListener;
 import com.example.babydays.FragmentFeedDialog.FeedDialogListener;
+import com.example.babydays.FragmentHeightDialog.HeightDialogListener;
 import com.example.babydays.FragmentMilestoneDialog.MilestoneDialogListener;
 import com.example.babydays.FragmentSleepDialog.SleepDialogListener;
+import com.example.babydays.FragmentWeightDialog.WeightDialogListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -34,7 +36,9 @@ public class DayActivities extends FragmentActivity implements DatePickerDialogL
 															 , FeedDialogListener
 															 , SleepDialogListener
 															 , DiaperDialogListener
-															 , MilestoneDialogListener{
+															 , MilestoneDialogListener
+															 , HeightDialogListener
+															 , WeightDialogListener{
 	private MySQLiteHelper dbHelper;//database
 	//calendar
 	private Calendar c;
@@ -241,6 +245,10 @@ public class DayActivities extends FragmentActivity implements DatePickerDialogL
 			showDiaperDialog();
 		} else if(type.equals("Milestone")){
 			showMilestonesDialog();
+		} else if(type.equals("Height")){
+			showHeightDialog();
+		} else if(type.equals("Weight")){
+			showWeightDialog();
 		}
 	}
 	
@@ -428,6 +436,32 @@ public class DayActivities extends FragmentActivity implements DatePickerDialogL
 		@Override
 		public void onFinishSetSleep(String date, String time, String type,
 				String info, boolean isStart, String start) {
+			updateCurrentActivity(date, time, type, info);
+			showActivityByDate();
+		}
+		
+		//Height dialog
+		private void showHeightDialog(){
+			BabyActivity act = map.get(curPosition);
+			DialogFragment frag = FragmentHeightDialog.newInstance(act.getDate(), act.getInfo());
+			frag.show(getSupportFragmentManager(), "HeightDialog");
+		}
+
+		@Override
+		public void onFinishSetHeight(String date, String time, String type, String info) {
+			updateCurrentActivity(date, time, type, info);
+			showActivityByDate();
+		}
+		
+		//Weight dialog
+		private void showWeightDialog(){
+			BabyActivity act = map.get(curPosition);
+			DialogFragment frag = FragmentHeightDialog.newInstance(act.getDate(), act.getInfo());
+			frag.show(getSupportFragmentManager(), "WeightDialog");
+		}
+
+		@Override
+		public void onFinishSetWeight(String date, String time, String type, String info) {
 			updateCurrentActivity(date, time, type, info);
 			showActivityByDate();
 		}

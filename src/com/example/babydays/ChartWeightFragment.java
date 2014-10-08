@@ -14,18 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-public class ChartHeightFragment extends Fragment{
+public class ChartWeightFragment extends Fragment{
 	private MySQLiteHelper dbHelper;
 	private List<BabyActivity> routine;
 	
-	
-	ChartHeightFragment(){}
+	ChartWeightFragment(){}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View rootView = inflater.inflate(R.layout.fragment_chart_height,
+		View rootView = inflater.inflate(R.layout.fragment_chart_weight,
 				container, false);
 		
 		//create database helper
@@ -38,7 +37,7 @@ public class ChartHeightFragment extends Fragment{
 	
 	private void populateGraphView(View view){
 		SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy");
-		String[] type = new String[]{"Height"};
+		String[] type = new String[]{"Weight"};
 		routine = dbHelper.getBabyActivityByType(type);
 		int n = routine.size();
 		//BabyInfo bi = dbHelper.getBabyInfo(0);
@@ -68,12 +67,9 @@ public class ChartHeightFragment extends Fragment{
 			} catch (java.text.ParseException e) {
 				e.printStackTrace();
 			}
-			String feet = yvalue[i].split("feet")[0];
-			String inch = yvalue[i].split("feet")[1].split("inch")[0];
-			value = Integer.parseInt(feet) + Double.parseDouble(inch) / 12;
-			if(Integer.parseInt(feet) == 0){//if feet is 0, set yvalue format xinche
-				yvalue[i] = inch + "inch";
-			}
+			String lb = yvalue[i].split("lb")[0];
+			String oz = yvalue[i].split("lb")[1].split("oz")[0];
+			value = Integer.parseInt(lb) + Integer.parseInt(oz) / 12;
 			data[i] = new GraphViewData(diff, value);
 			maxValueY = Math.max(maxValueY, value);
 			maxValueX = Math.max(maxValueX, diff);
@@ -86,13 +82,13 @@ public class ChartHeightFragment extends Fragment{
 			 
 		MyBarGraphView graphView = new MyBarGraphView(
 		    getActivity() // context
-		    , "Height Chart" // heading
+		    , "Weight Chart" // heading
 		);
 		
 		//set Y axis
 		int intervals = 0;
-		while(intervals < maxValueY){
-			intervals++;
+		while(intervals < maxValueY / 10){
+			intervals++;;
 		}
 		graphView.setManualYAxisBounds(maxValueY, 0);//set Y axis max and min
 		graphView.getGraphViewStyle().setNumVerticalLabels(intervals);//set Y axis scale
@@ -114,4 +110,5 @@ public class ChartHeightFragment extends Fragment{
 		LinearLayout layout = (LinearLayout) view.findViewById(R.id.graph);
 		layout.addView(graphView);
 	}
+	
 }

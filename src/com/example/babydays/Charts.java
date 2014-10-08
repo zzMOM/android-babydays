@@ -119,7 +119,9 @@ public class Charts extends FragmentActivity implements ActionBar.TabListener {
                     return new ChartDayActivityDetailFragment();
                 case 1:
                 	return new ChartHeightFragment();
-
+                case 2:
+                	return new ChartWeightFragment();
+                	
                 default:
                     // The other sections of the app are dummy placeholders.
                     Fragment fragment = new DummySectionFragment();

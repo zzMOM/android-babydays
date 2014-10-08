@@ -17,6 +17,7 @@ public class MyBarGraphView extends BarGraphView{
 	private int valuesOnTopColor = Color.RED;
 	private String[] yvalue;
 	private String[] xvalue;
+	private String[] horizontalLabel;
 	
 	public MyBarGraphView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -57,7 +58,7 @@ public class MyBarGraphView extends BarGraphView{
 			float border, double minX, double minY, double diffX, double diffY,
 			float horstart, GraphViewSeriesStyle style) {
 		float colwidth = graphwidth / (values.length);
-
+		float inwidth = graphwidth / horizontalLabel.length;
 		paint.setStrokeWidth(style.thickness);
 
 		float offset = 0;
@@ -75,9 +76,9 @@ public class MyBarGraphView extends BarGraphView{
 				paint.setColor(style.color);
 			}
 
-			float left = (i * colwidth) + horstart - offset + colwidth / 3;//left + colwidth/3
+			float left = (float) ((values[i].getX() * inwidth) + horstart - offset - colwidth / 20);//left + colwidth/3
 			float top = (border - y) + graphheight;
-			float right = ((i * colwidth) + horstart) + (colwidth - 1) - offset - colwidth / 3;//right - colwidth/3
+			float right = (float) ((values[i].getX() * inwidth) + horstart - offset + colwidth / 20);//right - colwidth/3
 			canvas.drawRect(left, top, right, graphheight + border - 1, paint);
 
 			// -----Set values on top of graph---------
@@ -141,5 +142,13 @@ public class MyBarGraphView extends BarGraphView{
 	
 	public String[] getXValue(){
 		return xvalue;
+	}
+	
+	public void setMyHorizontalLabel(String[] honrizontalLabel){
+		this.horizontalLabel = honrizontalLabel;
+	}
+	
+	public String[] getMyHorizontalLabel(){
+		return horizontalLabel;
 	}
 }
