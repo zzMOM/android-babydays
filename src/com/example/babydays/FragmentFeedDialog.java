@@ -62,12 +62,11 @@ public class FragmentFeedDialog extends DialogFragment implements DatePickerDial
         	dialog.setTitle("Insert a new feed activity");
         }
         
+        textOZ = (EditText) dialog.findViewById(R.id.editTextOZ);
         dateTimeStub = (ViewStub) dialog.findViewById(R.id.dateTimeStub);
         dateTimeStub.setLayoutResource(R.layout.date_time_merge);
         View inflatedView = dateTimeStub.inflate();
-        setDateTimeMergePart(inflatedView);
-        
-        textOZ = (EditText) dialog.findViewById(R.id.editTextOZ);
+        setDateTimeMergePart(inflatedView);  
 
         Button okButton = (Button) dialog.findViewById(R.id.ok);
         // if decline button is clicked, close the custom dialog

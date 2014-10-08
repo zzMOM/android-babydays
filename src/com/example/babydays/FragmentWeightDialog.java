@@ -51,12 +51,12 @@ public class FragmentWeightDialog  extends DialogFragment implements DatePickerD
         
         dateTimeStub = (ViewStub) dialog.findViewById(R.id.dateTimeStub);
         dateTimeStub.setLayoutResource(R.layout.date_time_merge);
-        View inflatedView = dateTimeStub.inflate();
-        setDateTimeMergePart(inflatedView);
-        
         lbText = (EditText) dialog.findViewById(R.id.lb);
         ozText = (EditText) dialog.findViewById(R.id.oz);
 
+        View inflatedView = dateTimeStub.inflate();
+        setDateTimeMergePart(inflatedView);
+        
         Button okButton = (Button) dialog.findViewById(R.id.ok);
         // if decline button is clicked, close the custom dialog
         okButton.setOnClickListener(new OnClickListener() {

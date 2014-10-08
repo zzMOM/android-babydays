@@ -51,11 +51,10 @@ public class FragmentHeightDialog  extends DialogFragment implements DatePickerD
         
         dateTimeStub = (ViewStub) dialog.findViewById(R.id.dateTimeStub);
         dateTimeStub.setLayoutResource(R.layout.date_time_merge);
-        View inflatedView = dateTimeStub.inflate();
-        setDateTimeMergePart(inflatedView);
-        
         feetText = (EditText) dialog.findViewById(R.id.feet);
         inchText = (EditText) dialog.findViewById(R.id.inch);
+        View inflatedView = dateTimeStub.inflate();
+        setDateTimeMergePart(inflatedView);
 
         Button okButton = (Button) dialog.findViewById(R.id.ok);
         // if decline button is clicked, close the custom dialog

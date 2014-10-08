@@ -456,7 +456,7 @@ public class DayActivities extends FragmentActivity implements DatePickerDialogL
 		//Weight dialog
 		private void showWeightDialog(){
 			BabyActivity act = map.get(curPosition);
-			DialogFragment frag = FragmentHeightDialog.newInstance(act.getDate(), act.getInfo());
+			DialogFragment frag = FragmentWeightDialog.newInstance(act.getDate(), act.getInfo());
 			frag.show(getSupportFragmentManager(), "WeightDialog");
 		}
 
