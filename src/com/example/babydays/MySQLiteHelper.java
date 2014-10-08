@@ -567,23 +567,25 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < type.length; i++){
         	if(i == 0){
-        		builder.append("type=?");
+        		builder.append("type='").append(type[i]).append("'");
         	} else {
-        		builder.append(" or type=?");
+        		builder.append(" or type='").append(type[i]).append("'");
         	}
         }
-        String whereClause = builder.toString();
-        String[] whereArgs = type;
-        
-        Cursor cursor = 
+        //String whereClause = builder.toString();
+        //String[] whereArgs = type;
+        String q = "select * from " + TABLE_BABY_ACTIVITIES + " where " + builder.toString() 
+        			+ " order by substr(date,7,4)||'-'||substr(date,1,2)||'-'||substr(date,4,2)";
+        Cursor cursor = db.rawQuery(q, null);
+        /*Cursor cursor = 
                 db.query(TABLE_BABY_ACTIVITIES, // a. table
                 COLUMNS, // b. column names
                 whereClause, // c. selections 
                 whereArgs, // d. selections args
                 null, // e. group by
                 null, // f. having
-                "strftime('%Y-%m-%d', date)", // g. order by
-                null); // h. limit
+                KEY_DATE, // g. order by
+                null); // h. limit*/
  
         // 3. go over each row, build babyActivity and add it to list
         BabyActivity babyActivity = null;

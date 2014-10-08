@@ -62,6 +62,8 @@ public class ChartHeightFragment extends Fragment{
 		
 		double maxValueY = 0;
 		double maxValueX = 0;
+		int startYear = Integer.parseInt(birthday.substring(birthday.length() - 4, birthday.length()));
+		int lastYear = startYear;
 		for(int i = 0; i < n; i++){
 			xvalue[i] = routine.get(i).getDate().toString();
 			yvalue[i] = routine.get(i).getInfo().toString();
@@ -79,9 +81,14 @@ public class ChartHeightFragment extends Fragment{
 			String feet = yvalue[i].split("feet")[0];
 			String inch = yvalue[i].split("feet")[1].split("inch")[0];
 			value = Integer.parseInt(feet) + Double.parseDouble(inch) / 12;
+			if(Integer.parseInt(feet) == 0){//if feet is 0, set yvalue format xinche
+				yvalue[i] = inch + "inch";
+			}
 			data[i] = new GraphViewData(diff, value);
 			maxValueY = Math.max(maxValueY, value);
 			maxValueX = Math.max(maxValueX, diff);
+			lastYear = Math.max(lastYear, Integer.parseInt(xvalue[i].substring(xvalue[i].length() - 4, xvalue[i].length())));
+			xvalue[i] = xvalue[i].substring(0, xvalue[i].length() - 5);//set xvalue format "6-24"
 		}
 		maxValueY = (int)Math.round(maxValueY + 0.5);
 		maxValueX = (int)Math.round(maxValueX + 0.5);
@@ -101,23 +108,18 @@ public class ChartHeightFragment extends Fragment{
 		graphView.setManualYAxisBounds(maxValueY, 0);//set Y axis max and min
 		graphView.getGraphViewStyle().setNumVerticalLabels(intervals);//set Y axis scale
 		//set X axis
-		/*intervals = 0;
-		while(intervals < maxValueX){
-			intervals++;
+		String[] horizontalLabel = new String[lastYear - startYear + 1];
+		for(int i = 0; i <= lastYear - startYear; i++){
+			horizontalLabel[i] = startYear + i + "";
 		}
-		String[] horizontalLabel = new String[intervals + 1];
-		for(int i = 0; i <= intervals; i++){
-			horizontalLabel[i] = i + " year";
-		}
-		graphView.setHorizontalLabels(horizontalLabel);*/
+		graphView.setHorizontalLabels(horizontalLabel);
 		//graphView.setDrawDataPoints(true);
 		//graphView.setDataPointsRadius(15f);
 		graphView.setYValue(yvalue);
 		graphView.setDrawValuesOnTop(true);
 		graphView.setXValue(xvalue);
 		graphView.setDrawXValues(true);
-		graphView.setShowHorizontalLabels(false);
-		graphView.setShowHorizontalLabels(false);
+		//graphView.setShowHorizontalLabels(false);
 		LinearLayout layout = (LinearLayout) view.findViewById(R.id.graph);
 		layout.addView(graphView);
 	}
