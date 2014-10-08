@@ -46,15 +46,11 @@ public class ChartHeightFragment extends Fragment{
 		String[] type = new String[]{"Height"};
 		routine = dbHelper.getBabyActivityByType(type);
 		int n = routine.size();
-		BabyInfo bi = dbHelper.getBabyInfo(0);
-		String birthday = null;
-		if(bi == null && n == 0){
-			return;
-		} else if(bi == null && n!= 0){
-			birthday = routine.get(0).getDate().toString();
-		} else {
-			birthday = bi.getDate().toString();
-		}
+		//BabyInfo bi = dbHelper.getBabyInfo(0);
+		List<BabyInfo> blist = dbHelper.getAllBabyInfo();
+		String birthday = blist.get(0).getDate().toString();
+		int startYear = Integer.parseInt(birthday.substring(birthday.length() - 4, birthday.length()));
+		String startDay = "01-01-" + startYear;
 		
 		GraphViewData[] data = new GraphViewData[n];
 		String[] xvalue = new String[n];
@@ -62,7 +58,6 @@ public class ChartHeightFragment extends Fragment{
 		
 		double maxValueY = 0;
 		double maxValueX = 0;
-		int startYear = Integer.parseInt(birthday.substring(birthday.length() - 4, birthday.length()));
 		int lastYear = startYear;
 		for(int i = 0; i < n; i++){
 			xvalue[i] = routine.get(i).getDate().toString();
@@ -70,7 +65,7 @@ public class ChartHeightFragment extends Fragment{
 			double diff = 0.0;
 			double value = 0.0;
 			try{
-				Date date1 = df.parse(birthday);
+				Date date1 = df.parse(startDay);
 				Date date2 = df.parse(xvalue[i]);
 				diff = date2.getTime() - date1.getTime();
 				diff = diff / (1000 * 60 * 60 * 24);

@@ -124,8 +124,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
  
         // 2. build query
         Cursor cursor = 
-                db.query(TABLE_BABY_ACTIVITIES, // a. table
-                COLUMNS, // b. column names
+                db.query(TABLE_BABY_INFO, // a. table
+                new String[]{BABY_ID, BABY_NAME, BABY_BIRTH_DATE, BABY_BIRTH_TIME, BABY_BIRTH_HEIGHT, BABY_BIRTH_WEIGHT}, // b. column names
                 " id = ?", // c. selections 
                 new String[] { String.valueOf(id) }, // d. selections args
                 null, // e. group by
