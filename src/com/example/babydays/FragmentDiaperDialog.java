@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.babydays.FragmentDatePicker.DatePickerDialogListener;
-import com.example.babydays.TimePickerFragment.TimePickerDialogListener;
+import com.example.babydays.FragmentTimePicker.TimePickerDialogListener;
 
 public class FragmentDiaperDialog extends DialogFragment implements DatePickerDialogListener
 																	,TimePickerDialogListener{
@@ -232,7 +232,7 @@ public class FragmentDiaperDialog extends DialogFragment implements DatePickerDi
         	ft.remove(pre);
         }
         ft.addToBackStack(null);
-		TimePickerFragment frag = TimePickerFragment.newInstance(hour, minute);
+		FragmentTimePicker frag = FragmentTimePicker.newInstance(hour, minute);
 		frag.setTargetFragment(this, 1);
 		frag.show(fm, "TimePicker");
 	}

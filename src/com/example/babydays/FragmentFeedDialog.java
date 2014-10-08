@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import com.example.babydays.FragmentDatePicker.DatePickerDialogListener;
-import com.example.babydays.TimePickerFragment.TimePickerDialogListener;
+import com.example.babydays.FragmentTimePicker.TimePickerDialogListener;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -78,9 +78,11 @@ public class FragmentFeedDialog extends DialogFragment implements DatePickerDial
                 if(textOZ.getText().toString().length() > 0){
                 	info = textOZ.getText().toString() + "oz";
                 	//insertCurrentActivity(type, info);
+                	TimeFormatTransfer tf = new TimeFormatTransfer();
+                	String time = tf.hour12to24(showTime.getText().toString());
                 	FeedDialogListener listener = (FeedDialogListener) getActivity();
                 	listener.onFinishSetFeed(showDate.getText().toString()
-                							, showTime.getText().toString(), type, info);
+                							, time, type, info);
                 }
             	
                 // Close dialog
@@ -207,7 +209,7 @@ public class FragmentFeedDialog extends DialogFragment implements DatePickerDial
         	ft.remove(pre);
         }
         ft.addToBackStack(null);
-		TimePickerFragment frag = TimePickerFragment.newInstance(hour, minute);
+		FragmentTimePicker frag = FragmentTimePicker.newInstance(hour, minute);
 		frag.setTargetFragment(this, 1);
 		frag.show(fm, "TimePicker");
 	}

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import com.example.babydays.FragmentDatePicker.DatePickerDialogListener;
-import com.example.babydays.TimePickerFragment.TimePickerDialogListener;
+import com.example.babydays.FragmentTimePicker.TimePickerDialogListener;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -100,9 +100,11 @@ public class FragmentMilestoneDialog extends DialogFragment implements DatePicke
 	                	   info.append(milestoneSelectedItems[(Integer) mSelectedItems.get(i)] + " ");
 	                   }
 	                   if(info.toString() != ""){
+	                	   TimeFormatTransfer tf = new TimeFormatTransfer();
+	                   	   String time = tf.hour12to24(showTime.getText().toString());
 	                	   MilestoneDialogListener listener = (MilestoneDialogListener) getActivity();
 	                   	   listener.onFinishSetMilestone(showDate.getText().toString()
-	                   							       , showTime.getText().toString(), type, info.toString());
+	                   							       , time, type, info.toString());
 	                   }
 	                   
 	                   dialog.dismiss();
@@ -226,7 +228,7 @@ public class FragmentMilestoneDialog extends DialogFragment implements DatePicke
         	ft.remove(pre);
         }
         ft.addToBackStack(null);
-		TimePickerFragment frag = TimePickerFragment.newInstance(hour, minute);
+		FragmentTimePicker frag = FragmentTimePicker.newInstance(hour, minute);
 		frag.setTargetFragment(this, 1);
 		frag.show(fm, "TimePicker");
 	}

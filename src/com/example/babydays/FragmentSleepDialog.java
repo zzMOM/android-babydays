@@ -23,7 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.babydays.FragmentDatePicker.DatePickerDialogListener;
-import com.example.babydays.TimePickerFragment.TimePickerDialogListener;
+import com.example.babydays.FragmentTimePicker.TimePickerDialogListener;
 
 public class FragmentSleepDialog extends DialogFragment implements DatePickerDialogListener
 														,TimePickerDialogListener{
@@ -105,10 +105,11 @@ public class FragmentSleepDialog extends DialogFragment implements DatePickerDia
          	    }
                 String info = hh + "h" + mm + "min";
                 String type = "Nap";
+                TimeFormatTransfer tf = new TimeFormatTransfer();
+            	String time = tf.hour12to24(showTime.getText().toString());
                 SleepDialogListener listener = (SleepDialogListener) getActivity();
             	 listener.onFinishSetSleep(showDate.getText().toString()
-										 , showTime.getText().toString()
-										 , type, info, isStart, "");
+										 , time, type, info, isStart, "");
                 // Close dialog
                 dialog.dismiss();
             }
@@ -325,7 +326,7 @@ public class FragmentSleepDialog extends DialogFragment implements DatePickerDia
         	ft.remove(pre);
         }
         ft.addToBackStack(null);
-		TimePickerFragment frag = TimePickerFragment.newInstance(hour, minute);
+		FragmentTimePicker frag = FragmentTimePicker.newInstance(hour, minute);
 		frag.setTargetFragment(this, 1);
 		frag.show(fm, "TimePicker");
 	}
