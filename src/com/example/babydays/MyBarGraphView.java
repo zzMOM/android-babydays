@@ -18,6 +18,7 @@ public class MyBarGraphView extends BarGraphView{
 	private String[] yvalue;
 	private String[] xvalue;
 	private String[] horizontalLabel;
+	private String[] verticalLabel;
 	
 	public MyBarGraphView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -57,6 +58,8 @@ public class MyBarGraphView extends BarGraphView{
 	public void drawSeries(Canvas canvas, GraphViewDataInterface[] values, float graphwidth, float graphheight,
 			float border, double minX, double minY, double diffX, double diffY,
 			float horstart, GraphViewSeriesStyle style) {
+		//paint.setColor(Color.MAGENTA);
+		//canvas.drawLine(0, border, 0, graphheight + border, paint);
 		float colwidth = graphwidth / (values.length);
 		float inwidth = graphwidth / horizontalLabel.length;
 		paint.setStrokeWidth(style.thickness);
@@ -64,9 +67,21 @@ public class MyBarGraphView extends BarGraphView{
 		float offset = 0;
 
 		// draw data
+		float lastmid = 0;
+		//int verticalLabelLength = verticalLabel.length - 1;
+		StringBuilder b = new StringBuilder();
+		String s = verticalLabel[0];//max value in vertical labels
+		for(int i = 0; i < s.length(); i++){
+			if(s.charAt(i) >= '0' && s.charAt(i) <= '9'){
+				b.append(s.charAt(i));
+			} else {
+				break;
+			}
+		}
+		int maxlabel = Integer.parseInt(b.toString());
 		for (int i = 0; i < values.length; i++) {
-			float valY = (float) (values[i].getY() - minY);
-			float ratY = (float) (valY / diffY);
+			//float valY = (float) (values[i].getY() - minY);
+			float ratY = (float) (values[i].getY() / maxlabel);//(float) (valY / diffY);
 			float y = graphheight * ratY;
 
 			// hook for value dependent color
@@ -91,11 +106,13 @@ public class MyBarGraphView extends BarGraphView{
 			}
 			
 			// -----Set X values x axis---------
-			if(drawXValues){
+			if(drawXValues && (left+right)/2 > lastmid + 20){
 				paint.setTextAlign(Align.CENTER);
 				paint.setColor(valuesOnTopColor );
 				canvas.drawText(xvalue[i], (left+right)/2, graphheight + border + 25, paint);
 			}
+			
+			lastmid = (left+right)/2 + 20;
 		}
 	}
 	
@@ -150,5 +167,13 @@ public class MyBarGraphView extends BarGraphView{
 	
 	public String[] getMyHorizontalLabel(){
 		return horizontalLabel;
+	}
+	
+	public void setMyVerticalLabel(String[] verticalLabel){
+		this.verticalLabel = verticalLabel;
+	}
+	
+	public String[] getMyVerticalLabel(){
+		return verticalLabel;
 	}
 }

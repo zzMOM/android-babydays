@@ -29,30 +29,28 @@ public class ChartWeightFragment extends Fragment{
 		
 		//create database helper
 		dbHelper = new MySQLiteHelper(getActivity());
-		
-		populateGraphView(rootView);
+		String[] type = new String[]{"Weight"};
+		routine = dbHelper.getBabyActivityByType(type);
+		if(routine.size() != 0){
+			populateGraphView(rootView);
+		}
 		
 		return rootView;
 	}
 	
 	private void populateGraphView(View view){
 		SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy");
-		String[] type = new String[]{"Weight"};
-		routine = dbHelper.getBabyActivityByType(type);
 		int n = routine.size();
-		//BabyInfo bi = dbHelper.getBabyInfo(0);
-		List<BabyInfo> blist = dbHelper.getAllBabyInfo();
-		String birthday = blist.get(0).getDate().toString();
-		int startYear = Integer.parseInt(birthday.substring(birthday.length() - 4, birthday.length()));
-		String startDay = "01-01-" + startYear;
 		
 		GraphViewData[] data = new GraphViewData[n];
 		String[] xvalue = new String[n];
 		String[] yvalue = new String[n];
 		
-		double maxValueY = 0;
-		double maxValueX = 0;
-		int lastYear = startYear;
+		String s = routine.get(0).getDate().toString();
+		int startYear = Integer.parseInt(s.substring(s.length() - 4, s.length()));
+		String startDay = "01-01-" + startYear;
+		s = routine.get(n - 1).getDate().toString();
+		int lastYear = Integer.parseInt(s.substring(s.length() - 4, s.length()));
 		for(int i = 0; i < n; i++){
 			xvalue[i] = routine.get(i).getDate().toString();
 			yvalue[i] = routine.get(i).getInfo().toString();
@@ -71,13 +69,9 @@ public class ChartWeightFragment extends Fragment{
 			String oz = yvalue[i].split("lb")[1].split("oz")[0];
 			value = Integer.parseInt(lb) + Integer.parseInt(oz) / 12;
 			data[i] = new GraphViewData(diff, value);
-			maxValueY = Math.max(maxValueY, value);
-			maxValueX = Math.max(maxValueX, diff);
-			lastYear = Math.max(lastYear, Integer.parseInt(xvalue[i].substring(xvalue[i].length() - 4, xvalue[i].length())));
 			xvalue[i] = xvalue[i].substring(0, xvalue[i].length() - 5);//set xvalue format "6-24"
 		}
-		maxValueY = (int)Math.round(maxValueY + 0.5);
-		maxValueX = (int)Math.round(maxValueX + 0.5);
+		double maxValueY = data[n - 1].getY();
 		GraphViewSeries series = new GraphViewSeries(data);
 			 
 		MyBarGraphView graphView = new MyBarGraphView(
@@ -86,12 +80,14 @@ public class ChartWeightFragment extends Fragment{
 		);
 		
 		//set Y axis
-		int intervals = 0;
-		while(intervals < maxValueY / 10){
-			intervals++;;
+		int intervals = (int) Math.round(maxValueY / 10 + 0.5);
+		String[] ylabels = new String[intervals + 1];
+		for(int i = 0; i <= intervals; i++){
+			ylabels[intervals - i] = (i * 10) + "lb";
 		}
-		graphView.setManualYAxisBounds(maxValueY, 0);//set Y axis max and min
-		graphView.getGraphViewStyle().setNumVerticalLabels(intervals);//set Y axis scale
+		//graphView.setManualYAxisBounds(maxValueY, 0);//set Y axis max and min
+		graphView.getGraphViewStyle().setNumVerticalLabels(intervals + 1);//set Y axis scale
+		graphView.setVerticalLabels(ylabels);
 		//set X axis
 		String[] horizontalLabel = new String[lastYear - startYear + 1];
 		for(int i = 0; i <= lastYear - startYear; i++){
@@ -106,6 +102,7 @@ public class ChartWeightFragment extends Fragment{
 		graphView.setDrawXValues(true);
 		//graphView.setShowHorizontalLabels(false);
 		graphView.setMyHorizontalLabel(horizontalLabel);
+		graphView.setMyVerticalLabel(ylabels);
 		graphView.addSeries(series); // data
 		LinearLayout layout = (LinearLayout) view.findViewById(R.id.graph);
 		layout.addView(graphView);

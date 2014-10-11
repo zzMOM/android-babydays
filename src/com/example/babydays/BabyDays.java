@@ -42,6 +42,7 @@ public class BabyDays extends Activity {
 			dbHelper.addBabyInfo(babyInfo);
 		} 
 		
+		babyInfoList = dbHelper.getAllBabyInfo();
 		babyInfo = babyInfoList.get(0);
 		//if babyInfo path value not null, load saved image
 		if(babyInfo.getProfilePath().length() > 0){

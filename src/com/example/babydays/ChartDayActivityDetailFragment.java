@@ -40,7 +40,7 @@ public class ChartDayActivityDetailFragment extends Fragment{
 		//create database helper
 		dbHelper = new MySQLiteHelper(getActivity());
 		//routine = dbHelper.getAllBabyActivity();
-		String[] type = new String[]{"FeedMilk", "Diaper", "Sleep"};
+		String[] type = new String[]{"FeedMilk", "Diaper", "Nap"};
 		routine = dbHelper.getBabyActivityByType(type);
 		
 		//set recordIndex to be the last record
