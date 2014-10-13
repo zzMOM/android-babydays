@@ -54,7 +54,7 @@ public class Charts extends FragmentActivity implements ActionBar.TabListener {
         });
 
         // For each of the sections in the app, add a tab to the action bar.
-        for (int i = 0; i < mAppSectionsPagerAdapter.getCount(); i++) {
+        /*for (int i = 0; i < mAppSectionsPagerAdapter.getCount(); i++) {
             // Create a tab with text corresponding to the page title defined by the adapter.
             // Also specify this Activity object, which implements the TabListener interface, as the
             // listener for when this tab is selected.
@@ -62,7 +62,11 @@ public class Charts extends FragmentActivity implements ActionBar.TabListener {
                     actionBar.newTab()
                             .setText(mAppSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
-        }
+        
+        }*/
+        actionBar.addTab(actionBar.newTab().setText("Day Detail").setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setText("Height").setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setText("Weight").setTabListener(this));
     }
 	
 	@Override
