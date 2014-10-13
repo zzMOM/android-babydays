@@ -107,9 +107,10 @@ public class FragmentDiaperDialog extends DialogFragment implements DatePickerDi
 	                	   info.append(diaperSelectedItems[(Integer) mSelectedItems.get(i)] + " ");
 	                   }
 	                   if(info.toString() != ""){
+	                	   String time = tf.hour12to24(showTime.getText().toString());
 	                	    DiaperDialogListener listener = (DiaperDialogListener) getActivity();
 	                   		listener.onFinishSetDiaper(showDate.getText().toString()
-	                   							       , showTime.getText().toString(), type, info.toString());
+	                   							       , time, type, info.toString());
 	                   }
 	                   
 	                   dialog.dismiss();
