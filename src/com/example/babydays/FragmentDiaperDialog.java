@@ -155,7 +155,9 @@ public class FragmentDiaperDialog extends DialogFragment implements DatePickerDi
 	        tf = new TimeFormatTransfer();
 			showTime.setText(tf.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
         } else {//set showTime specific value
-        	showTime.setText(time);
+        	String[] st = time.split(":");
+	        tf = new TimeFormatTransfer();
+			showTime.setText(tf.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
         }
         
         pickDate = (ImageButton) inflatedView.findViewById(R.id.pickDate);

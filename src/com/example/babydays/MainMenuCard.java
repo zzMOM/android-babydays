@@ -184,7 +184,7 @@ public class MainMenuCard extends FragmentActivity implements FeedDialogListener
 					showWeightDialog();
 					break;
 				}
-				return false;
+				return true;
 			}
 		});
 	}

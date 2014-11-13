@@ -128,7 +128,10 @@ public class FragmentFeedDialog extends DialogFragment implements DatePickerDial
 	        tf = new TimeFormatTransfer();
 			showTime.setText(tf.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
         } else {//set showTime specific value
-        	showTime.setText(time);
+        	//showTime.setText(time);
+        	String[] st = time.split(":");
+	        tf = new TimeFormatTransfer();
+			showTime.setText(tf.timeFormat24To12(Integer.parseInt(st[0]), Integer.parseInt(st[1])));
         }
         if(info.length() > 0){//set info sepcific value
         	textOZ.setText(info.substring(0, info.length() - 2));
